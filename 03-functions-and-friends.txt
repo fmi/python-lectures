@@ -1,0 +1,539 @@
+Функциите и техните приятели
+15.03.2011
+
+== Въпроси към вас ==
+
+Вдигане на ръка, после отговор
+
+== Въпроси (1) ==l
+{{{python
+numbers = {
+    'one': 'ett',
+    'two': 'två',
+    'three': 'tre',
+    'four': 'fyra',
+    'five': 'fem',
+}
+print(numbers['six'])
+}}}
+
+== Въпроси (1) ==l
+{{{python
+numbers = {
+    'one': 'ett',
+    'two': 'två',
+    'three': 'tre',
+    'four': 'fyra',
+    'five': 'fem',
+}
+print(numbers['six'])
+}}}
+
+== Въпроси (2) ==
+Каква е разликата между `list`, `tuple` и `set`?
+
+== Въпроси (3) ==
+Какво ще върнат
+{{{python
+{1, 2, 3} < {2, 3, 4}
+(1, 2, 3) < (2, 3, 4)
+[1, 2, 3] < (2, 3, 4)
+}}}
+
+== Функции - преговор ==
+Дефинират се с ключовата дума `def`
+
+Връщат стойност с `return`
+
+{{{python
+def factorial(n):
+    if n == 0:
+        return 1
+    else:
+        return n * factorial(n-1)
+
+>>> factorial(4)
+24
+}}}
+
+
+== Функции - преговор (2) ==
+Ако искате една функция да взема повече от един аргумент, просто ги разделяте със запетаи:
+
+{{{python
+def lrange(to, start):
+	res = []
+	i = start
+	while i < to:
+		res.append(i)
+		i += 1
+	return res
+
+>>> lrange(10, 0)
+[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+}}}
+
+
+== Аргументи по подразбиране ==
+Може да слагате стойности по подразбиране на аргументите:
+
+{{{python
+def lrange(to, start = 0):
+	res = []
+	i = start
+	while i < to:
+		res.append(i)
+		i += 1
+	return res
+
+>>> lrange(10)
+[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+>>> lrange(10, 2)
+[2, 3, 4, 5, 6, 7, 8, 9]
+}}}
+
+
+== Аргументи по подразбиране (2) ==l
+Имайте предвид, че стойностите по подразбиране се инициализират само веднъж
+
+{{{python
+def add_beer(beers = []):
+    beers.append("Beer")
+    print(beers)
+
+>>> add_beer()
+['Beer']
+
+>>> add_beer()
+['Beer', 'Beer']
+}}}
+
+В този случай е по-добре да сложите `beers` със стойност по подразбиране `None` и създавате нов списък в тялото на функцията, ако потребителя не подаде нещо друго.
+
+
+== Извикване с наименовани параметри ==l
+При извикване можете да подавате параметрите с имената им. По този начин може да ги дадете в различен ред или да използвате само някои, които имат стойност по подразбиране.
+
+{{{python
+def lrange(to, start = 0, step = 1):
+	res = []
+	i = start
+	while i < to:
+		res.append(i)
+		i += step
+	
+	return res
+
+>>> lrange(10, start = 2)
+[2, 3, 4, 5, 6, 7, 8, 9]
+>>> lrange(10, step = 2)
+[0, 2, 4, 6, 8]
+>>> lrange(to = 10, step = 2, start = 4)
+[4, 6, 8]
+}}}
+
+
+== Функциите като стойности ==l
+Python не прави разлика между имена на функции и обекти. Може да ги третирате по еднакъв начин.
+
+{{{python
+def scare(): print("Ni!")
+
+>>> say_it = scare
+>>> say_it()
+Ni!
+>>> scare()
+Ni!
+>>> del scare
+>>> say_it()
+Ni!
+>>> scare()
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+NameError: name 'scare' is not defined
+}}}
+
+
+== Функциите като стойности (2) ==
+Съответно може да предавате функции като аргументи...
+
+{{{python
+def calculate(operation, n1, n2):
+	return operation(n1, n2)
+def addition(n1, n2):
+	return n1 + n2
+def multiplication(n1, n2): 
+	return n1 * n2
+
+>>> calculate(addition, 6, 7)
+13
+>>> calculate(multiplication, 6, 7)
+42
+}}}
+
+
+== Функциите като стойности (3) ==
+...или като връщани стойности:
+
+{{{python
+def make_surrounder(begin, end):
+    def surround(sth):
+        return begin + sth + end
+    return surround
+
+>>> surrounder = make_surrounder('[', ']')
+>>> surrounder('1 + 2')
+'[1 + 2]'
+}}}
+
+
+== Функциите като стойности (4) ==l
+`def` твърденията се пресмятат по време на изпълнение
+
+{{{python
+def operation(name, n1, n2):
+    if name == "addition":
+        def oper(x, y):
+            return x + y
+    else:
+        def oper(x, y):
+            return x * y
+    return oper(n1, n2)
+
+>>> operation('addition', 6, 7)
+13
+>>> operation('multiplication', 6, 7)
+42
+}}}
+
+
+== Функциите като стойности (5) ==l
+Във функциите можете да викате променливи и функции, които още не са дефинирани.
+
+{{{python
+def call_y():
+  for i in range(0,3):
+    y(i)
+
+def y(i):
+  print(i, end = ', ')
+
+>>> call_y()
+0, 1, 2,
+
+def y(i):
+  print(i ** i, end = ', ')
+
+>>> call_y()
+1, 1, 4, 
+}}}
+
+
+== Отметка: Игра със n-торки ==
+
+{{{python
+>>> a, *b, c = 1,2,3,4,5
+>>> a
+1
+>>> b
+[2, 3, 4]
+>>> c
+5
+}}}
+
+== Динамични аргументи ==
+
+Като поставите `*` прeд списък...
+
+{{{python
+>>> range_opts = (20, 3, 2)
+>>> lrange(*range_opts)
+[3, 5, 7, 9, 11, 13, 15, 17, 19]
+}}}
+
+...или `**` пред речник:
+
+{{{python
+>>> range_opts = {'to': 20, 'step': 3, 'start': 3}
+>>> lrange(**range_opts)
+[3, 6, 9, 12, 15, 18]
+}}}
+
+
+== Функции с променлив брой аргументи ==
+
+{{{python
+def sum(initial, *args):
+    result = initial
+    for n in args:
+        result += n
+    return result
+
+>>> sum(1,2,3,4)
+10
+>>> sum("The", "quick", "brown", "fox")
+'Thequickbrownfox'
+}}}
+
+
+== Функции с променлив брой аргументи (2) ==
+{{{python
+def build_dict(**kwargs):
+	d = {}
+	for k, v in kwargs.items():
+		d[k] = v
+	return d
+
+def build_dict_right(**kwargs):
+	return kwargs.copy()
+}}}
+
+
+== Функции с променлив брой аргументи (3) ==
+
+ * Когато имате и трита вида параметри:
+{{{python
+def func(param, param2, *args, **kwargs)
+}}}
+ * Първо трябва да предавате позиционните аргументи
+ * След тях трябва да предадете именованите аргументи
+ * Ако предадете позиционен след именован, ще получите грешка
+
+
+== Функции с променлив брой аргументи (3) ==
+Можем да накараме аргументи да могат да се използват само с наименован параметър.
+
+{{{python
+def connect(url, *, timeout=10, reties=3)
+   for range(0, retries):
+      connected = connect_with_timeout(url, timeout)
+      if connected: return connected
+   else:
+      return None
+}}}
+
+
+== Област на видимост ==
+В Python има четири области на видимост (scope)
+
+ * Локална
+ * Обграждаща функция
+ * Глобална
+ * Вградена
+
+
+== Локална ==
+{{{python
+x = 11
+
+def stuff():
+    x = 14
+    print(x)
+
+stuff()
+print(x)
+}}}
+Резултат:
+{{{
+14
+11
+}}}
+
+
+== Глобален ==l
+
+Ако искате да променяте глобални променливи, трябва ви ключовата дума `global`.
+
+{{{python
+# TODO change to eggs
+x = "spam"
+
+def stuff():
+    global x
+    x = 14
+    print(x)
+
+stuff()
+print(x)
+}}}
+Резултат:
+{{{
+14
+14
+}}}
+
+Глобалните променливи са ЗЛО! Не искайте да ги ползвате.
+
+
+== Обграждаща функция (closure) ==
+
+{{{python
+def build_death_star(power=100):
+    def death_star(world):
+        print('{0} PW love energy sent to {1}' \
+            .format(power, world))
+    return death_star
+
+santa_maria = build_death_star(50)
+santa_maria('Earth')
+}}}
+Резултат:
+{{{
+50 PW love energy sent to Earth
+}}}
+
+
+== Обграждаща функция (2) ==l
+
+Искаме след всяко изстрелване да намаляваме общата мощност наполовина
+
+{{{python
+def build_death_star():
+    power = 100
+    def death_star(world):
+        print('{0} PW love energy sent to {1}'.format(power, world))
+        power = power // 2
+    return death_star
+
+santa_maria = build_death_star()
+
+santa_maria('Earth')
+santa_maria('Neptune')
+}}}
+Резултат:
+{{{
+UnboundLocalError
+UnboundLocalError
+}}}
+
+Присвояването на `x` във вътрешната не променя `x` във външната
+
+
+== Обграждаща функция (3) ==l
+
+Ако искате да променяте глобални променливи, трябва ви ключовата дума `nonlocal`
+
+{{{python
+def build_death_star():
+    power = 100
+    def death_star(world):
+        nonlocal power
+        print('{0} PW love energy sent to {1}'.format(power, world))
+        power = power // 2
+    return death_star
+
+santa_maria = build_death_star()
+
+santa_maria('Earth')
+santa_maria('Neptune')
+}}}
+Резултат:
+{{{
+100 PW love energy sent to Earth
+50 PW love energy sent to Earth
+}}}
+
+
+== Вградена ==
+Достъпни са навсякъде.
+
+Примери:
+{{{python
+str
+list
+dict
+help
+...
+}}}
+
+{{{python
+>>> dir(__builtins__)
+}}}
+
+
+== Анонимни функции ==
+
+ * Дефинират се с `lambda`
+ * Могат да съдържат само един израз, който е връщаната им стойност
+
+{{{python
+>>> operation = lambda x, y: x * y
+>>> print(operation(6, 7))
+42
+}}}
+
+
+== Функции от по-висок ред — map ==
+
+ * Приема: едно-аргументна функция и поредица
+ * Връща: списък образуван от елементите на дадената поредица, върху които е приложена функцията
+
+{{{python
+>>> list(map(lambda x: x ** 2, range(1, 10)))
+[1, 4, 9, 16, 25, 36, 49, 64, 81]
+}}}
+
+
+== Функции от по-висок ред — filter ==
+
+ * Приема: едно-аргументна функция и поредица
+ * Връща: списък образуван от елементите на дадената поредица, за които функцията връща списък
+
+{{{python
+>>> list(filter(lambda x: x % 2, range(1, 10)))
+[1, 3, 5, 7, 9]
+}}}
+
+
+== List comprehension ==
+
+Python има специален синтаксис за `map`
+
+`[израз for променлива in поредица]`
+ 
+{{{python
+>>> [x * x for x in range(0, 10)]
+[1, 4, 9, 16, 25, 36, 49, 64, 81]
+}}}
+
+
+== List comprehension (2) ==
+
+Можете да добавите функционалността и на `filter`
+
+`[израз for променлива in поредица if условие]`
+
+{{{python
+>>> [x * x for x in range(0, 10) if x % 2]
+[1, 9, 25, 49, 81]
+}}}
+
+
+== List comprehension (3) ==
+
+Може да вложите list comprehension в друг такъв:
+
+{{{python
+>>> nums = range(0, 10)
+>>> [(x, y) for x in nums 
+		for y in nums if (x + y) == 13]
+[(4, 9), (5, 8), (6, 7), (7, 6), (8, 5), (9, 4)]
+}}}
+
+
+== set & dict comprehension ==
+
+Можете да ползвате set и dict comprehension
+
+{{{python
+>>> {x % 8 for x in range(0, 20) if (x % 2) == 0}
+{0, 2, 4, 6}
+
+>>> {x: x**2 for x in range(0, 5)}
+{0: 0, 1: 1, 2: 4, 3: 9, 4: 16}
+}}}
+
+
+== Още въпроси? ==
+ * Страница на курса: http://fmi.py-bg.net/
+ * Форуми на курса: http://fmi.py-bg.net/topics

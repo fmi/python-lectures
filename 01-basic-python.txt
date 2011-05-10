@@ -1,0 +1,406 @@
+Днес!!!
+
+Основни типове и конструкции
+08.03.2011г.
+
+== Python Shell  ==l
+{{{python
+>>> word = "Ni!"
+>>> knights = "We Are The Knights Who Say"
+>>> print(knights, word)
+We Are The Knights Who Say Ni!
+>>> 2 * 2
+4
+}}}
+
+== Програма на Python ==l
+ * Най-обикновен текстов файл
+ * `whoami.py`:
+{{{python
+name = "Guido"
+print("Hello, I'm Python", version, "and", name, "created me!")
+}}}
+ * Изпълняват се с double click под Windows
+ * С команда: `python whoami.py`
+ * Резултатът:
+`Hello, I'm Python and Guido created me!`
+ 
+ == Обекти, имена, променливи ==l
+ * Всичко е обект
+ * Пред имената им ***няма*** никакви долари, диези, маймуни или други странни символи
+ * Присвояването става с `=`
+ * Типът обект, който стои зад дадено име, може да се променя:
+{{{python
+answer = "Forty Two"
+answer = 42
+}}}
+ * Има garbage collector, който се грижи за "излишъците"
+ * Използването на недефинирани имена води до грешка:
+{{{python
+>>> print(question)
+Traceback (most recent call last):
+  File "&lt;stdin&gt;", line 1, in &lt;module&gt;
+NameError: name 'question' is not defined
+}}}
+
+== Основни типове ==
+ * ((Цели числа — `int` (`1`, `-99`, `111111111111111111111111111111`)))
+ * ((Не толкова цели числа — `float`, `complex` (`2.71828`, `217e-2`, `3.0+4.0j`, `complex(1,2)`)))
+ * ((Текстови низове — `str`))
+ * ((Булеви данни — `bool`))
+ * ((Списъци, n-орки, речници, множества -- `list`, `tuple`, `dict`, `set`))
+ * ((Типове дефинирани от потребителя))
+
+== Операции с числа ==
+ * ((Събиране (`+`), изваждане (`−`), умножение (`*`)))
+ * ((Деление (`/`), целочислено деление (`//`), деление с остатък (`%`)))
+ * ((Повдигане на степен (`**`)))
+ * ((Побитови операции (само за цели числа) - `<<`, `>>`, `&`, `|`, `^`, `~`))
+ 
+== Текстови низове ==l
+ * ((Текстовите низове се представят с класа `str`))
+ * ((Текстовите низове се представят в `Unicode`))
+ * ((Записът е с единични или двойни кавички — `"spam and eggs", 'larodi'`))
+ * ((Единствената разлика е кои кавички трябва да се "екранират"))
+ * ((Някои escape кодове: `\\ \' \" \a \b \f \n \r \t \v`))
+
+== Дефиниране на низове ==l
+{{{python
+>>> food = 'spam'
+>>> taste = "yum"
+}}}
+
+{{{python
+>>> "spam" == 'spam'
+True
+}}}
+
+{{{python
+>>> 'I can\'t taste your ' + food + ', can I?'
+>>> "Yes, you can't"
+}}}
+
+== Джордж Бул ==
+ * ((Тип `bool` -- `True` `False`))
+ * ((`and`, `or` и `not` работят точно както очаквате))
+ * ((`==` и `!=` също действат както очаквате.))
+ * ((`6 * 9 == 42` връща `False`))
+
+== Булеви Операции ==l
+ * ((`<` и `>` са оператори за сравнение))
+ * ((`"Perl" < "Python"` връща True))
+ * ((Разбира се, можете да ползвате всички тези оператори и за числа))
+ * ((Операторите имат `<=` и `>=` версии))
+ * ((Не можете да сравнявате несравними обекти))
+ * ((Т.е. `20 < 'Foo'` гърми с `TypeError` ))
+
+== Блокове ==
+ * ((Блоковете в Python се идентират с whitespace (табулации или интервали)))
+ * ((Което и да изберете, бъдете консистентни. Непоследователното отместване води до синтактична грешка!))
+ * ((Преди всяко изместване по-навътре се слагат `:`))
+ * (([[PEP 8 http://www.python.org/dev/peps/pep-0008/]] казва да ползваме 4 space-а =>))
+
+== what if ==
+{{{python
+if name == "King Arthur":
+    print("What is the average speed of a swallow?")
+elif name == "Sir Robin":
+    print("What is the capital of Assyria")
+elif name == "Sir Lancelot":
+    print("What is your favourite color?")
+else:
+    print("Run! It's the Legendary Black Beast of Aaarrgh!")
+}}}
+
+== while ==
+{{{python
+connected = False
+
+while not connected:
+    print("Trying...")
+    connected = retry()
+
+print("We're now connected")
+}}}
+    
+== for ==
+{{{python
+for n in range(12, 22):
+    if 2 * 7 == n:
+        print("Middle brother")
+    else:
+        print("Sad unicorn")    
+}}}
+
+== break/continue ==
+{{{python
+for age in range(1, 10000):
+    if age > 169:
+        print("You reached super-human limits!")
+        break
+    if age % 17 == 1:
+        print("So lucky!")
+        continue
+    print("So ordinary my leg hurts.")
+}}}
+
+== факториел ==
+{{{python
+def f(n):
+    if n <= 1:
+        return 1
+    return n*f(n-1)
+}}}
+
+== Колекции в Python ==
+ * ((Списъци))
+ * ((Речници))
+ * ((Множества))
+ * ((n-торки))
+
+== Списъци ==l
+ * ((Подредена колекция от обекти))
+ * ((Отделните елементи се достъпват чрез индекс — цяло число))
+ * ((Обхождат се лесно))
+ * ((Променлива дължина — няма нужда да я определяме преди използване))
+ * ((Могат да бъдат променяни на място -- mutable))
+ * ((Могат да съдържат обекти от различни типове))
+ * ((Списъците могат да се влагат един в друг))
+
+== Списъци (2) ==
+{{{python
+["Lancelot", ["Ni!", 8, []], "Pidgeon"]
+}}}
+
+== Да си направим списък ==
+{{{python
+>>> actor = "Eric Idle"
+>>> sketch = "Spam"
+>>> stuff = [actor, 42, sketch]
+>>> print(stuff)
+['Eric Idle', 42, 'Spam']
+}}}
+
+== Операции със списъци (1) ==
+* Намиране на дължина -- `len(списък)`
+
+{{{python
+>>> len(["Foo", "Bar", "Baz", "Qux"])
+4
+}}}
+
+== Операции със списъци (2) ==
+* Конкатенация -- `+`
+
+{{{python
+>>> [1, 2] + [3, 4]
+[1, 2, 3, 4]
+}}}
+
+== Операции със списъци (3) ==
+* Съдържа ли се обект в списък — `in`
+
+{{{python
+>>> "Spam" in ["Eggs", "Bacon", "Spam"]
+True
+}}}
+
+== Операции със списъци (4) ==
+* Неприсъствие на обект в списък — `not in`
+
+{{{python
+>>> "Spam" not in ["Eggs", "Bacon", "Spam"]
+False
+}}}
+
+== Индексиране и рязане на списъци ==ll
+{{{python
+>>> cheese = ['Red Leicester', 'Cheddar', 'Emmental', 'Mozzarella', 'Tilsit', 'Limburger']
+>>> cheese[0]
+'Red Leicester'
+>>> cheese[-1]
+'Limburger'
+>>> cheese[1:4]
+['Cheddar', 'Emmental', 'Mozzarella']
+>>> cheese[1:-1]
+['Cheddar', 'Emmental', 'Mozzarella', 'Tilsit']
+>>> cheese[1:]
+['Cheddar', 'Emmental', 'Mozzarella', 'Tilsit', 'Limburger']
+>>> cheese[:3]
+['Red Leicester', 'Cheddar', 'Emmental']
+>>> cheese[0:6:2]
+['Red Leicester', 'Emmental', 'Tilsit']
+>>> cheese[::2]
+['Red Leicester', 'Emmental', 'Tilsit']
+>>> cheese[::-1]
+['Limburger', 'Tilsit', 'Mozzarella', 'Emmental', 'Cheddar', 'Red Leicester']
+}}}
+
+== Промяна на списъци ==l
+{{{python
+>>> food = ['eggs', 'bacon', 'spam']
+>>> print(food)
+['eggs', 'bacon', 'spam']
+>>> food[1] = 'sausage'
+>>> print(food)
+['eggs', 'sausage', 'spam']
+>>> food.append('spam')
+>>> print(food)
+['eggs', 'sausage', 'spam', 'spam']
+>>> food.append(['манджа', 'грозде'])
+>>> print(food)
+['eggs', 'sausage', 'spam', 'spam', ['манджа', 'грозде']]
+>>> del food[4]
+>>> print(food)
+['eggs', 'sausage', 'spam', 'spam']
+}}}
+
+== Интересни методи на списъците ==ll
+{{{python
+>>> knights = ["Arthur", "Galahad"]
+>>> knights.append('Bedevere')
+>>> knights
+['Arthur', 'Galahad', 'Bedevere']
+>>> knights.extend(['Lancelot', 'Robin']) # Може и knigts += ['Lancelot', 'Robin']
+>>> knights
+['Arthur', 'Galahad', 'Bedevere', 'Lancelot', 'Robin']
+>>> knights.sort()
+>>> knights
+['Arthur', 'Bedevere', 'Galahad', 'Lancelot', 'Robin']
+>>> knights.reverse()
+>>> knights
+['Robin', 'Lancelot', 'Galahad', 'Bedevere', 'Arthur']
+>>> someone = knights.pop()
+>>> print(someone, knights)
+Arthur ['Robin', 'Lancelot', 'Galahad', 'Bedevere']
+>>> someone = knights.pop(2)
+>>> print(someone, knights)
+Galahad ['Robin', 'Lancelot', 'Bedevere']
+}}}
+
+== Хайде пак малко за for ==l
+ * Обхождането на списъци става с конструкцията `for`
+ * Синтаксисът изглежда така: 
+
+{{{python
+for ⟨име⟩ in ⟨нещо-за-обхождане⟩:
+    ⟨блок код⟩
+}}}
+
+ * ((Тук `in` е част от синтаксиса, не проверка за притежание))
+ * ((`⟨нещо-за-обхождане⟩` може да е както литерал -- `[1, 2, 3]` така и име, например `knights`))
+ * ((Операторът `break` излиза от цикъла))
+ * ((Операторът `continue` прекъсва текущата итерация и продължава изпълнението на цикъла от следващия елемент))
+
+== Обхождане на списъци ==
+{{{python
+>>> numbers = [1, 2, 3, 5, 7, 11, 13]
+>>> answer = 0
+>>> 
+>>> for n in numbers:
+        answer += n
+>>> print(answer)
+42
+}}}
+Ние нали ви казахме, че става лесно?
+
+== Имена и обекти ==
+ * В `python` операторът `=` дава ново име на съществуващ обект.
+ * Последният не се копира.
+
+{{{python
+>>> spam = ['Lancelot', 'Arthur']
+>>> eggs = spam
+>>> eggs[1] = 'Bedevere'
+>>> spam
+['Lancelot', 'Bedevere']
+}}}
+
+== Нищо ==
+В `Python` нищото е `None` <br><br>
+
+{{{python
+>>> print(None)
+None
+>>> 1 is None
+False
+>>> if not None:
+        print('None is treated as "False"')
+}}}
+`None is treated as "False"`
+
+== n-торки(tuples) ==ll
+ * n-торките са неизменяеми `(immutable)` списъци
+ * Записват се по същия начин, но с малки скоби, вместо средни:
+
+{{{python
+primes = (2, 3, 5, 7, 11, 13)
+}}}
+
+ * prime = `(2,)`, иначе ще се сметне за израза `2`
+ * Можете да ги индексирате и `slice`-вате, но не и променяте:
+
+{{{python
+>>> primes[0] -> 2
+>>> primes[1:4] -> (3, 5, 7)
+>>> primes[5] = 17
+Traceback (most recent call last):
+
+  File "<stdin>", line 1, in <module>
+TypeError: 'tuple' object does not support item assignment
+}}}
+
+ * Могат да се влагат:
+
+{{{python
+("Foo", "Bar", ("Spam",), ("More", "Spam"))
+}}}
+
+== И те като списъците поддържат: ==
+ * `+`
+ * `*`
+ * `1 in (1, 2)`
+ * `for x in (1, 2):`
+ * `.index`
+ * `.count`
+
+== Любопитни работи (1) ==
+ * Ако имате n-торка, съдържаща само имена от лявата страна на присвояване, може да постигнете интересни ефекти:
+
+{{{python
+>>> (a, b) = 1, 2
+>>> print(a)
+1
+}}} 
+
+== Любопитни работи (2) ==
+* Всъщност скобите не са задължителни:
+
+{{{python
+>>> a, b = 1, 2
+>>> a, b = b, a
+>>> print(a)
+2
+>>> print(b)
+1
+}}}
+
+== Любопитни работи (3) ==
+* Или:
+
+{{{python
+>>> numbers = (1, 2, 3)
+>>> a, b, c = numbers
+}}}
+
+== Любопитни работи (4) ==
+* В този ред на мисли, същото го могат и списъците
+
+{{{python
+>>> numbers = [1, 2, 3]
+>>> [a, b, c] = numbers
+}}}
+
+== Още въпроси? ==
+ * Страница на курса: http://fmi.py-bg.net
+ * Форум на курса: http://fmi.py-bg.net/topics
