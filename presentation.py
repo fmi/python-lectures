@@ -5,12 +5,13 @@ import shpaml
 class Presentation:
     def __init__(self, input_file, lecture_name, date, *args):
         self.input_file = input_file
+        self.lecture_name = lecture_name
         self.date = date
 
     @property
     def header(self):
         with open('ui/header.html') as f:
-            return f.read().format(self.lecture_name, self.date)
+            return f.read().format(title=self.lecture_name, date=self.date)
 
     @property
     def footer(self):
