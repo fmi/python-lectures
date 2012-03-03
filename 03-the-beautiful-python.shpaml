@@ -1,0 +1,147 @@
+section.slide
+    h2 | PEP 8
+    blockquote
+        This document gives coding conventions for the Python code comprising the
+        standard library in the main Python distribution.  Please see the
+        companion informational PEP describing style guidelines for the C code in
+        the C implementation of Python.
+    h2
+        a href="http://www.python.org/dev/peps/pep-0008/" | http://www.python.org/dev/peps/pep-0008/
+section.slide
+    h2 | Философия
+    blockquote
+        One of Guido's key insights is that code is read much more often than it is written.
+section.slide
+    h2 | Консистентност
+    blockquote
+        Когато си в Рим прави като римляните.
+section.slide
+    h2 | Изключние от правилото
+    blockquote
+        When applying the rule would make the code less readable, even for
+        someone who is used to reading code that follows the rules.
+    blockquote
+        To be consistent with surrounding code that also breaks it (maybe for
+        historic reasons) -- although this is also an opportunity to clean up
+        someone else's mess (in true XP style).
+section.slide
+    h2 | Индентация
+    ul
+        li | Четири space-а, без право на обжалване
+        li | Пунктуация
+section.slide
+    h2 | Конвенция за именуване
+    ul
+        li | variable_name
+        li | CONSTANT_NAME
+        li | ClassName
+        li | function_name
+        li | modulename
+section.slide
+    <img style="margin-top: 64px;" src="http://troll.me/images/angry-samuel-l-jackson/english-motherfucker-do-you-speak-it.jpg">
+section.slide
+    <img style="margin-top: 20px;" src="http://upload.wikimedia.org/wikipedia/en/2/22/Elements_of_Style_cover.jpg">
+section.slide
+    h2 | Какво прави този код?
+    pre.prettyprint
+        #!/usr/bin/env zhpy
+        # 檔名: while.py
+        數字 = 23
+        運行 = 真
+        當 運行:
+            猜測 = 整數(輸入('輸入一個數字: '))
+            如果 猜測 == 數字:
+                印出 '恭喜, 你猜對了.'
+                運行 = 假 # 這會讓循環語句結束
+            假使 猜測 < 數字:
+                印出 '錯了, 數字再大一點.'
+            否則:
+                印出 '錯了, 數字再小一點.'
+        否則:
+            印出 '循環語句結束'
+        印出 '結束'
+section.slide
+    h2 | Какво прави този код?
+    pre.prettyprint
+       | #!/usr/bin/env python
+       | # File name: while.twpy
+       | number = 23
+       | running = True
+       | while running:
+       |    guess = int(raw_input('Enter an integer : '))
+       |    if guess == number:
+       |        print 'Congratulations, you guessed it.'
+       |        running = False # this causes the while loop to stop
+       |    elif guess < number:
+       |        print 'No, it is higher than that.'
+       |    else:
+       |        print 'No, it is lower than that.'
+       | else:
+       |    print 'The while loop is over'
+       | print 'Done'
+section.slide
+    h2 | Още за именоването...
+section.slide
+    h2 | Анонимни функции
+    ul
+        li | Дефинират се с lambda
+        li | Могат да съдържат само един израз, който е връщаната им стойност
+    pre.prettyprint
+        >>> operation = lambda x, y: x * y
+        >>> print(operation(6, 7))
+        42
+section.slide
+    h2 | Функции от по-висок ред — map
+    ul
+        li | Приема: едно-аргументна функция и поредица
+        li | Връща: списък образуван от елементите на дадената поредица, върху които е приложена функцията
+    pre.prettyprint
+        >>> list(map(lambda x: x ** 2, range(1, 10)))
+        [1, 4, 9, 16, 25, 36, 49, 64, 81]
+section.slide
+    h2 | Функции от по-висок ред — filter
+    ul
+        li | Приема: едно-аргументна функция и поредица
+        li | Връща: списък образуван от елементите на дадената поредица, за които функцията връща списък
+    pre.prettyprint
+        >>> list(filter(lambda x: x % 2, range(1, 10)))
+        [1, 3, 5, 7, 9]
+section.slide
+    h2 | List comprehension
+    h3 | Python има специален синтаксис за map
+    pre.prettyprint
+        [израз for променлива in поредица]
+
+        >>> [x * x for x in range(0, 10)]
+        [1, 4, 9, 16, 25, 36, 49, 64, 81]
+section.slide
+    h2 | List comprehension (2)
+    h3 | Можете да добавите функционалността и на filter
+    h3 | [израз for променлива in поредица if условие]
+
+
+    pre.prettyprint
+        >>> [x * x for x in range(0, 10) if x % 2]
+        [1, 9, 25, 49, 81]
+section.slide
+    h2 | List comprehension (3)
+    h3 | Може да вложите list comprehension в друг такъв:
+    pre.prettyprint
+        >>> nums = range(0, 10)
+        >>> [(x, y) for x in nums for y in nums if (x + y) == 13]
+        [(4, 9), (5, 8), (6, 7), (7, 6), (8, 5), (9, 4)]
+section.slide
+    h2 | set & dict comprehension
+    h3 | Можете да ползвате set и dict comprehension
+    pre.prettyprint
+        >>> {x % 8 for x in range(0, 20) if (x % 2) == 0}
+        {0, 2, 4, 6}
+
+        >>> {x: x**2 for x in range(0, 5)}
+        {0: 0, 1: 1, 2: 4, 3: 9, 4: 16}
+section.slide
+    h2 | Още въпроси?
+    h3 | Страница на курса: http://fmi.py-bg.net/
+    h3 | Форуми на курса: http://fmi.py-bg.net/topics
+
+
