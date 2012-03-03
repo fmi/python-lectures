@@ -38,9 +38,9 @@ section.slide
         li | function_name
         li | modulename
 section.slide
-    <img style="margin-top: 64px;" src="http://troll.me/images/angry-samuel-l-jackson/english-motherfucker-do-you-speak-it.jpg">
+    > img style="margin-top: 64px;" src="http://troll.me/images/angry-samuel-l-jackson/english-motherfucker-do-you-speak-it.jpg"
 section.slide
-    <img style="margin-top: 20px;" src="http://upload.wikimedia.org/wikipedia/en/2/22/Elements_of_Style_cover.jpg">
+    > img style="margin-top: 20px;" src="http://upload.wikimedia.org/wikipedia/en/2/22/Elements_of_Style_cover.jpg"
 section.slide
     h2 | Какво прави този код?
     pre.prettyprint
@@ -108,7 +108,7 @@ section.slide
         [1, 3, 5, 7, 9]
 section.slide
     h2 | List comprehension
-    h3 | Python има специален синтаксис за map
+    ul | li | Python има специален синтаксис за map
     pre.prettyprint
         [израз for променлива in поредица]
 
@@ -116,8 +116,9 @@ section.slide
         [1, 4, 9, 16, 25, 36, 49, 64, 81]
 section.slide
     h2 | List comprehension (2)
-    h3 | Можете да добавите функционалността и на filter
-    h3 | [израз for променлива in поредица if условие]
+    ul
+        li | Можете да добавите функционалността и на filter
+        li | [израз for променлива in поредица if условие]
 
 
     pre.prettyprint
@@ -125,14 +126,14 @@ section.slide
         [1, 9, 25, 49, 81]
 section.slide
     h2 | List comprehension (3)
-    h3 | Може да вложите list comprehension в друг такъв:
+    ul | li | Може да вложите list comprehension в друг такъв:
     pre.prettyprint
         >>> nums = range(0, 10)
         >>> [(x, y) for x in nums for y in nums if (x + y) == 13]
         [(4, 9), (5, 8), (6, 7), (7, 6), (8, 5), (9, 4)]
 section.slide
     h2 | set & dict comprehension
-    h3 | Можете да ползвате set и dict comprehension
+    ul | li | Можете да ползвате set и dict comprehension
     pre.prettyprint
         >>> {x % 8 for x in range(0, 20) if (x % 2) == 0}
         {0, 2, 4, 6}
@@ -141,7 +142,11 @@ section.slide
         {0: 0, 1: 1, 2: 4, 3: 9, 4: 16}
 section.slide
     h2 | Още въпроси?
-    h3 | Страница на курса: http://fmi.py-bg.net/
-    h3 | Форуми на курса: http://fmi.py-bg.net/topics
-
+    ul
+        li
+            Страница на курса:
+            a href='http://fmi.py-bg.net/' | http://fmi.py-bg.net/
+        li
+            Форуми на курса:
+            a href="http://fmi.py-bg.net/topics" | http://fmi.py-bg.net/topics
 
