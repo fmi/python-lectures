@@ -189,6 +189,7 @@ html {
   position: relative;
 }
 .slide h1 {
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.8);
   font-size: 4.5em;
 }
 .slide h1, .slide .vcenter {
@@ -225,6 +226,7 @@ html {
   padding-top: .5em;
   margin: 0 0 .66666em 0;
   border-bottom: 3px solid #888;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.8);
 }
 .slide h3 {
   font-size: 1.4375em;
@@ -253,7 +255,8 @@ html {
   display: block;
   margin: 0 auto;
 }
-.slide p, .slide blockquote, .slide iframe, .slide img, .slide ul, .slide ol, .slide pre, .slide video {
+.slide p, .slide blockquote, .slide iframe, .slide img, .slide ul, .slide ol, .slide video {
+  font-size: 1.5em;
   margin-bottom: 1em;
 }
 .slide pre {
@@ -262,6 +265,7 @@ html {
   word-wrap: break-word;
   padding: 1em;
   border: 1px solid #888;
+  margin-bottom: 1em;
 }
 .slide em {
   font-style: italic;
@@ -722,7 +726,7 @@ body.deck-container .deck-status {
   width: auto;
   max-width: 864px;
   margin: 16px auto 24px auto;
-  height: 560px;
+  height: 660px;
   font-size: 16px;
 }
 .no-boxshadow .introduction .deck-container {

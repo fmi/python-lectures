@@ -1,4 +1,4 @@
 $(function() {
-	$.deck('section');
+	$.deck('.slide');
 });
 
