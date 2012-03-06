@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
 import sys
+from shutil import copyfile
 import yaml
+
 
 import presentation
 
-with open('index.yaml', 'r') as f:
+with open('index.yml', 'r') as f:
     slides = yaml.load(f)
 
 def lecture(index):
@@ -18,6 +20,7 @@ def build_all_presentations():
     for slide_index in slides:
         if 'slug' in slides[slide_index]:
             lecture(slide_index)
+    copyfile('index.yml', 'compiled/index.yml')
 
 if __name__ == '__main__':
     if len(sys.argv) == 1:
