@@ -213,5 +213,7 @@ section.slide
     h2 | Git and GitHub
     p | Линукс е второто най-добро нещо, създадено от Линус Торвалдс
     ul
-        li.slide | a href='http:/git-scm.com' | http://git-scm.com/
-        li.slide | a href='http:/github.com' | http://github.com/
+        li.slide
+            a href='http:/git-scm.com' | http://git-scm.com/
+        li.slide
+            a href='http:/github.com' | http://github.com/
