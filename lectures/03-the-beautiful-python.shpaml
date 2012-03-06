@@ -140,13 +140,3 @@ section.slide
 
         >>> {x: x**2 for x in range(0, 5)}
         {0: 0, 1: 1, 2: 4, 3: 9, 4: 16}
-section.slide
-    h2 | Още въпроси?
-    ul
-        li
-            Страница на курса:
-            a href='http://fmi.py-bg.net/' | http://fmi.py-bg.net/
-        li
-            Форуми на курса:
-            a href="http://fmi.py-bg.net/topics" | http://fmi.py-bg.net/topics
-
