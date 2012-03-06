@@ -8,9 +8,10 @@ class Syntax:
     DOT_FOR_CLASSES = '.'
     DIV_SHORTCUT = '[\.#]'
 
+    @property
     def convert(self):
         from converter import Convert
-        return Convert(self.__class__)
+        return Convert()
 
     def enclose_tag(self, tag, text):
         start_tag, end_tag = self.apply_id_and_classes(tag)

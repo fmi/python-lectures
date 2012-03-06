@@ -1,8 +1,12 @@
 0:
   title: 00. За курса
   date: 21.02.2012
-  url: http://fmi.py-bg.net/#
-3:
-  title: 03. Красивият Python
-  date: 23.02.2012
-  slug: 03-the-beautiful-python
+  url: http://www.slideshare.net/alekandreev/python-2012-0
+# 3:
+#   title: 03. Красивият Python
+#   date: 23.02.2012
+#   slug: 03-the-beautiful-python
+# 4:
+#   title: 03. Добри практики
+#   date:  06.03.2012
+#   slug: 04-good-practices
