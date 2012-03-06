@@ -2,6 +2,10 @@
   title: 00. За курса
   date: 21.02.2012
   url: http://www.slideshare.net/alekandreev/python-2012-0
+1:
+  title: 01. Въведение в Python
+  date: 23.02.2012
+  slug: 01-introduction-to-python
 # 3:
 #   title: 03. Красивият Python
 #   date: 23.02.2012
