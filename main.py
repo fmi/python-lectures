@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3.2
 import sys
 from shutil import copyfile
 import yaml
