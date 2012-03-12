@@ -1,0 +1,286 @@
+section.slide
+    h2 | Disclaimer
+    p  | Днес няма да си говорим за acceptance testing, quality assurance или нещо, което се прави от "по-низшия" отдел във фирмата. Всичко тук е дело на програмиста.
+
+section.slide
+    h2 | Митът
+    p  | Проектът идва с готово, подробно задание. Прави се дизайн. С него работата се разбива на малки задачи. Те се извършват последователно. За всяка от тях пишете кода и приключвате. Изискванията не се променят, нито се добавя нова функционалност.
+
+section.slide
+    h2 | Митът v1.1
+    p  | Щом съм написал един код, значи ми остава единствено да го разцъкам - няколко <em>print</em>-а, малко пробване в <em>main</em> метода/функцията и толкова. Така или иначе няма да се променя. А ако (не дай си боже) това се случи - аз съм го писал, знам го, няма как да допусна грешка. Най-много да го поразцъкам още малко.
+
+section.slide
+    h2 | Тежката действителност
+    ul
+        li.slide | Заданията <strong>винаги</strong> се променят.
+        li.slide | Често се налага един код да се преработва.
+        li.slide | Писането на код е сложна задача - допускат се грешки.
+        li.slide | Програмистите (освен Мило) са хора - допускат грешки (освен Мило).
+        li.slide | Промяната на модул в единия край на системата като нищо може да счупи модул в другия край на системата.
+        li.slide | Идва по-добра идея за реализация на кода
+
+section.slide
+    h2 | Традиционният подход 
+    pre.prettyprint
+        | class Programmer(object):
+        |     # ...
+        |     def implement_a_change(self, project, change):
+        |         files = self.open_related_files(project, change)
+        |         while True:
+        |             self.attempt_change(change, files)
+        |             project.run()
+        |             result = self.click_around_and_test(project)
+        |             project.stop()
+        |             if result.successful(): break
+        |         self.commit_code(project, files)
+        |         self.hope_everything_went_ok()
+
+section.slide
+    h2 | Идея
+    p  | - Добре де... хващам се, че постоянно правя едно и също нещо като робот. Понеже е досадно, лесно ще забравя нещо. Пък и само ми губи времето. Човешката цивилизация не реши ли тоя вид проблеми с някакви машини? Май се казваха компютри?
+    p  | &nbsp;
+    p  | — Защо просто не си напишеш програма, която да го прави вместо теб?
+
+section.slide
+    h2 | На хартия (или проектор)
+    ul
+        li.slide | За всичко съмнително ще пишем <strong>сценарий</strong>, който да "цъка".
+        li.slide | Всеки сценарий ще изпълнява кода и ще прави няколко <strong>твърдения</strong> за резултатите.
+        li.slide | Сценариите ще бъдат обединени в <strong>групи</strong>.
+        li.slide | Пускате всички тестове с едно бутонче.
+        li.slide | Резултатът е "Всичко мина успешно" или "Твърдения X, Y и Z в сценарии A, B и C се оказаха неверни".
+
+section.slide
+    h2 | Кодът, който ще тестваме
+    pre.prettyprint
+        | class Interval(object):
+
+        |     def __init__(self, left, right): self.left, self.right = left, right
+        |     def __repr__(self): return "Interval({0}, {1})".format(self.left, self.right)
+        |     def __eq__(self, other):
+        |         return isinstance(other, Interval) and \
+        |             (self.left, self.right) == (other.left, other.right)
+
+        |     def left_open(self): return self.left == None
+        |     def right_open(self): return self.right == None
+
+        |     def contains_number(self, number):
+        |         if self.left_open() and self.right_open(): return True
+        |         if self.left_open(): return number <= self.right
+        |         if self.right_open(): return self.left <= number
+        |         return self.left < number < self.right
+
+        |     def intersect(self, other):
+        |         extr = lambda a, b, func: func(a, b) if not None in (a, b) else a or b
+        |         return Interval(
+        |             extr(self.left, other.left, max),
+        |             extr(self.right, other.right, min))
+
+        |     __and__ = intersect
+
+section.slide
+    h2 | Идеята...
+    pre.prettyprint
+        | class IntervalTest:
+
+        |     def test_contains_number(self):
+        |         interval = Interval(None, 0)
+        |         твърдя_че("interval съдържа -3")
+        |         твърдя_че("interval съдържа 0")
+        |         твърдя_че("interval не съдържа 9")
+        |         твърдя_че("interval.left_open() е истина")
+        |         твърдя_че("interval.right_open() е лъжа")
+
+        |     def test_intersects(self):
+        |         твърдя_че("сечението на [0, 10] с [5, None] е [5, 10]")
+        |         твърдя_че("сечението на [None, 0] с [None, 42] е [None, 0]")
+        |         твърдя_че("сечението на [None, 20] с [-20, None] е [-20, 20]")
+        |         твърдя_че("сечението на [None, 0] с [-10, None] е [-10, 0]")
+
+section.slide
+    h2 | ...реализацията...
+    pre.prettyprint
+        | class IntervalTest(unittest.TestCase):
+        |     def test_contains_number(self):
+        |         interval = Interval(None, 0)
+        |         self.assertTrue(interval.contains_number(-3))
+        |         self.assertTrue(interval.contains_number(0))
+        |         self.failIf(interval.contains_number(9))
+        |         self.assertTrue(interval.left_open())
+        |         self.failIf(interval.right_open())
+
+        |     def test_intersects(self):
+        |         self.assertEqual(
+        |             Interval(5, 10), Interval(0, 10) & Interval(5, None))
+        |         self.assertEqual(
+        |             Interval(None, 0), Interval(None, 42) & Interval(None, 0))
+        |         self.assertEqual(
+        |             Interval(-20, 20), Interval(None, 20) & Interval(-20, None))
+        |         self.assertEqual(
+        |             Interval(-10, 0), Interval(None, 0) & Interval(-10, None))
+
+        | if __name__ == "__main__":
+        |     unittest.main()
+
+section.slide
+    h2 | ...и резултатът
+    pre
+        | .F
+        | ======================================================================
+        | FAIL: test_intersects (__main__.IntervalTest)
+        | ----------------------------------------------------------------------
+        | Traceback (most recent call last):
+        |   File "<stdin>", line 52, in test_intersects
+        | AssertionError: Interval(-10, 0) != Interval(-10, None)
+
+        | ----------------------------------------------------------------------
+        | Ran 2 tests in 0.001s
+
+        | FAILED (failures=1)
+
+section.slide
+    h2 | bulgarian: (english, python)
+    pre.prettyprint
+        | vocabulary = {
+        |     "група": ("test case", unittest.TestCase),
+        |     "сценарий": ("test method", 
+        |         [_ for _ in dir(YourTestCase) if _.startswith("test")]), 
+        |     "твърдение": ("assertion",
+        |         [_ for _ in dir(unittest.TestCase) if re.match("assert|fail", _)])
+        | }
+
+    p  | <strong>Важно.</strong> Не бъркайте ключовата дума <em>assert</em> с методите за твърдения в тестовете. Първото служи да прекратите програмата ако изпадне в невалидно състояние. Второто е част от библиотеката за тестове.
+
+section.slide
+    h2 | Твърдения в unittest.TestCase
+    p  | Всички методи имат опционален последен аргумент <em>msg</em> - текстово съобщение, което ще се покаже ако теста пропадне.
+    ul
+        li.slide | <em>self.assertTrue(expr)</em>
+        li.slide | <em>self.assertFalse(expr)</em>
+        li.slide | <em>self.assertEqual(expected, actual)</em>
+        li.slide | <em>self.assertAlmostEqual(expected, actual, places=7)</em>
+        li.slide | <em>self.assertNotAlmostEqual(expected, actual, places=7)</em>
+        li.slide | <em>self.assertRaises(self, excClass, callable, *args, **kwargs)</em>
+
+section.slide
+    h2 | Видове тестове
+    ul
+        li.slide | <strong>Unit tests</strong> - проверяват дали дадено парче код/клас работи правилно в изолация
+        li.slide | <strong>Integration tests</strong> - проверяват дали няколко модула си общуват правилно
+        li.slide | <strong>Functional tests</strong> - проверяват дали крайната функционалност е както се очаква
+
+section.slide
+    h2 | За какво ни помагат тестовете
+    ul
+        li.slide | Откриват грешки по-рано
+        li.slide | Позволяват ни уверено да правим промени в системата
+        li.slide | Дават сигурност на клиенти, шефове и програмисти
+        li.slide | Представляват пример как се работи с кода
+        li.slide | Помага разделянето на интерфейс от имплементация
+        li.slide | Служат като документация и спецификация
+
+section.slide
+    h2 | За какво не служат тестовете
+    ul
+        li.slide | <strong>Не доказват</strong>, че приложението работи
+        li.slide | Не са Quality Assurance
+        li.slide | Не са benchmark
+
+section.slide
+    h2 | Още речник
+    ul
+        li.slide | black-box тестове
+        li.slide | glass-box тестове
+        li.slide | fixture (<em>setUp</em> и <em>tearDown</em>)
+
+section.slide
+    h2 | Документация 
+    pre.prettyprint
+        | class Foo:
+        |     """
+        |     Sample Foo class
+        |     """
+
+        |     def foo(self):
+        |         """
+        |         Sample foo method
+        |         Returns: 2
+        |         """
+        |         return 2
+
+section.slide
+    h2 | Документацията като тестове 
+    pre.prettypint
+        | def add(a, b):
+        |     """
+        |     Adds the two arguments.
+
+        |     >>> add(1, 3)
+        |     4
+        |     >>> add(1, '')
+        |     Traceback (most recent call last):
+        |         ...
+        |     TypeError: unsupported operand type(s) for +: 'int' and 'str'
+        |     """
+        |     return a + b
+
+        | if __name__ == '__main__':
+        |     import doctest
+        |     doctest.testmod()
+
+section.slide
+    h2 | Дизайн
+    p  | <strong>Въпрос:</strong> какво е "дизайн" на едно приложение?
+
+section.slide
+    h2 | Test-Driven Development
+    <p><em>Test-Driven Development is not about testing.</em></p>
+    <p style="text-align: right">&mdash; Dan North</p>
+
+section.slide
+    h2 | Test-Driven Development (2)
+    ol
+        li | Добави тест
+        li | Пусни всички тестове и виж, че новият се чупи
+        li | Напиши код
+        li | Пусни тестовете и виж че минават успешно
+        li | Подобри кода (refactor)
+        li | Повтаряй
+
+section.slide
+    h2 | Демо
+    p  | лишън!
+
+section.slide
+    h2 | Test-Driven Developmnt (3)
+    ul
+        li.slide | Подход за писане на код
+        li.slide | Дизайна е базиран върху обратна връзка, не гадаене
+        li.slide | Спестява излишен код -- пишете само каквото ви трябва
+        li.slide | Спестява излишна функционалност
+        li.slide | Продуктивност!
+
+section.slide
+    h2 | Behaviour-Driven Development
+    ul
+        li | Теst-Driven Development by Examp
+        li | The RSpec Bo
+        li | xUnit Test Patter
+
+section.slide
+    h2 | Шепа съвети
+    ul
+        li.slide | <strong>Пишете тестове за всичко, което може да се счупи.</strong>
+        li.slide | Не тествайте елементарен код.
+        li.slide | Не използвайте произволни тестови данни.
+        li.slide | Успеха на тестовете не трябва да зависи от реда им.
+        li.slide | Тествайте гранични случаи!
+        li.slide | Не правете тестовете зависими един от друг.
+
+section.slide
+    h2 | Още въпроси?
+    ul
+        li.slide | раница на курса: http://fmi.py-bg.ne
+        li.slide | руми на курса: http://fmi.py-bg.net/topic
+        li.slide | tp://extremeprogramming.or
