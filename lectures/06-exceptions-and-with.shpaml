@@ -152,11 +152,6 @@ section.slide
         li | Look Before You Leap (LBYL)
         li | Easier to Ask for Forgiveness than Permission (EAFP)
 section.slide
-    h2 | Design by Contract
-    ul
-        li.slide | <strong>preconditions</strong> — условия, които трябва да са изпълнени преди извикване на метода
-        li.slide | <strong>postconditions</strong> — условия, които са гарантирани след изпълнението на функцията
-section.slide
     h2 | Нека обобщим
     p | Няколко неща, за които може да ползваме изключения:
 
