@@ -264,11 +264,12 @@ html {
   white-space: pre-wrap;
   word-wrap: break-word;
   padding: 1em;
-  border: 1px solid #888;
   margin-bottom: 1em;
+  font-size: 1.4em;
 }
 .slide em {
   font-style: italic;
+  font-weight: bold;
 }
 .slide li {
   padding: .25em 0;
