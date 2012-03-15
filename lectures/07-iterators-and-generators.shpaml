@@ -1,0 +1,210 @@
+section.slide
+    h2 | Преговор
+    p | Какво можем с <code>for</code>?
+
+    pre.prettyprint
+        | for x in [1,2,3]: print(x)
+
+        | for x in range(42): print(x)
+
+        | for x in map(lambda x: 2*x, something): print(x)
+
+section.slide
+    h2 | Итератор
+    ul
+        li.slide | <code>for</code> може да обхожда неща, за които можем да вземем итератор
+        li.slide | ... а какво е итератор?
+
+section.slide
+    h2 | <code>iter</code> и <code>next</code>
+    ul
+        li.slide | Итератор е обект, съдържащ състоянието на обхождането
+        li.slide | Получаваме го извиквайки <code>iter</code>
+        li.slide | Движим се по него извиквайки <code>next</code>
+
+section.slide
+    h2 | Пример
+    p | <code>for</code> чрез <code>while</code>
+    pre.prettyprint
+        | iterator = iter([1,2,3])
+        | while True:
+        |     x = next(iterator)
+        |     print(x)
+
+
+section.slide
+    h2 | <code>iter</code> и <code>next</code> (2)
+
+    ul
+        li.slide | Получаваме <code>StopIteration</code> грешка, когато няма повече елементи
+        li.slide | Има начин да я обработим (<code>for</code> го прави вътрешно)
+
+section.slide
+    h2 | <code>iter</code> и <code>next</code> (3)
+    p | Понякога итерираното съвпада с итератора
+
+    pre.prettyprint
+        | >>> m = map(lambda x: x*2, [1,2,3])
+        | >>> iter(m) is m # True
+        | True
+
+section.slide
+    h2 | <code>iter</code> и <code>next</code> (4)
+    p | В тези случаи можем да викаме направо <code>next</code>
+
+    pre.prettyprint
+        | m = map(lambda x: x * 2, [1,2,3])
+        | while True:
+        |     x = next(m)
+        |     print(x)
+
+
+section.slide
+    h2 | Въпрос
+    p | Какво ще изведе следният код:
+    pre.prettyprint
+        | numbers = [1,2,3]
+        | doubled = map(lambda x: x*2, l)
+        | numbers[1] = 42
+        | for x in doubled:
+        |     print(x)
+
+section.slide
+    h2 | <code>yield</code> e:
+
+    ul
+        li | Албум на "Pearl Jam"
+        li | Знак "дайте предимство"
+        li | израз в Python
+
+section.slide
+    h2 | Пример за <code>yield</code>
+
+    pre.prettyprint
+        | def musicians():
+        |     yield 'Coltrane'
+        |     yield 'Davis'
+        |     yield 'Getz'
+
+    p | Това е генератор
+
+section.slide
+    h2 | Прости числа с генератор
+
+    pre.prettyprint
+        | def primes():
+        |     number = 2
+        |     while True:
+        |         if all([number % divisor for divisor in range(2, number)]):
+        |             yield number
+        |         number += 1
+
+section.slide
+    h2 | Генератори
+
+section.slide
+    h2 | Генератори
+
+    pre.prettyprint
+        | def biscuits(pack):
+        |     pack.open()
+        |     while not pack.empty():
+        |         biscuit = pack.take_out()
+        |         yield biscuit
+
+        | for biscuit in biscuits(favori):
+        |     if biscuit.examine():
+        |         biscuit.eat()
+        |     else:
+        |         biscuit.throw_away()
+
+section.slide
+    h2 | Generator expressions
+    pre.prettyprint
+        | primes = [n*n for n in range(2, 100)]
+        | primes = (n*n for n in range(2, 100))
+
+section.slide
+    h2 | вградени функции
+
+    ul
+        li | <code>all()</code>, <code>any()</code>
+        li | <code>map()</code>
+        li | <code>filter()</code>
+        li | <code>zip()</code>
+        li | <code>list()</code>, <code>tuple()</code>, <code>set()</code>
+        li
+            a href="http://docs.python.org/3.1/library/itertools.html" | itertools
+
+section.slide
+    h2 | <code>any</code> и <code>all</code>
+
+    ul
+        li | Какво ще се случи, когато изпълним следния код?
+
+    pre.prettyprint
+        | def endless():
+        |     yield True
+        |     while True:
+        |         yield False
+
+        | any(endless())
+
+section.slide
+    h2 | <code>enumerate</code>
+
+    ul
+        li | Понякога ни се налага да имаме индекса и стойността
+
+section.slide
+    h2 | <code>enumerate</code> (2)
+
+    ul
+        li | Понякога ни се налага да имаме индекса и стойността
+        li | Едно <strong>не-много-елегантно</strong> решение:
+
+    pre.prettyprint
+        | names = ['Bird', 'Satchmo', 'Trane']
+        | i = 0
+        | for x in names:
+        |     print(i, x)
+        |     i += 1
+
+section.slide
+    h2 | <code>enumerate</code> (2)
+
+    ul
+        li | Едно <strong>по-елегантно</strong> решение:
+
+    pre.prettyprint
+        | names = ['Bird', 'Satchmo', 'Trane']
+        | for i, x in enumerate(names):
+        |     print(i, x)
+
+section.slide
+    h2 | <code>zip</code>
+
+    ul
+        li | Итерира няколко итеруеми едновременно
+        li | дава n-торки при викане на <code>next</code>
+
+section.slide
+    h2 | <code>zip</code> (2)
+
+    pre.prettyprint
+        | tracks = ['Take the A Train', 'Mack the Knife', 'Alabama']
+        | names = ['The Duke', 'Satchmo', 'Trane']
+        | for track, name in zip(tracks, names):
+        |     print('{0} by {1}'.format(track, name))
+
+section.slide
+    h2 | Модулът <code>itertools</code>
+
+    p | Съдържа помощни функции за работа с итератори
+
+section.slide
+    h2 | <code>itertools</code>
+
+    ul
+        li | <code>dir(itertools)</code>
+        li | <code>help(itertools)</code>
