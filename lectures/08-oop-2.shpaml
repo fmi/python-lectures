@@ -1,0 +1,88 @@
+section.slide
+    h2 | Сравняване на обекти
+    ul
+        li | Можете да проверите дали два обекта са равни по стойност с <em>==</em>
+        li | Можете да проверите дали две имена сочат към един и същи обект с <em>is</em>
+        li | Можете да предефинирате равенството за обекти от даден клас с метода <em>__eq__</em>
+    pre.prettyprint
+        | class Vector:
+        |     def __init__(self, x, y, z):
+        |         self._coords = map(float, [x, y, z])
+        |     def __eq__(self, other):
+        |         return all([a == b for a, b in zip(self._coords, other._coords)])
+    p | По подразбиране, <em>__eq__</em> е имплементирана с <em>is</em>
+section.slide
+    h2 | Аритметични оператори
+    p | Можете да предефинирате аритметичните оператори за вашите типове.
+    ul
+        li | __add__(self, other) за self + other
+        li | __sub__(self, other) за self - other
+        li | __mul__(self, other) за self * other
+        li | __truediv__(self, other) за self / other
+        li | __floordiv__(self, other) за self // other
+        li | __mod__(self, other) за self % other
+        li | __lshift__(self, other) за self << other
+        li | __rshift__(self, other) за self >> other
+        li | __and__(self, other) за self & other
+        li | __xor__(self, other) за self ^ other
+        li | __or__(self, other) за self &#124; other
+section.slide
+    h2 | Преобразуване до стандартни типове
+    p | Има методи, които може да предефинирате, за преобразования от вашия клас към стандартен тип:
+    ul
+        li | __int__(self) за int(обект)
+        li | __float__(self) за float(обект)
+        li | __complex__(self) за complex(обект)
+        li | __bool__(self) за bool(обект)
+section.slide
+    h2 | Колекции
+    p | Python ви предлага и оператори, с които можете да третирате вашия клас като колекция:
+    ul
+        li | __len__(self) за len(обект)
+        li | __getitem__(self, key) за обект[key]
+        li | __setitem__(self, key, value) за обект[key] = value
+        li | __delitem__(self, key) за del обект[key]
+        li | __contains__(self, item) за item in обект
+section.slide
+    h2 | Обекти, които могат да бъдат извиквани като функции
+    p | Можете да предефинирате оператора две скоби ().
+    pre.prettyprint
+        | class Stamp:
+        |     def __init__(self, name): self.name = name
+        |     def __call__(self, something):
+        |         print("{0} was stamped by {1}".format(something, self.name))
+
+        | >>> stamp = Stamp("The government")
+        | >>> stamp("That thing there")
+        | That thing there was stamped by The government
+section.slide
+    h2 | Статични методи
+    p | При статичните методи положението е малко странно:
+    pre.prettyprint
+        | class Person:
+        |     people = []
+
+        |     @staticmethod
+        |     def register(name):
+        |         Person.people.append(name)
+        |         print(len(Person.people), "people are registered now")
+
+        | >>> Person.register("Mityo the Python")
+        | 1 people are registered now
+        | >>> Person.register("Pooh")
+        | 2 people are registered now
+section.slide
+    h2 | Класови методи
+    p | В Python има "класови" методи, които вземат класът на който са извикани като първи аргумент. Понякога е полезно при наследяване:
+    pre.prettyprint
+        | class Something:
+
+        |     @classmethod
+        |     def greet(cls, someone):
+        |         print(someone, "was greeted from", cls)
+
+        | >>> Something.greet("Mityo")
+        | Mityo was greeted from &lt;class '__main__.Something'&gt;
+
+
+
