@@ -1,3 +1,117 @@
+section.slide 
+    h2 | Преговор, философски
+    ol
+        li | Абстракция
+        li | Енкапсулация
+        li | Модулярност
+section.slide
+    h2 | Преговор, по същество
+    ol
+        li | Всичко е обект
+        li | Отворени обекти
+        li | Отворени класове
+section.slide
+h2 | Vector (2) 
+    pre.prettyprint
+        |    class Vector:
+        |        def __init__(self, x, y, z):
+        |            self.x = x
+        |            self.y = y
+        |            self.z = z
+
+        |    spam = Vector(1.0, 2.0, 3.0)
+        |    print(spam.x)
+
+    ol
+        li.slides | Конструктура се казва __init__
+        li.slides | Първия аргумент на метода е инстанцията, върху която се извиква
+        li.slides | Атрибутите ("член-променливите") не се декларират (класовете са отворени)
+        li.slides | Инстанцира се с оператор <pre>()</pre>
+
+section.slide
+h2 | Vector (3) 
+    pre.prettyprint
+        |    class Vector:
+        |        def __init__(self, x, y, z): ...
+
+        |        def length(self):
+        |            return (self.x * self.x + self.y * self.y + self.z * self.z) ** 0.5
+
+        |        spam = Vector(1.0, 2.0, 3.0)
+        |        print(spam.length())
+
+    ol
+        li.slides | В методите атрибутите се достъпват през <pre>self</pre>
+        li.slides | Методите се извикват с <pre>обект.име_на_метод()</pre>
+
+section.slide
+h2 | Vector (4) 
+    pre.prettyprint
+        |    class Vector:
+        |        def __init__(self, x, y, z): ...
+
+        |        def _coords(self):
+        |            return (self.x, self.y, self.z)
+
+        |        def length(self):
+        |            return sum(_ ** 2 for _ in self._coords()) ** 0.5
+
+    ol
+        li.slides | <pre>_coords</pre> е protected метод
+        li.slides | Отново, методите се извикват върху <pre>self</pre>
+        li.slides | <pre>_</pre> е валидно име за променлива
+
+section.slide
+h2 | Извикване през класа 
+
+        |    v1 = Vector(1.0, 2.0, 3.0)
+        |    v2 = Vector(4.0, 5.0, 6.0)
+        |    v3 = Vector(7.0, 8.0, 9.0)
+
+        |    print(Vector.length(v1))
+        |    print(Vector.length(v2))
+        |    print(map(Vector.length, [v1, v2, v3]))
+
+
+section.slide
+h2 | Vector (5) 
+        |    class Vector:
+        |        def __init__(self, x, y, z): ...
+        |        def length(self): ...
+        |        def normalize(self):
+        |            length = self.length()
+        |            self.x /= length
+        |            self.y /= length
+        |            self.z /= length
+
+
+section.slide
+h2 | Vector (6) 
+        |    class Vector:
+        |        def __init__(self, x, y, z): ...
+        |        def length(self): ...
+        |        def normalized(self):
+        |            return Vector(self.x / self.length(),
+        |                          self.y / self.length(), self.z / self.length())
+
+
+section.slide
+h2 | <pre>normalize</pre> vs <pre>normalized</pre> 
+    pre.prettyprint
+        |    class Vector:
+        |        def normalize(self):
+        |            length = self.length()
+        |            self.x /= length
+        |            self.y /= length
+        |            self.z /= length
+
+        |        def normalized(self):
+        |            return Vector(self.x / self.length(), self.y / self.length(), self.z / self.length())
+
+    p | Ако имате само едно от двете, кое предпочитате?
+
+    p | (верен отговор по-късно)
+
 section.slide
     h2 | Сравняване на обекти
     ul
@@ -84,5 +198,419 @@ section.slide
         | >>> Something.greet("Mityo")
         | Mityo was greeted from &lt;class '__main__.Something'&gt;
 
+h2 | mutable срещу immutable 
+    ol
+        li |  Обекти, чието състояние ***не може*** да се промени се наричат ***immutable***.
+        li |  Такива са <pre>tuple</pre>, <pre>int</pre> и <pre>str</pre>
+        li |  Обекти, чието състояние ***може*** да се промени се наричат ***mutable***.
+        li |  Такива са <pre>dict</pre>, <pre>list</pre> и <pre>set</pre>.
+        li |  Код, използващ ***immutable*** обекти обикновено е по-лесно разбираем от код, използващ ***mutable*** обекти.
+
+h2 | Нещо подобно 
+    p | Искаме да пишем на всички активни потребители.
+    
+    pre.prettyprint
+        |    emails = []
+        |    for user in User.all():
+        |        if user.active():
+        |            emails.append(user.email)
+        |    # или
+        |    emails = [user.email for user in User.all() if user.active()]
+
+
+    p | Кое и защо?
+
+h2 | Fred Brooks 
+    ol
+        li.slides | Essential complexity и accidental complexity
+        li.slides | Първия пример се чете "създай списък, обходи потребителите; за всеки активен, добави списък"
+        li.slides | Втория се чете "дай ми ми пощите на всички потребители, които са активни"
+        li.slides | В първия има повече accidental complexity
+        li.slides | 2 > 1 (очевидно) 
+        li.slides | mutable векторите имат излишен accidental complexity
+
+h2 | Vector (7) 
+        |        def __init__(self, x, y, z): ...
+        |        def __add__(self, other):
+        |            return Vector(self.x + other.x, self.y + other.y, self.z + other.z)
+
+        |    spam = Vector(1.0, 2.0, 3.0)
+        |    eggs = Vector(4.0, 5.0, 6.0)
+        |    breakfast = spam + eggs
+
+
+    ol
+        li |  <pre>self + other</pre> се предефинира с <pre>__add__(self, other)</pre>
+
+h2 | Vector (8) 
+    pre.prettyprint
+        |   class Vector:
+        |       def __init__(self, x, y, z): ...
+        |       def _coords(self): ...
+        |       def __add__(self, other):
+        |           return Vector(*map(sum, zip(self._coords(), other._coords())))
+
+        |   spam = Vector(1.0, 2.0, 3.0)
+        |   eggs = Vector(4.0, 5.0, 6.0)
+        |   breakfast = spam + eggs
+
+    p | По-хакерско, но спорно дали по-четимо
+
+h2 | Vector (9) 
+    pre.prettyprint
+        |   class Vector:
+        |       def __init__(self, x, y, z): ...
+        |       def _coords(self): ...
+
+        |   def addition(a, b):
+        |       return Vector(a.x + b.x, a.y + b.y, a.z + b.z)
+
+        |   Vector.__add__ = addition
+
+        |   print(Vector(1.0, 2.0, 3.0) + Vector(4.0, 5.0, 6.0))
+
+    ol
+        li.slides | Функциите са първокласни обекти
+        li.slides | Методите са атрибути на класа
+        li.slides | Класовете са динамични
+        li.slides | Ето защо <pre>self</pre> е явен
+
+h2 | Vector (10) 
+    p | Ако искате да достъпвате компонентите на вектора с <pre>v[0]</pre>, <pre>v[1]</pre> и <pre>v[2]<pre>:
+    pre.prettyprint
+        |   class Vector:
+        |   def __init__(self, x, y, z): ...
+        |   def __getitem__(self, i):
+        |       return (self.x, self.y, self.z)[i]
+
+
+h2 | Vector (11) 
+    p | Можете да направите вектора да се държи като колекция:
+    pre.prettyprint
+        |   class Vector:
+        |       def __init__(self, x, y, z): ...
+        |       def __getitem__(self, i):
+        |           return (self.x, self.y, self.z)[i]
+
+        |       def __len__(self):
+        |           return 3
+
+        |       def length(self):
+        |           return sum(_ ** 2 for _ in self) ** 0.5
+
+        |       def __add__(self, other):
+        |            return Vector(*map(sum, zip(self, other)))
+
+
+h2 | Vector (12) 
+    p | Може и да имплементирате присвояване на индекс:
+    pre.prettyprint
+        |   class Vector:
+        |       def __init__(self, x, y, z): ...
+        |       def __getitem__(self, i): ...
+        |       def __setitem__(self, index, value):
+        |           if   index == 0: self.x = value
+        |           elif index == 1: self.y = value
+        |           elif index == 2: self.z = value
+        |           else: pass # Тук е добро място за изключение
+
+        |   v = Vector(1, 2, 3)
+        |   v[1] = 10
+        |   print(v.y) # 10
+
+    p | Разбира се, по-добре вектора да е immutable.
+
+h2 | Атрибути 
+    ol
+        li |  <pre>getattr(obj, 'name')</pre> е като <pre>obj.name</pre>
+        li |  <pre>setattr(obj, 'name', value)</pre> е като <pre>obj.name = value</pre>
+        li |  <pre>delattr(obj, 'name')</pre> е като <pre>del obj.name</pre>
+
+    pre.prettyprint
+        |   class Spam: pass
+
+        |   spam = Spam()
+
+        |   spam.eggs = "Eggs"
+        |   print(getattr(spam, 'eggs')) # Eggs
+
+        |   setattr(spam, 'bacon', 'Spam, eggs and bacon')
+        |   print(spam.bacon) # Spam, eggs and bacon
+
+
+h2 | Атрибути (2) 
+    p | Може да дефинирате <pre>__getitem__</pre> и <pre>__setitem__</pre> по-компактно:
+
+    pre.prettyprint
+        |   class Vector:
+        |       def __init__(self, x, y, z): ...
+
+        |       def __getitem__(self, i):
+        |           return getattr(self, ('x', 'y', 'z')[i])
+
+        |       def __setitem__(self, index, value):
+        |           return setattr(self, ('x', 'y', 'z')[i], value)
+
+
+h2 | Атрибути (3) 
+    p | Може да предефинирате "оператора точка":
+    ol
+        li |  <pre>__getattr__(self, name)</pre> за <pre>object.name</pre>
+        li |  <pre>__setattr__(self, name, value)</pre> за <pre>object.name = 'Foo'</pre>
+        li |  <pre>__delattr__(self, name)</pre> за <pre>del object.name</pre>
+
+h2 | Атрибути (4) 
+    p | <pre>__getattr__(self, name)</pre> се извиква само ако обекта няма атрибут <pre>name</pre>.
+
+    pre.prettyprint
+        |   class Spam:
+        |       def __init__(self):
+        |           self.eggs = 'larodi'
+
+        |       def __getattr__(self, name):
+        |           return name.upper()
+
+        |       def answer(self):
+        |           return 42
+
+        |   spam = Spam()
+        |   print(spam.foo) # FOO
+        |   print(spam.bar) # BAR
+        |   print(spam.eggs) # larodi
+        |   print(spam.answer()) # 42
+
+
+h2 | Атрибути (5) 
+    p | <pre>__setattr__</pre> се извиква, когато присвоявате стойност на атрибут на обект.
+    p | За да не изпаднете в безкрайна рекурсия, ползвайте <pre>object.__setattr__</pre>.
+
+    pre.prettyprint
+        |   class Spam:
+        |       def __setattr__(self, name, value):
+        |           print("Setting {0} to {1}".format(name, value))
+        |           return object.__setattr__(self, name.upper(), value + 10)
+
+        |   spam = Spam()
+        |   spam.foo = 42
+        |   print(spam.FOO) # 52
+        |   print(spam.foo) # грешка!
+
+
+h2 | Атрибути (6) 
+    ol
+        li |  <pre>__getattr__</pre> се извиква ***само*** когато в обекта няма такъв атрибут.
+        li |  Ако искате да предефинирате достъпа до атрибут ***винаги***, метода е <pre>__getattribute__</pre>. Но за това по-натам
+
+h2 | Обектите и питоните 
+    p | ***Опростен модел***: Всеки обект се състои от две неща:
+
+    ol
+        li |  речник, съдържащ атрибутите на обекта (достъпен в <pre>__dict__<pre>)
+        li |  връзка към класа на обекта (достъпен в <pre>__class__<pre>)
+
+    pre.prettyprint
+        |   class Spam: pass
+
+        |       spam = Spam()
+        |       spam.foo = 1
+        |       spam.bar = 2
+        |       print(spam.__dict__) # {'foo': 1, 'bar': 2}
+        |       print(spam.__class__) # &lt;class '__main__.Spam'&gt;
+        |       print(spam.__class__ is Spam) # True
+
+
+h2 | Обектите и питоните (2) 
+    p | ***Още по-опростено***: Функциите и променливите дефинирани в тялото на класа са атрибути на класа.
+
+    pre.prettyprint
+        |   class Spam:
+        |       def foo(self): 
+        |           return 1
+        |       
+        |       bar = 42
+
+        |   print(Spam.foo) # &lt;function foo at 0x0c4f3b4b3&gt;
+        |   print(Spam.bar) # 42
+
+
+h2 | Обектите и питоните (3) 
+    p | Когато извикате <pre>object.attr<pre>:
+ 
+    ol
+        li |  Python връща <pre>object.__dict__['attr']</pre>
+        li |  Ако няма такъв, Python търси в <pre>object.__class__</pre>, ако това е функция, се връща специален обект (bound method), на който може да извикате <pre>()</pre>.
+        li |  Ако това в <pre>object.__class__</pre> не е функция, то просто се връща
+        li |  Ако го няма там се вика <pre>object.__getattr__('attr')</pre>
+
+    pre.prettyprint
+        |   class Spam:
+        |       answer = 42
+        |       def __init__(self, x):
+        |           self.x = x
+        |       def add(self, y):
+        |           return self.x * y
+
+        |   spam = Spam(6)
+        |   print(spam.add) # &lt;bound method Spam.add of &lt;__main__.Spam object at 0x0d34db33f&gt;&gt;
+        |   print(spam.add(9)) # 54
+        |   print(spam.answer) # 42
+
+
+h2 | Обектите и питоните (4) 
+
+    ol
+        li |  В Python има наследяване
+        li |  Всичко наследява от <pre>object</pre>
+        li |  Това преди малко е поведението на <pre>object.__getattribute__</pre>
+        li |  Можете да го предефинирате (стига да имате причина)
+
+h2 | Наследяване 
+    pre.prettyprint
+        |   class Person:
+        |       def __init__(self, first_name, last_name):
+        |           self.first_name = first_name
+        |           self.last_name = last_name
+        |       
+        |       def name(self):
+        |           return self.first_name + " " + self.last_name
+
+        |   class Star(Person):
+        |       def greet_audience(self):
+        |           print("Hello Sofia, I am {0}!".format(self.name()))
+
+        |   david = Star("David", "Gaham")
+        |   david.greet_audience()
+        |   # Hello Sofia, I am David Gaham!
+
+
+h2 | Наследяване (2) 
+
+    pre.prettyprint
+        |   class Person:
+        |       def __init__(self, first_name, last_name):
+        |           self.first_name, self.last_name = first_name, last_name
+        |       
+        |       def name(self):
+        |           return "{0} {1}".format(self.first_name, self.last_name)
+
+        |   class Japanese(Person):
+        |       def name(self):
+        |           return "{0} {1}".format(self.last_name, self.first_name)
+
+        |   print(Person("Edward", "Murdsone").name()) # Edward Murdstone
+        |   print(Japanese("Yukihiro", "Matsumoto").name()) # Matsumoto Yukihiro
+
+
+h2 | Наследяване (3) 
+
+    pre.prettyprint
+        |   class Person:
+        |       def __init__(self, first_name, last_name):
+        |           self.first_name, self.last_name = first_name, last_name
+        |       
+        |       def name(self):
+        |           return "{0} {1}".format(self.first_name, self.last_name)
+
+        |   class Doctor(Person):
+        |       def name(self):
+        |           return "{0}, M.D.".format(Person.name(self))
+
+        |   print(Doctor("Gregory", "House").name()) # Gregory House, M.D.
+
+
+h2 | Множествено наследяване 
+    pre.prettyprint
+        |   class Spam:
+        |       def spam(self): return "spam"
+
+        |   class Eggs:
+        |       def eggs(self): return "eggs"
+
+        |   class CheeseShop(Spam, Eggs):
+        |       def food(self):
+        |           return self.spam() + " and " + self.eggs()
+
+
+h2 | Множествено наследяване (2) 
+    p | Методи се търсят в широчина (breath-first):
+    pre.prettyprint
+        |   class A:
+        |       def spam(self): return "A.spam"
+        |   class B(A):
+        |       pass
+        |   class C(A):
+        |       def spam(self): return "C.spam"
+        |   class D(B, C):
+        |       pass
+
+        |   print(D().spam()) # C.spam
+
+
+h2 | Множествено наследяване (3) 
+    p | Да, в широчина:
+    pre.prettyprint
+        |   class A:
+        |       def spam(self): return "A.spam"
+        |   class B(A):
+        |       def spam(self): return "B.spam"
+        |   class C(A):
+        |       def spam(self): return "C.spam"
+        |   class D(B, C):
+        |       pass
+
+        |   print(D().spam()) # B.spam
+
+
+h2 | 24 карата 
+    p | Ако изпаднете в диамантено наследяване, имате проблем. Обикновено първопричината не е в кода.
+
+    p | (но има и изключения)
+
+h2 | private и protected 
+    ol
+        li |  В Python енкапсулацията е въпрос на добро възпитание
+        li |  Имена от типа <pre>_име</pre> са protected
+        li |  Имена от типа <pre>__име</pre> са private
+        li |  Интерпретатор(а|ът) променя имената от тип <pre>__име</pre> до <pre>_клас__име</pre>. Нарича се name mangling и създава ефект, подобен на този в C++/Java.
+
+    pre.prettyprint
+        |   class Spam:
+        |       def __init__(self):
+        |           self.__var = 42
+
+        |   print(dir(Spam())) # ['_Spam__var', '__class__', ...]
+
+
+h2 | private и protected (2) 
+    pre.prettyprint
+        |       class Base:
+        |           def __init__(self, name, age):
+        |               self.__name = name
+        |               self._age = age
+        |           def report_base(self):
+        |               print("Base:", self.__name, self._age)
+
+        |       class Derived(Base):
+        |           def __init__(self, name, age, derived_name):
+        |               Base.__init__(self, name, age)
+        |               self.__name = derived_name
+        |               self._age = 33
+        |           def report_derived(self):
+        |               print("Derived:", self.__name, self._age)
+
+        |       derived = Derived("John", 0, "Doe")
+        |       print(derived.report_base()) # Base: John 33
+        |       print(derived.report_derived()) # Derived: Doe 33
+        |       print(derived._Base__name, derived._Derived__name, sep=', ') # John, Doe
+
+
+
+h2 | <pre>isinstance</pre> и <pre>issubclass</pre> 
+    pre.prettyprint
+        |    print(isinstance(3, int)) # True
+        |    print(isinstance(4.5, int)) # False
+
+        |    print(issubclass(int, object)) # True
+        |    print(issubclass(float, int)) # False
 
 
