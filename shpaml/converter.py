@@ -61,7 +61,7 @@ class Convert:
                         line = line[:-1]
                         plain_block = len(prefix)
                 elif len(prefix) > plain_block:
-                    line = "|{}{}".format(' ' * (len(prefix) - plain_block - 4), line)
+                    line = "| {}{}".format(' ' * (len(prefix) - plain_block - 4), line)
                     prefix = ' ' * (plain_block+5)
                     follower_length = len(prefix)
                 else:
