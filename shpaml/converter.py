@@ -51,9 +51,22 @@ class Convert:
         lookaheads.pop(0)
         lookaheads.append(None)
         lines = []
+        plain_block = -1
         for prefix, line in prefixed_lines:
             if line:
                 follower_length = lookaheads.pop(0)
+
+                if plain_block == -1:
+                    if line[-1] == ':':
+                        line = line[:-1]
+                        plain_block = len(prefix)
+                elif len(prefix) > plain_block:
+                    line = "|{}{}".format(' ' * (len(prefix) - plain_block - 4), line)
+                    prefix = ' ' * (plain_block+5)
+                    follower_length = len(prefix)
+                else:
+                    plain_block = -1
+
                 if follower_length is None:
                     kind = 'leaf'
                 elif follower_length <= len(prefix):
