@@ -3,8 +3,8 @@ div:
     .match {
         color: red;
         background-color: yellow;
-        padding: 1px;
-        font-weight: ;
+        padding: 2px;
+        border: 2px solid black;
     }
     .left {
         text-align: left;
@@ -166,7 +166,11 @@ section.slide
         li | <em>.</em> съвпада с един произволен символ. По подразбиране символите за нов ред не се включват в тази група. 
         li | <em>^</em> съвпада с началото на низ (или на ред, ако се работи в MULTILINE режим.) 
         li | <em>$</em> съвпада с края на низ (или на ред, ако се работи в MULTILINE режим.) 
-        li | <em>|</em> има смисъл на или, например:
+
+section.slide
+    h2 | Значения на специалните символи 
+    ul
+        li | <b>|</b> има смисъл на или, например:
     pre.prettyprint:
         matcher('day|nice', 'A nice dance-day.')   # 'A <span class="match">nice</span> dance-day.'
         matcher('da(y|n)ce', 'A nice dance-day.')  # 'A nice <span class="match">dance</span>-day.' 
