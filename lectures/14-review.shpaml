@@ -271,4 +271,42 @@ section.slide
         li | __dir__(self)
 
 
+section.slide
+    h2 | Декоратори
+    pre.prettyprint:
+        def memoize(func):
+            memory = {}
+            def memoized(*args):
+                if args in memory:
+                    return memory[args]
+                result = func(*args)
+                memory[args] = result
+                return result
+            return memoized
 
+section.slide
+    h2 | Декоратори в действие
+    pre.prettyprint:
+        @memoized
+        def fibonacci(x):
+            if x in [0,1]:
+                return 1
+            return fibonacci(x-1) + fibonacci(x-2)
+
+section.slide
+    h2 |  Декоратори с аргументи
+    pre.prettyprint:
+        def accepts(*types):
+          def accepter(f):
+            def decorated(*args):
+              for (i, (arg, t)) in enumerate(zip(args, types)):
+                if not isinstance(arg, t):
+                  raise TypeError("""Argument #{0} of '{1}' should \
+                       have been of type {2}".format(i,
+                                           f.__name__,
+                                           t.__name__))
+                return f(*args)
+              return decorated
+
+section.slide
+    h2 | 
