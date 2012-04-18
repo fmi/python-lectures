@@ -211,7 +211,7 @@ section.slide
 
 section.slide
     h2 | Документацията като тестове 
-    pre.prettypint
+    pre.prettyprint
         | def add(a, b):
         |     """
         |     Adds the two arguments.
@@ -253,7 +253,7 @@ section.slide
     p  | лишън!
 
 section.slide
-    h2 | Test-Driven Developmnt (3)
+    h2 | Test-Driven Development (3)
     ul
         li.slide | Подход за писане на код
         li.slide | Дизайна е базиран върху обратна връзка, не гадаене
@@ -264,9 +264,9 @@ section.slide
 section.slide
     h2 | Behaviour-Driven Development
     ul
-        li | Теst-Driven Development by Examp
-        li | The RSpec Bo
-        li | xUnit Test Patter
+        li | Теst-Driven Development by Example
+        li | The RSpec Book
+        li | xUnit Test Patterns
 
 section.slide
     h2 | Шепа съвети
@@ -281,6 +281,6 @@ section.slide
 section.slide
     h2 | Още въпроси?
     ul
-        li.slide | раница на курса: http://fmi.py-bg.ne
-        li.slide | руми на курса: http://fmi.py-bg.net/topic
-        li.slide | tp://extremeprogramming.or
+        li.slide | Страница на курса: <a href='http://fmi.py-bg.net/'>http://fmi.py-bg.net/</a>
+        li.slide | Форуми на курса: <a href="http://fmi.py-bg.net/topics">http://fmi.py-bg.net/topics</a>
+        li.slide | <a href="http://extremeprogramming.org">http://extremeprogramming.org</a>
