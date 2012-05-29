@@ -1,0 +1,339 @@
+section.slide
+    h2 | math
+    p | No comment
+    pre.prettyprint
+       | import math
+
+       | math.sin(1)
+
+section.slide
+    h2 | datetime
+    p | <em>datetime</em> е модул, който ви дава основна функционалност за дати
+    ul
+        li | <em>datetime.date(year, month, day)</em> - клас за дата
+        li | <em>datetime.time(hour, minute, second, microsecond, tzinfo=None)</em> - клас за време
+        li | <em>datetime.datetime(...)</em> - клас за дата и време
+        li | <em>datetime.timedelta</em> - разлика м/у <em>datetime.datetime</em>
+
+section.slide
+    h2 | Пример с datetime
+    pre.prettyprint
+        | now     = datetime.datetime.now()
+        | future  = now + datetime.timedelta(minutes=45)
+        | past    = now - datetime.timedelta(minutes=45)
+        | special = datetime.datetime(2009, 5, 11, 19, 0)
+
+        | some_date = datetime.datetime.strptime(
+        |         '11.05.2009 17:00', '%d.%m.%Y %H:%M')
+
+        | hour = datetime.timedelta(minutes=30) * 2
+
+        | print(now, future, past, special, some_date, sep='\n')
+        | print(hour)
+        | print(now.strftime('%d.%m.%Y %H:%M'))
+
+section.slide
+    h2 | os
+    p | <em>os</em> - функционалност от операционната система
+    p |<em>os.path</em> - функционалност за работа с пътища във файловата система
+    ul
+       li | <em>os.system(command)</em> - изпълнява командата
+       li | текущата директория - <em>os.chdir(path)</em> - сменя я ; <em>os.getcwd()</em> - дава я
+       li | <em>os.listdir(path)</em> - дава съдържанието на директорията
+       li | <em>os.makedirs(path)</em> - създава директория и родители
+       li | <em>os.remove(path)</em> - трие файл; <em>os.rmdir(path)</em> - трие ***празна*** директория
+       li | <em>os.stat(path)</em> - данни за файла
+       li | <em>os.walk(path)</em> - <em>for root, dirs, files in os.walk('/tmp/'): pass</em>
+       li | <em>os.path.abspath(path)</em> ; <em>os.path.basename(path)</em> ; <em>os.path.dirname(path)</em>
+       li | <em>os.path.exists(path)</em>
+       li | <em>os.path.isdir(path)</em>
+
+section.slide
+    h2 | pickle
+    p | <em>pickle</em> е модул, който може да сериализира прости Python обекти.
+    ul
+        li | <em>pickle.dump(object, file)</em>
+        li |  Приема binary отворен за писане файл file и Python обект object. Записва обекта в файла.
+        li | <em>pickle.load(file)</em>
+        li |  Приема binary отворен за четене файл и прочита един обект, който е и резултат от функцията 
+        li | <em>pickle.dumps(object)</em> - връща низ
+        li | <em>pickle.loads(str)</em> - връща обект от низ
+        li | може да бъде backward compatible с python 2 и 1
+
+section.slide
+    h2 | Пример с pickle
+    pre.prettyprint
+        | import pickle
+
+        | with open('/tmp/foo.txt', 'wb') as file:
+        |     pickle.dump("The answer", file)
+        |     pickle.dump(["spam", "eggs", "ham"], file)
+
+        | with open('/tmp/foo.txt', 'rb') as file:
+        |     print(pickle.load(file))
+        |     print(pickle.load(file))
+
+section.slide
+    h2 | shelve
+    ul
+        li | <em>shelve</em> е сравнително прост модул, който позволява да записвате данни във файл под формата на речник.
+        li | Можете да ги достъпвате в последствие по ключовете, с които сте ги записали.
+        li | Всички обекти се сериализират посредством <em>pickle</em>.
+        li | Организацията им във файла става посредством dbm или gdbm.
+        li | НЕ е thread-safe откъм писане
+        li | трябва да се внимава с mutable обектите
+
+section.slide
+    h2 | Пример с shelve
+    pre.prettyprint
+        | import shelve
+
+        | db = shelve.open('/tmp/foo.db')
+        | db['name'] = 'Mityo the Python'
+        | db['age'] = 33
+        | db['favouriteBands'] = ["Blackmore's Night", "Deep Purple", "Rainbow"]
+        | db['favouriteSong'] = "Colubrid on the Tree"
+        | db.close()
+
+        | db = shelve.open('/tmp/foo.db')
+        | print(db.keys())
+        | print(db['name'])
+        | print(db['favouriteBands'])
+        | print(db['favouriteSong'])
+        | db.close()
+
+section.slide
+    h2 | json
+    p | <em>json</em> е модул, който може да сериализира прости Python обекти.
+    ul
+        li | <em>json.dump(object, file)</em>
+        li |  Приема binary отворен за писане файл file и Python обект object. Записва обекта в файла.
+        li | <em>json.load(file)</em>
+        li |  Приема binary отворен за четене файл и прочита един обект, който е и резултат от функцията 
+        li | <em>json.dumps(object)</em> - връща низ
+        li | <em>json.loads(str)</em> - връща обект от низ
+
+section.slide
+    h2 | Пример с json
+    pre.prettyprint
+        | >>> import json
+        | >>> json.dumps(['foo', {'bar': ('baz', None, 1.0, 2)}])
+        | '["foo", {"bar": ["baz", null, 1.0, 2]}]'
+        | >>> print(json.dumps("\"foo\bar"))
+        | "\"foo\bar"
+        | >>> print(json.dumps('\u1234'))
+        | "\u1234"
+        | >>> print(json.dumps('\\'))
+        | "\\"
+        | >>> print(json.dumps({"c": 0, "b": 0, "a": 0}, sort_keys=True))
+        | {"a": 0, "b": 0, "c": 0}
+
+        | >>> json.loads('["foo", {"bar":["baz", null, 1.0, 2]}]')
+        | ['foo', {'bar': ['baz', None, 1.0, 2]}]
+
+section.slide
+    h2 | bytes
+    ul
+       li | Примери <em>b'aa'</em> и <em>b'\x7f\x00'</em>
+       li | Много близки до низ
+       li | Могат да се конвертират до низ с <em>.decode(encoding)</em>
+       li | Низове могат да се конвертират до <em>bytes</em> с <em>.encode(encoding)</em>
+
+section.slide
+    h2 | struct
+    p | Понякога ни трябва нещо да сериализираме в нещо "low level" - нещо като за C
+    ul
+       li | <em>struct.pack</em> - "опакова" неща в байтове
+       li | <em>struct.unpack</em> - "разопакова" неща в байтове
+
+    pre.prettyprint
+        | >>> struct.pack('bbH', 4,0,3)
+        | b'\x04\x00\x03\x00'
+        | >>> struct.unpack('bbH', b'\x04\x00\x03\x00')
+        | (4, 0, 3)
+
+section.slide
+    h2 | csv
+    pre.prettyprint
+        | import csv
+
+        | with open('/tmp/eggs.csv', 'w') as file:
+        |     spam_writer = csv.writer(file, delimiter=',', quotechar='"')
+        |     spam_writer.writerow(['Spam'] * 2 + ['Baked Beans'])
+        |     spam_writer.writerow(['Spam', 'Lovely Spam', 'Wonderful Spam'])
+
+        | with open('/tmp/eggs.csv', 'r') as file:
+        |     spam_reader = csv.reader(file, delimiter=',', quotechar='"')
+        |     for row in spam_reader:
+        |         print(' & '.join(row))
+        | # Spam & Spam & Baked Beans
+        | # Spam & Lovely Spam & Wonderful Spam
+
+section.slide
+    h2 | configparser
+    p | <em>configparser</em> - модул за обработка на .conf файлове:
+    pre
+        | [auth]
+        | username = someone
+        | password = somepass
+
+        | [report]
+        | url = http://docs.python.org
+
+section.slide
+    h2 | Пример с configparser
+    pre.prettyprint
+        | import configparser
+
+        | config = configparser.ConfigParser()
+        | config.add_section('auth')
+        | config.set('auth', 'password', 'm@st@')
+
+        | with open('/tmp/test.cfg', 'w') as file:
+        |     config.write(file)
+
+        | config = configparser.ConfigParser()
+        | config.read('/tmp/test.cfg')
+
+        | print(config.get('auth', 'password')) # -> "m@st@"
+
+section.slide
+    h2 | getopt
+    p | <em>getopt</em> - parser за опции от командния ред
+    pre.prettyprint
+        | import getopt, sys
+
+        | def main():
+        |    try:
+        |        opts, args = getopt.getopt(sys.argv[1:], "ho:v", ["help", "output="])
+        |    except getopt.GetoptError as err:
+        |        print(err, usage())
+        |        sys.exit(1)
+        |    output, verbose = None, False
+        |    for o, a in opts:
+        |        if o == "-v": verbose = True
+        |        elif o in ("-h", "--help"):
+        |            usage(); sys.exit()
+        |        elif o in ("-o", "--output"): output = a
+        |        else: assert False, "unhandled option"
+        |    pass # TODO
+
+        | if __name__ == "__main__":
+        |    main()
+
+section.slide
+    h2 | StringIO
+    p | Ами ако не искаме нещата да отиват във файл ами в низ.
+    ul
+        li | поддържа <em>.read</em>, <em>.write</em> и подобни
+        li | взимаме стойността му с <em>.getvalue()</em>
+
+    pre.prettyprint
+        | from io import StringIO
+
+        | data = StringIO()
+
+        | config = configparser.ConfigParser()
+        | config.add_section('auth')
+        | config.set('auth', 'password', 'm@st@')
+        | config.write(data)
+
+        | print(data.getvalue())
+
+section.slide
+    h2 | xml.dom.minidom
+    p | <em>xml.dom.minidom</em> — Lightweight DOM implementation
+    pre.prettyprint
+        | import xml.dom.minidom
+
+        | document = """\
+        | &lt;slideshow&gt;
+        | &lt;title>Demo slideshow&lt;/title&gt;
+        | &lt;slide>slide1&lt;/slide&gt;
+        | &lt;slide>slide2&lt;/slide&gt;
+        | &lt;/slideshow&gt;
+        | """
+
+        | dom = xml.dom.minidom.parseString(document)
+
+section.slide
+    h2 | xml.dom.minidom(2)
+    pre.prettyprint
+        | def getText(nodelist):
+        |     rc = ""
+        |     for node in nodelist:
+        |         if node.nodeType == node.TEXT_NODE:
+        |             rc = rc + node.data
+        |     return rc
+
+        | def handleSlideshow(slideshow):
+        |     print("&lt;html&gt;&lt;title&gt;", 
+        |           getText(slideshow.getElementsByTagName("title")[0].childNodes), 
+        |           "&lt;/title&gt;&lt;body&gt;")
+        |     handleSlides(slideshow.getElementsByTagName("slide"))
+        |     print("&lt;/body&gt;&lt;/html&gt;")
+
+        | def handleSlides(slides):
+        |     for slide in slides:
+        |         print('&lt;div id="slide"&gt;', 
+        |               getText(slide.childNodes), 
+        |               '&lt;/div&gt;')
+
+        | handleSlideshow(dom)
+
+section.slide
+    h2 | html parsing
+    pre.prettyprint
+        | from html.parser import HTMLParser
+
+        | class MyHTMLParser(HTMLParser):
+
+        |     def handle_starttag(self, tag, attrs):
+        |         print("Encountered the beginning of a {0} tag".format(tag))
+
+        |     def handle_endtag(self, tag):
+        |         print("Encountered the end of a {0} tag".format(tag))
+
+section.slide
+    h2 | urllib.request
+    p | <em>urllib.request</em> - за работа с http 
+    ul
+        li | Има различни класове за всякакви неща...
+        li | Лесно се използва
+        li | в стария python за това служи <em>urllib2</em>
+
+section.slide
+    h2 | Примери с urllib.request
+    pre.prettyprint
+        | import urllib.request
+        | import urllib.parse
+
+        | params = urllib.parse.urlencode({'spam': 1, 'eggs': 2, 'bacon': 0})
+
+        | # GET
+        | f = urllib.request.urlopen("http://www.python.org/cgi-bin/query?{0}".format(params))
+        | print(f.read())
+
+        | # Същото с POST
+        | f = urllib.request.urlopen("http://www.python.org/cgi-bin/post",
+        |                    data=params)
+        | print(f.read())
+
+section.slide
+    h2 | Други
+    ul
+        li | <em>hashlib</em>
+        li | <em>base64</em>
+        li | <em>email</em>
+        li | <em>mimetypes</em>
+        li | <em>logging</em>
+        li | ...
+
+section.slide
+    h2 | Архивиране/компресия
+    ul
+        li | <em>zlib</em>
+        li | <em>gzip</em>
+        li | <em>bz2</em>
+        li | <em>zipfile</em>
+        li | <em>tarfile</em>
