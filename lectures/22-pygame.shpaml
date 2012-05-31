@@ -28,18 +28,16 @@ section.slide
     h2 | Безкрайният цикъл
     p | Цялата ни игра е един безкраен цикъл, в който обработваме event-и
     pre.prettyprint
-        |import pygame
+         | import pygame
 
-        |pygame.init()
-        |screen = pygame.display.set_mode((640, 480))
+         | pygame.init()
+         | screen = pygame.display.set_mode((640, 480))
 
-        |running = True
-        |while running:
-        |    for event in pygame.event.get():
-        |        if event.type == pygame.QUIT:
-        |            running = False
-        |        if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
-        |            running = False
+         | running = True
+         | while running:
+         |     for event in pygame.event.get():
+         |         if event.type == pygame.QUIT:
+         |             running = False
 section.slide
     h2 | Безкраен цикъл <em>done right</em>
     pre.prettyprint
@@ -50,8 +48,6 @@ section.slide
         |         while 1:
         |             for event in pygame.event.get():
         |                 if event.type == pygame.QUIT:
-        |                     return
-        |                 if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
         |                     return
 
         | if __name__ == '__main__':
@@ -72,13 +68,11 @@ section.slide
     ul
         li | <em>pygame.time.Clock</em>
     pre.prettyprint
-        |while 1:
+        | while 1:
         |    clock.tick(30)
 
         |    for event in pygame.event.get():
         |        if event.type == pygame.QUIT:
-        |            return
-        |        if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
         |            return
 
         |    screen.fill((200, 200, 200))
@@ -142,8 +136,6 @@ section.slide
 
         |             for event in pygame.event.get():
         |                 if event.type == pygame.QUIT:
-        |                     return
-        |                 if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
         |                     return
 
         |             sprites.update()
@@ -227,6 +219,6 @@ section.slide
 section.slide
     h2 | И още...
     ul
-        li | http://pygame.org/
-        li | http://pyvideo.org/video/615/introduction-to-game-development
+        li | <a href="http://pygame.org/">http://pygame.org</a>
+        li | <a href="http://pyvideo.org/video/615/introduction-to-game-development">http://pyvideo.org/video/615/introduction-to-game-development</a>
 
