@@ -1,0 +1,69 @@
+section.slide
+    h2 | Защо искаме да правим игри?
+    ul
+        li | Забавни са
+        li | Предлагат ни изцяло нов начин на мислене
+section.slide
+    h2 | Колко точно различно е?
+    ul
+        li | Дребните детайли са критични
+        li | Зависите от ресурсите на потребителската машина
+        li | Физика, Изкуство, Музика, Математика...
+section.slide
+    h2 | Основните ни занимания
+    ul
+        li | Показваме неща на екрана
+        li | Обработваме потребителски вход
+        li | Механика
+        li | Звуци и музика
+        li | Завършена архитектура на една игра
+section.slide
+    h2 | Показваме неща на екрана
+    ul
+        li | Отваряме прозорец
+        li | Чертаем разни неща
+        li | Местим вече налични такива
+section.slide
+    h2 | Безкрайният цикъл
+    p | Цялата ни игра е един безкраен цикъл
+    pre.prettyprint | # Here goes the code
+section.slide
+    h2 | FPS
+    p | Различни машини - различни възможности.
+    ul
+        li | <em>pygame.time.Clock</em>
+section.slide
+    h2 | Малко по-структурираният вариант
+    pre.prettyprint | # Here goes the code
+section.slide
+    h2 | Чертаене
+    ul
+        li | Координатна система
+        li | <em>fill &amp; blit</em>
+        li | <em>flip</em>
+        li | <em>pygame.time.Clock</em>
+        li | Scene construction
+section.slide
+    h2 | Анимации
+section.slide
+    h2 | User Input
+    ul
+        li | Events
+        li | State dictionary
+section.slide
+    h2 | Sprites
+    p | #Дефиниция на спрайт
+section.slide
+    h2 | Групи от спрайтове
+    p | В общия случай го раздаваме с десетки/стотици спрайтове.
+    p | Не искаме да се молим на всеки един по отделно да се пречертае
+    pre.prettyprint | # Код с pygame.sprite.Group
+section.slide
+    h1 | The real deal!
+section.slide
+    h2 | Gameplay Mechanics
+    ul
+        li | Player Controls
+        li | Timed rules - кога се появяват обекти, как се движат по полето и кога са излишни
+        li | Интеракция с другите обекти(collision detections)
+        li | Строго следене за важните събития
