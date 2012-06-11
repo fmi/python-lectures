@@ -50,6 +50,10 @@
   title: 14. Преговор
   date: 10.04.2012
   slug: 14-review
+15:
+  title: 15. Конкурентност
+  date: 10.04.2012
+  url: http://2011.fmi.py-bg.net/slides/15-concurrency.html
 18:
   title: 18. Бази данни с Mongo
   date: 15.05.2012
