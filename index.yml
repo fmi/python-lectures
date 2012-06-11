@@ -54,6 +54,10 @@
   title: 15. Конкурентност
   date: 10.04.2012
   url: http://2011.fmi.py-bg.net/slides/15-concurrency.html
+17:
+  title: 17. Дебобулечкване с Питон
+  date: 13.05.2012
+  url: http://www.slideshare.net/sesarr/debugging-with-python
 18:
   title: 18. Бази данни с Mongo
   date: 15.05.2012
