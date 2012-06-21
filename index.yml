@@ -67,6 +67,14 @@
   date: 29.05.2012
   slug: 21-stdlib
 20:
-  title: 20. PyGame
+  title: 20. Django I
+  date: 31.05.2012
+  url: http://www.slideshare.net/alekandreev/django-1
+21:
+  title: 21. Django II
+  date: 05.06.2012
+  url: http://www.slideshare.net/alekandreev/django2
+22:
+  title: 22. PyGame
   date: 31.05.2012
   slug: 22-pygame
