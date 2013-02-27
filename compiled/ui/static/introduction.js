@@ -1,4 +1,0 @@
-$(function() {
-	$.deck('.slide');
-});
-
