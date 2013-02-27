@@ -1,0 +1,324 @@
+= slide 'Къде отива кода?' do
+    ul
+        li.action Код се пише в .py файлове (например gameoflife.py).
+        li.action Изпълнява се с python gameoflife.py
+        li.action Можем да пишем код интерактивно като пуснем python без аргументи.
+
+= slide 'Python е предсказуем' do
+    p Когато не сте сигурни, просто пробвайте.
+    annotate:
+      $ python
+      >>> 5 + 10
+      15
+      >>> a = 5
+      >>> b = a + 10
+      >>> print(b)
+      15
+      >>> a * 2
+      10
+      >>> a ** 2
+      25
+      >>> "hello" + ', ' + "world"
+      "hello, world"
+
+= slide 'Първа помощ' do
+    p В интерактивната конзола, help() показва документацията на всяка функция, клас или тип.
+    annotate:
+       >>> help(str)
+       >>> help(5)
+       >>> help(SomeClass)
+       >>> help(some_function)
+
+= slide 'Един ред код' do
+    annotate:
+       my_var = 'spam'.upper()
+       print(my_var) # SPAM
+    ul
+        li.action Съдържа един израз, никога не завършва с ;
+        li.action Всичко след # е коментар
+
+
+= slide 'Типове: int' do
+    ul
+        li.action Цели числа, положителни и отрицателни
+        li.action Стандартни операции: +, -, *, /, ** (степенуване)
+        li.action Без максимален размер
+        li.action Пробвай 2 ** 4 ** 8 (степенуване)
+
+= slide 'Типове: str' do
+    annotate:
+       >>> "hello".upper()
+       "HELLO"
+       >>> len("абвгдеж")
+       7
+       >>> "hello"[1]
+       "e"
+       >>> help(str)
+    ul
+        li.action Текстови низове с произволна дължина
+        li.action Единични или двойни кавички
+        li.action Unicode навсякъде
+        li.action Поддържат \n, \t и пр.
+
+= slide 'Типове: bool' do
+    ul
+        li.action True и False, не забравяйте главните букви
+        li.action True == 1
+        li.action False == 0
+
+= slide 'Типове: None' do
+    ul
+        li.action Като null в другите езици
+        li.action Когато една функция не върне нищо, тя връща None
+
+= slide 'Типове' do
+    annotate:
+      >>> type(5.5)
+      <class 'float'>
+      >>> type(type)
+      <class 'type'>
+      >>> type(type(type(type)))
+      <class 'type'>
+    ul
+      li.action Всяка стойност има тип, включително функциите.
+      li.action Всяка стойност е обект и има клас, включително функциите.
+      li.action Всичко е обект, включително функциите и типовете!
+      li.action Можем да видим типа на нещо с type()
+
+= slide 'Имена' do
+    ul
+        li Можем да дадем име на стойност и получаваме променлива. velocity = distance / 60
+        li  Динамичен език - стойностите имат тип, но имената - не.
+    annotate:
+       а = 5
+       type(a) # <class 'int'>
+       a = 'test'
+       type(a) # <class 'str'>
+
+= slide 'Структури от данни' do
+    ul
+        li.action Списък (list)
+        li.action Речник (dict)
+        li.action Tuple (tuple)
+        li.action Множество (set)
+        li.action Както винаги: help(dict)
+
+= slide 'Списъци' do
+    annotate:
+       my_list = []
+       my_list = list()
+    ul
+        li.action Списък = list = масив = array
+        li.action Mutable и без фиксирана дължина
+        li.action Бързи за търсене по индекс, бавни за търсене по стойност
+        li.action Гарантиран ред
+        li.action Могат да се смесват типове
+
+= slide 'Списъци' do
+    annotate:
+       my_list = []
+       my_list.append('word')
+       my_list.append(5)
+       my_list.append(False)
+       my_list[1] == 5
+       my_other_list = ['foo', 'bar', 'quux']
+       len(my_other_list) # 3
+       del my_other_list[1]
+       print(my_other_list) # ['foo', 'quux']
+       'foo' in my_other_list # True
+       False in my_list # True
+
+= slide 'Речник (dict)' do
+    annotate:
+       ages = {'Кай': 1, 'Бобо': 2}
+       ages['Йоан'] = 25
+       ages['Алек'] = 25
+       ages['Кирил'] = 22
+       ages['Николай'] = 27
+       print(ages['Кирил']) # 22
+       'Николай' in ages # True
+       ages.get('Георги') # None
+       ages.get('Георги', 'няма такъв') # няма такъв
+    ul
+        li.action Речник = dict = hashtable = associative array
+        li.action Реда не е гарантиран
+        li.action Асоциира ключ със стойност
+
+= slide 'tuple' do
+    annotate:
+       >>> args = (9.8, 3.14, 2.71)
+       >>> args[2]
+       2.71
+       >>> args[1] = 22/7
+       Traceback (most recent call last):
+       File "<stdin>", line 1, in <module>
+       TypeError: 'tuple' object does not support item assignment
+    ul
+        li.action Tuple = n-торка = списък, който не може да бъде променян
+        li.action Гарантиран ред
+        li.action Ползват за да подадете или върнете няколко стойности от функция, когато специален клас би би твърде много
+        li.action Tuple от един елемент - със запетайка на края: ('Your friends will never love you.',)
+        li.action Може и без скобите
+
+= slide 'Структури от данни: set' do
+    annotate:
+       >>> unique_numbers = {2,3,5,6}
+       >>> unique_numbers
+       {2, 3, 5, 6}
+       >>> unique_numbers.add(5)
+       >>> unique_numbers
+       {2, 3, 5, 6}
+       >>> unique_numbers.remove(5)
+       >>> unique_numbers
+       {2, 3, 6}
+       >>> my_list = [5,1,6,6,2,3,5,5]
+       >>> set(my_list)
+       {1, 2, 3, 5, 6}
+    ul
+        li.action Set = множество = списък без повтарящи се елементи
+        li.action Реда не е гарантиран
+        li.action Спомнете си теория на категориите
+
+= slide 'Mutable vs immutable' do
+    annotate:
+       a = 5
+       a += 2 # 7
+    ul
+        li.action Immutable са стойностите, които не могат да бъдат променяни.
+        li.action Този код не променя стойноста на 5, а кара а да сочи към друга стойност (7).
+        li.action Immutable са числа, низове, tuples, True, False, None, дата/час (datetime), класове и функции.
+    annotate:
+       a = [1,2,3]
+       a.append(4)
+    ul
+        li.action Този код променя списъка, към който сочи a. Списъците са mutable.
+        li.action Всичко останало е mutable.
+        li.action Като ключ на dict или елемент на set могат да се ползват само immutable стойности.
+
+= slide 'Контролни структури' do
+    ul
+        li.action if .. elif .. else
+        li.action while
+        li.action for
+
+= slide 'if' do
+    annotate:
+       if a == 5:
+           print("a is five")
+       elif a == 3 and not b == 2:
+           print("a is three, b is not two")
+       else:
+           print("a is something else")
+    ul
+        li.action Точно каквото очаквахте.
+        li.action Не слагайте скоби около условията.
+        li.action and и or и not вместо &&, ||, !
+
+= slide 'if' do
+    p Булеви тестове:
+    annotate:
+       a = True
+       if a:
+           print("a is True")
+
+       if not a:
+           print("a is not True")
+
+= slide 'if' do
+    p тестове за принадлежност:
+    annotate:
+        my_list = [1, 2, 3, 4]
+        if 1 in my_list:
+            print('1 is in my list')
+
+        if 5 not in my_list:
+            print('5 is not in my list')
+
+= slide 'Индентация' do
+    ul
+        li.action Къде са къдравите скоби?!
+        li.action Всеки вложен блок код (тяло на if, тяло на функция, и т.н.) се определя с индентацията му спрямо предишния блок.
+        li.action Блокът свършва, когато се върнете към предишната индентация.
+        li.action 4 празни места = нов блок. Не 2, не 3, не табулация.
+        li.action Настройте редактора си да слага 4 празни места когато натиснете Tab.
+
+= slide 'while' do
+    annotate:
+       while a > 5:
+           a -= 1
+           print("a is %d" % a)
+
+= slide 'for' do
+    annotate:
+       primes = [3,5,7,11]
+       for e in primes:
+           print(e ** 2) # prints 9 25 49 121
+
+       people = {'bob': 25, 'john': 22, 'mitt': 56}
+       for name, age in people:
+           print("{} is {} years old".format(name, age))
+           # bob is 25 years old
+           # john is 22 years old
+           # ...
+    ul
+        li.action for е като foreach в другите езици
+        li.action Не увеличава индекси, а обхожда структури от данни
+
+= slide 'for като в C' do
+    annotate:
+       for i in range(0, 20):
+           print(i)
+           # 0 1 2 3 4 5 6 .. 19
+
+       for i in range(0, 20, 3):
+           print(i)
+           # 0 3 6 9 12 15 18
+
+= slide 'break и continue' do
+    ul
+        li.action Работят както очаквате в for и while.
+        li.action Афектират само най-вътрешния цикъл.
+
+= slide 'switch/case' do
+    p Няма.
+
+
+= slide 'Функции' do
+    annotate:
+       def say_hello(name, from):
+           return "Hello, {}! -- {}".format(name, from)
+    ul
+        li.action Функцията приема аргументи
+        li.action Функцията може да върне нещо с return, иначе автоматично се връща None
+        li.action Както очакваме, не се описват типовете на аргументите, нито типа на резултата
+        li.action Имената
+
+= slide 'Аргументи на функции' do
+    annotate:
+       def multiply(a, b=2):
+           return a * b
+
+       multiply(5) # 10
+       multiply(5, 10) # 50
+
+       def is_pythagorean(a=2, b=3, c=4):
+           return a * a + b * b == c * c
+
+       is_pythagorean(b=5) # a = 2, c = 4
+       is_pythagorean(1, c=3) # a = 1, b = 3
+
+= slide 'Променливи аргументи' do
+    annotate:
+       def varfunc(some_arg, *args, **kwargs):
+           #...
+
+       varfunc('hello', 1,2,3, name='Bob', age=12)
+           # some_arg == 'hello'
+           # args = (1,2,3)
+           # kwargs = {'name': 'Bob', 'age': 12}
+
+    ul
+        li.action Функциите могат да приемат произволен брой аргументи
+        li.action Позиционните аргументи (тези без име) отиват в tuple args
+        li.action Именованите аргументи отиват в dict kwargs
+        li.action Имената args и kwargs могат да се променят, но това е конвенция, която не трябва да нарушавате
