@@ -1,0 +1,276 @@
+= slide 'За обектите' do
+  p ... за тях след малко. Преди това.
+
+= slide 'Константи' do
+  p
+    | Хубаво е данни които сте сигурни че са константни и няма да се променят
+    | да ги изнасяте извън функциите и да ги именовате С_ГЛАВНИ_БУКВИ_И_ДОЛНИ_ЧЕРТИ
+  annotate:
+    def what_is_my_sign(day, month):
+    days_and_signs = [
+    {(1, 20): 'Козирог', (20, 32): 'Водолей'},
+    {(1, 19): 'Водолей', (19, 30): 'Риби'},
+    {(1, 21): 'Риби', (21, 32): 'Овен'},
+    {(1, 21): 'Овен', (21, 31): 'Телец'},
+    {(1, 21): 'Телец', (21, 32): 'Близнаци'},
+    {(1, 21): 'Близнаци', (21, 31): 'Рак'},
+    {(1, 22): 'Рак', (22, 32): 'Лъв'},
+    {(1, 23): 'Лъв', (23, 32): 'Дева'},
+    {(1, 23): 'Дева', (23, 31): 'Везни'},
+    {(1, 23): 'Везни', (23, 32): 'Скорпион'},
+    {(1, 22): 'Скорпион', (22, 31): 'Стрелец'},
+    {(1, 22): 'Стрелец', (22, 32): 'Козирог'}
+    ]
+    for key in days_and_signs[month - 1]:
+    if day in range(*key):
+    return days_and_signs[month - 1][key]
+
+= slide 'За обектите' do
+  p за тях след малко. Преди това.
+
+= slide 'Въпрос' do
+  p Какво ще изведе следният код:
+  annotate:
+    'hello'[:2]
+
+  ul
+    li.action
+        annotate:
+          'he'
+
+= slide 'Въпрос' do
+  p Какво ще изведе следният код:
+  annotate:
+    1, 2 is 1, 2
+  ul
+    li.action
+        annotate:
+          (1, False, 2)
+
+= slide 'Въпрос' do
+  p Какво ще изведе следният код:
+  annotate:
+    type({1, 2, 3, 4, 5})
+  ul
+    li.action
+        annotate:
+          builtins.set
+
+= slide 'За обектите...' do
+    ul
+        li.action Всичо е обект - дори функциите и модулите.
+        li.action Обектите и класовете са динамични - може да ги разширявате с полета и методи по време на изпълнение
+        li.action Има множествено наследяване.
+        li.action Може да предефинирате оператори.
+= slide 'Класове 101' do
+    annotate:
+        class Person:
+            first_name = "Кънчо"
+            last_name = "Кънчев"
+
+            def name(self):
+                return "{} {}".format(self.first_name, self.last_name)
+    ul
+        li.action Дефинират се с ключовата дума `class`
+        li.action PEP8 повелява CamelCase
+        li.action Имената дефинирани в тялото му са негови атрибути
+        li.action Ако са функции стават методи на класа.
+        li.action В противен случай, стават статични атрибути на класа.
+
+= slide 'Конструктор' do
+    annotate:
+        class Person:
+            def __init__(self, first_name, last_name):
+                self.first_name = first_name
+                self.last_name = last_name
+
+    ul
+        li.action Казва се `__init__`
+        li.action Изговаря се "Дъндър init"
+        li.action Приема `self` като първи аргумент
+        li.action Изпълнява се първи при създаване на инстанцията
+
+= slide 'Какъв е този `self`?' do
+    ul
+        li.action `self` е инстанцията на класа.
+        li.action Само чрез него методите имат достъп до полетата на обекта.
+        li.action Докато свикнете с него си мислете за `this`.
+        li.action Ще ви дърпаме ушите ако го пишете така.
+        li.action Задължително е първи аргумент на всеки метод
+
+= slide 'Защо self трябва да е експлицитен?' do
+    ul
+        li.action "Explicit is better than implicit."
+        li.action Няма нужда от синтаксис за достъп до scope-а на класа
+        li.action Можем да подаваме друга инстанция като първи аргумент на всеки метод
+
+= slide 'Какво ще се случи тук?' do
+    p
+        | Искаме да можем да кажем на колко години ще е Кънчо през еди-коя-си година
+
+    annotate:
+        class Person:
+            def __init__(self, first_name, last_name, birth_year):
+                self.first_name = first_name
+                self.last_name = last_name
+                self.birth_year = birth_year
+
+            def name(self):
+                return "{} {}".format(self.first_name, self.last_name)
+
+            def age_at(year):
+                return year - self.birth_year
+
+        kuncho = Person('Кънчо', 'Кънчев', 1964)
+        kuncho.age_at(2060) # Следващият апокалипсис, според Нютон
+
+    ul
+        li.action
+            annotate:
+                TypeError: age_at() takes 1 positional argument but 2 were given
+
+= slide 'Показвали ли сме ви как да сравнявате обекти?' do
+    ul
+        li Можете да проверите дали два обекта са равни по стойност с оператора ==
+        li Можете да проверите дали две имена сочат към един и същи обект с оператора is
+    annotate:
+        >>> a = ['spam', 'eggs', 42]
+        >>> b = ['spam', 'eggs', 42]
+
+        >>> a is b
+        False
+        >>> a == b
+        True
+
+        >>> c = a
+        >>> a == c
+        True
+        >>> a is c
+        True
+
+= slide 'Дъндъри' do
+    p Всеки обект в езика има по няколко такива.
+    pre
+      '__class__         __delattr__       __dict__          __dir__
+       __eq__            __format__        __ge__            __getattribute__
+       __hash__          __init__          __le__            __lt__
+       __ne__            __new__           __qualname__      __reduce__
+       __repr__          __setattr__       __sizeof__        __str__
+       __weakref__       __doc__           __gt__            __module__
+       __reduce_ex__     __reduce_ex__     __subclasshook__
+
+= slide 'Държанието на == може да се промени' do
+    ul
+        li Нужно е да дефинираме метод __eq__ в нашия клас.
+        li Освен инстанцията, приема другият обект като аргумент
+    annotate:
+        def __eq__(self, other):
+            return [self.first_name, self.last_name] == [other.first_name, other.last_name]
+
+= slide 'Други методи за сравнение на обекти' do
+    annotate:
+        __lt__(self, other)  # self < other
+        __le__(self, other)  # self <= other
+        __gt__(self, other)  # self > other
+        __ge__(self, other)  # self >= other
+
+= slide 'Аритметични оператори' do
+    annotate:
+        __add__(self, other)  # self + other
+        __sub__(self, other)  # self - other
+        __mul__(self, other)  # self * other
+        __truediv__(self, other)  # self / other
+        __floordiv__(self, other)  # self // other
+        __mod__(self, other)  # self % other
+        __lshift__(self, other)  # self << other
+        __rshift__(self, other)  # self >> other
+        __and__(self, other)  # self & other
+        __xor__(self, other)  # self ^ other
+        __or__(self, other)  # self | other
+
+= slide 'Преобразуване до стандартни типове' do
+    annotate:
+        __int__(self)  # int(обект)
+        __float__(self)  # float(обект)
+        __complex__(self)  # complex(обект)
+        __bool__(self)  # bool(обект)
+
+= slide 'Колекции' do
+    p Python ви предлага и оператори, с които можете да третирате вашия клас като колекция:
+    annotate:
+        __len__(self)  # len(обект)
+        __getitem__(self, key)  # обект[key]
+        __setitem__(self, key, value)  # обект[key] = value
+        __delitem__(self, key)  # del обект[key]
+        __contains__(self, item)  # item in обект
+
+= slide 'Lambda функции' do
+    p Съкратен синтаксис за създаване на функции, с някои сериозни ограничения
+
+    annotate:
+        def squared(n):
+            return n**2
+
+    p е същото като
+
+    annotate:
+        squared = lambda n: n**2
+
+= slide 'Могат да се използват и повече аргументи' do
+
+    annotate:
+        power = lambda base, exp: base**exp
+
+= slide 'Най-полезни са когато се налага да се подаде функция като аргумент' do
+
+    annotate:
+        >>> map(lambda n: n**2, [0, 1, 2, 3, 4, 5])
+        [0, 1, 4, 9, 16, 25]
+
+= slide 'Могат и да се използват директно в списъци и речници' do
+
+    annotate:
+        >>> actions = [lambda n: n**2, lambda n: n**3, lambda n: n**4]
+        >>> for f in actions:
+        ...    print(f(2))
+        4
+        8
+        16
+
+= slide 'Можете да използвате тернарният оператор:' do
+
+    annotate:
+        >> lower = lambda x, y: x if x < y else y
+        >> lower("Aa", "Bb")
+        'Aa'
+        >> lower("Bb", "Aa")
+        'Aa'
+
+= slide 'Ламбдите могат да се извикват и веднага след като се създадат:' do
+
+    annotate:
+        >>> for line, n in [("Who let the dogs out?", 1), ("Who?", 4)]:
+        ...  (lambda a, b: print(a*b))(line, n)
+        ...
+        'Who let the dogs out?'
+        'Who?Who?Who?Who?'
+
+= slide 'Ограничения' do
+    ul
+        li В тялото на ламбда функциите може да има _само един израз_
+        li Изразът в тялото на ламбда функциите трябва да връща стойност
+
+= slide 'Това означава че НЕ МОЖЕ' do
+    ul
+        li Да се присвояват стойности
+        annotate:
+            >>> lambda n, p: result = n * p
+            File "<stdin>", line 1
+            SyntaxError: can't assign to lambda
+
+        li Да се хвърлят изключения
+
+        annotate:
+            >>> lambda: raise Exception
+            File "<stdin>", line 1
+                lambda: raise Exception
