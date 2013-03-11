@@ -4,11 +4,15 @@ require 'yaml'
 require 'albino'
 require 'fileutils'
 require 'rcodetools/xmpfilter'
+require 'open3'
+require 'json'
+
 
 $:.unshift File.dirname(__FILE__) + '/slides'
 
 autoload :Example,     'example'
 autoload :Annotate,    'annotate'
+autoload :Annotator,   'annotator'
 autoload :List,        'list'
 autoload :SlideHelper, 'slide_helper'
 autoload :Lecture,     'lecture'

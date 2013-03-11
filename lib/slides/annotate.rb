@@ -2,7 +2,7 @@
 class Annotate < Slim::Filter
   def on_slim_embedded(engine, body)
     code = Slim::CollectText.new.call(body)
-    # code = annotate code
+    code = annotate code
     html = Albino.colorize code, :python
 
     [:static, html]
@@ -11,12 +11,6 @@ class Annotate < Slim::Filter
   private
 
   def annotate(input)
-    input = input.gsub /^(.*) #!$/, '(\1) rescue $!.class # =>'
-    input = input.gsub('"', "'")
-    output = `python -c "#{input}"`
-
-    output = output.gsub /^\((.*)\) rescue \$!\.class # =>\s*(.*)$/, '\1 # error: \2'
-    output = output.gsub /# +=> (.*)/, '# \1'
-    output
+    Annotator.new(input).execute
   end
 end
