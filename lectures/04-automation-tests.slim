@@ -1,0 +1,129 @@
+= slide 'Disclaimer' do
+    p  Днес няма да си говорим за acceptance testing, quality assurance или нещо, което се прави от "по-низшия" отдел във фирмата. Всичко тук е дело на програмиста.
+
+= slide 'Митът' do
+    p Проектът идва с готово, подробно задание. Прави се дизайн. С него работата се разбива на малки задачи. Те се извършват последователно. За всяка от тях пишете кода и приключвате. Изискванията не се променят, нито се добавя нова функционалност.
+= slide 'Митът v1.1' do
+    p Щом съм написал един код, значи ми остава единствено да го разцъкам - няколко <em>print</em>-а, малко пробване в <em>main</em> метода/функцията и толкова. Така или иначе няма да се променя. А ако (не дай си боже) това се случи - аз съм го писал, знам го, няма как да допусна грешка. Най-много да го поразцъкам още малко.
+= slide 'Тежката действителност' do
+    ul
+        li.action  Заданията <strong>винаги</strong> се променят.
+        li.action  Често се налага един код да се преработва.
+        li.action  Писането на код е сложна задача - допускат се грешки.
+        li.action  Програмистите са хора - допускат грешки.
+        li.action  Промяната на модул в единия край на системата като нищо може да счупи модул в другия край на системата.
+        li.action  Идва по-добра идея за реализация на кода
+= slide 'Искаме да автоматизираме нещата' do
+    ul
+        li.action За всичко съмнително ще пишем <strong>сценарий</strong>, който да "цъка".
+        li.action Всеки сценарий ще изпълнява кода и ще прави няколко <strong>твърдения</strong> за резултатите.
+        li.action Сценариите ще бъдат обединени в <strong>групи</strong>.
+        li.action Пускате всички тестове с едно бутонче.
+        li.action Резултатът е "Всичко мина успешно" или "Твърдения X, Y и Z в сценарии A, B и C се оказаха неверни".
+= slide 'unittest.TestCase' do
+    p  Всички методи имат опционален последен аргумент <em>msg</em> - текстово съобщение, което ще се покаже ако теста пропадне.
+    ul
+        li.action assertTrue(expression)
+        li.action assertFalse(expression)
+        li.action assertEqual(expected, actual)
+        li.action assertNotEqual(expected, actual)
+        li.action assertIs(expected, actual)
+        li.action assertIsNot(expected, actual)
+        li.action assertIsNone(expression)
+        li.action assertIsNotNone(expression)
+        li.action assertIn(element, collection)
+        li.action assertNotIn(element, collection)
+        li.action assertIsInstance(object, type)
+        li.action assertNotIsInstance(object, type)
+        li.action assertRaises(exception, callable)
+        li.action assertRaisesRegex(exception, regex, callable)
+        li.action assertWarns(warning, callable)
+        li.action assertWarnsRegex(warning, regex, callable)
+= slide 'Видове тестове' do
+    ul
+        li.action <strong>Unit tests</strong> - проверяват дали дадено парче код/клас работи правилно в изолация
+        li.action <strong>Integration tests</strong> - проверяват дали няколко модула си общуват правилно
+        li.action <strong>Functional tests</strong> - проверяват дали крайната функционалност е както се очаква
+= slide 'За какво ни помагат тестовете' do
+    ul
+        li.action Откриват грешки по-рано
+        li.action Позволяват ни уверено да правим промени в системата
+        li.action Дават сигурност на клиенти, шефове и програмисти
+        li.action Представляват пример как се работи с кода
+        li.action Помага разделянето на интерфейс от имплементация
+        li.action Служат като документация и спецификация
+= slide 'За какво не служат тестовете' do
+    ul
+        li.action <strong>Не доказват</strong>, че приложението работи
+        li.action Не са Quality Assurance
+        li.action Не са benchmark
+= slide 'Още речник' do
+    ul
+        li.action black-box тестове
+        li.action glass-box тестове
+        li.action fixture (<em>setUp</em> и <em>tearDown</em>)
+= slide 'Документация ' do
+    annotate:
+        class Foo:
+            """
+            Sample Foo class
+            """
+
+            def foo(self):
+                """
+                Sample foo method
+                Returns: 2
+                """
+                return 2
+= slide 'Документацията като тестове ' do
+    annotate:
+        def add(a, b):
+            """
+            Adds the two arguments.
+
+            >>> add(1, 3)
+            4
+            >>> add(1, '')
+            Traceback (most recent call last):
+                ...
+            TypeError: unsupported operand type(s) for +: 'int' and 'str'
+            """
+            return a + b
+
+        if __name__ == '__main__':
+            import doctest
+            doctest.testmod()
+= slide 'Дизайн' do
+    p  <strong>Въпрос:</strong> какво е "дизайн" на едно приложение?
+= slide 'Test-Driven Development' do
+    p Test-Driven Development is not about testing.
+= slide 'Test-Driven Development (2)' do
+    ol
+        li Добави тест
+        li Пусни всички тестове и виж, че новият се чупи
+        li Напиши код
+        li Пусни тестовете и виж че минават успешно
+        li Подобри кода (refactor)
+        li Повтаряй
+= slide 'Демо' do
+    p  лишън!
+= slide 'Test-Driven Development (3)' do
+    ul
+        li.action Подход за писане на код
+        li.action Дизайна е базиран върху обратна връзка, не гадаене
+        li.action Спестява излишен код -- пишете само каквото ви трябва
+        li.action Спестява излишна функционалност
+        li.action Продуктивност!
+= slide 'Behaviour-Driven Development' do
+    ul
+        li Теst-Driven Development by Example
+        li The RSpec Book
+        li xUnit Test Patterns
+= slide 'Шепа съвети' do
+    ul
+        li.action <strong>Пишете тестове за всичко, което може да се счупи.</strong>
+        li.action Не тествайте елементарен код.
+        li.action Не използвайте произволни тестови данни.
+        li.action Успеха на тестовете не трябва да зависи от реда им.
+        li.action Тествайте гранични случаи!
+        li.action Не правете тестовете зависими един от друг.

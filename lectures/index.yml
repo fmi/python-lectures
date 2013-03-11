@@ -1,7 +1,3 @@
-0:
-  title: 00. Нулева лекция
-  date: 2013-02-25
-  url: https://speakerdeck.com/aandr/proghramiranie-s-python-2013-nulieva-liektsiia
 1:
   title: 01. Въведение в Python
   date: 2013-02-27
@@ -10,7 +6,11 @@
   title: 02. Обекти и функции
   date: 2013-03-04
   slug: 02-objects-and-functions
-3:
-  title: 03. Работа с колекции
-  date: 2013-03-06
-  slug: 03-collections
+5:
+  title: 05. Метаобектен протокол
+  date: 2013-01-01
+  slug: 03-metaobject-protocol
+9:
+  title: 09. Изключения и with
+  date: 2013-01-01
+  slug: 09-exceptions-and-with
