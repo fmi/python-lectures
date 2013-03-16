@@ -1,3 +1,22 @@
+= slide 'За кои от типовете колекции има литерален синтаксис?' do
+    p.action list, tuple, dict, set
+
+= slide 'На какви условия трябва да отговаря обект, за да бъде обхождан от for?' do
+    p.action трябва да има __iter__
+    p.action върнатото от __iter__ трябва да има __next__
+
+= slide 'Каква е разликата между lazy и eager изчисляването (в контекста на колекциите)?' do
+    p.action eager върши всичко в началото и [обикновено] връща списък
+    p.action lazy върши по малко работа на всяка стъпка от обхождането
+
+= slide 'Избройте поне 3 вградени функции (или типа), които връщат "мързеливи" колекции.' do
+    p.action map
+    p.action filter
+    p.action range
+    p.action dir(itertools)
+
+= slide 'Как можем да напишем filter чрез list comprehension-и.' do
+    p.action lambda func, iterable: [x for x in iterable if func(x)]
 = slide 'Disclaimer' do
     p  Днес няма да си говорим за acceptance testing, quality assurance или нещо, което се прави от "по-низшия" отдел във фирмата. Всичко тук е дело на програмиста.
 
