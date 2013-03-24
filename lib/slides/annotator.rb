@@ -4,20 +4,23 @@ class Annotator
   end
 
   def execute
-    marked     = add_marks @code
-    collecting = add_mark_collecting marked
-    values     = run_code collecting
-    replace_marks marked, values
+    marked, has_annotations = add_marks @code
+    if has_annotations
+      collecting = add_mark_collecting marked
+      values     = run_code collecting
+      replace_marks marked, values
+    end
   end
 
   private
 
   def add_marks(code)
     counter = 0
-    code.gsub(/# =>$/) do |mark|
+    marked = code.gsub(/# =>$/) do |mark|
       counter += 1
       "# {#{counter}}"
     end
+    return marked, counter > 0
   end
 
   def add_mark_collecting(code)
