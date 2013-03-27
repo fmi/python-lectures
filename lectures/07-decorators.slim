@@ -1,0 +1,183 @@
+= slide 'Вече сме ги виждали'
+    annotate:
+         @staticmethod
+         def register(name)
+             Person.people.append(name)
+             print(len(Person.people), "people are registered now")
+         [...]
+         @classmethod
+         def greet(cls, someone)
+             print(someone, "was greeted from", cls)
+
+= slide 'Предговор'
+    ul
+         li.action 'Какво различава функцията от всеки друг обект?'
+         li.action '__call__'
+         li.action 'Какви типове обекти може да връща една функция?'
+         li.action 'Всякакви.'
+
+    p Тогава защо не може една функция да връща друга?
+
+= slide 'Фибоначи.'
+    annotate:
+         def fibonacci(x):
+             if x in [0,1]:
+                 return 1
+             return fibonacci(x-1) + fibonacci(x-2)
+
+    p Рекурсивната версия на fibonacci, освен че е бавна, е много бавна.
+      особено когато x >= 40.
+
+    p Проблемът е, че fibonacci се извиква стотици пъти с един и същ аргумент.
+      Можем спокойно да прегенерираме първите стотина резултати в един речник или...
+
+= slide 'Да изчисляваме всеки резултата само по веднъж...'
+    annotate:
+         if x not in memory:
+             memory[x] = fibonacci(x)
+         print(memory[x])
+
+    p  Разбира се тази идея може да се използва и на много повече места!
+       Можем да я направим още по-елегантно.
+
+= slide 'Функции които опаковат други функции'
+   ul
+     li.action f(функция) -> функция
+     li.action резултатът е нова ф-я, която "опакова" старата и може да разшири нейната функционалност
+
+= slide 'memoize'
+   annotate:
+        def memoize(func)
+            memory = {}
+            def memoized(*args)
+                if args in memory:
+                    return memory[args]
+                result = func(*args)
+                memory[args] = result
+                return result
+            return memoized
+
+   annotate:
+        fibonacci = memoize(fibonacci)
+
+= slide 'Красивият синтаксис'
+   annotate:
+         def fibonacci(x):
+             if x in [0,1]:
+                 return 1
+             return fibonacci(x-1) + fibonacci(x-2)
+
+         fibonacci = memoize(fibonacci)
+
+   p Декорацията става след дефиницията на функцията, което е малко объркващо.
+
+   annotate:
+        @memoized
+        def fibonacci(x)
+            if x in [0,1]:
+                return 1
+            return fibonacci(x-1) + fibonacci(x-2)
+
+= slide 'Клинт Ийстууд' do
+    annotate:
+        @memoized
+        def fibonacci(x):
+            if x in [0,1]:
+                return 1
+            return fibonacci(x-1) + fibonacci(x-2)
+= slide 'Друг пример за декоратор' do
+    annotate:
+        def notifyme(f):
+            def logged(*args, **kwargs):
+                print(f.__name__, ' called with', args, 'and', kwargs)
+                return f(*args, **kwargs)
+            return logged
+
+        @notifyme
+        def square(x):
+            return x * x
+
+        res = square(25)
+        #square was called with (25,) and {}.
+= slide 'Няколко декоратора на една функция' do
+    annotate:
+        class Mityo:
+            @staticmethod
+            @notifyme
+            def work(): pass
+
+        Mityo.work()
+        work was called with () and {}
+    p Първо се извикват най-вътрешните декоратори.
+= slide 'Прави същото като:' do
+    annotate:
+        def work(): pass
+        work = notifyme(work)
+        work = staticmethod(work)
+    p или:
+    annotate:
+        work = staticmethod(notifyme(work))
+    ul
+        li.slide Какво правим, ако искаме да му подаваме аргументи?
+= slide 'Динамични декоратори' do
+    p Декоратор, който приема параметри.
+    annotate:
+        @memoize('/tmp/fibs')
+        def fibonacci(n):
+        [...]
+    p е равно на
+    annotate:
+        def fibonacci(n):
+        [...]
+        f = memoize('/tmp/fibs')(fibonacci)
+    p Да не се бърка с
+    annotate: fibonacci = memoize('/tmp/fibs', fibonacci)
+= slide 'На лов за патици' do
+    p Всъщност, защо да не си направим следния декоратор:
+    annotate:
+        @accepts(int, int)
+        def add(a, b):
+            return a+b
+    p Превод на недекораторски:
+    annotate:
+        add = accepts(int, int)(add)
+= slide ' код &gt; думи' do
+    annotate:
+        def accepts(*types):
+          def accepter(f):
+            def decorated(*args):
+              for (i, (arg, t)) in enumerate(zip(args, types)):
+                if not isinstance(arg, t):
+                  raise TypeError("""Argument #{0} of '{1}' should \
+                       have been of type {2}".format(i,
+                                           f.__name__,
+                                           t.__name__))
+                  #TODO: more complex checks
+                return f(*args)
+              return decorated
+          return accepter
+= slide 'За патиците с любов' do
+    p duck typing е много важна част от философията на Python. @accepts е забавен пример и дори има някои употреби, но избягвайте да го ползвате масово. В повечето случаи губите, а не печелите.
+= slide 'Полезни декоратори' do
+    ul
+        li <em>classmethod</em> — прави метода класов (приема клас, а не обект като първи аргумент)
+        li <em>staticmethod</em> — прави метода статичен
+        li.slide <em>property</em>
+= slide '@property' do
+    annotate:
+        class Battery(object):
+            def __init__(self):
+                self._voltage = 100000
+
+            @property
+            def voltage(self):
+                """Get the current voltage."""
+                return self._voltage
+    p Това превръща voltage в getter към атрибут само за четене със същото име
+= slide '@property си има и setter' do
+    annotate:
+          @voltage.setter
+          def voltage(self, value):
+              self._voltage = value
+    ul
+        li.slide В този ред на мисли, си има и <em>deleter</em>
