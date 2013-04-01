@@ -1,5 +1,5 @@
 = slide 'Традицията повелява' do
-    annotate:
+    example:
         import jars
 
         ERROR = -1
@@ -19,7 +19,7 @@
             return SUCCESS
 
 = slide 'Традициите не са...' do
-    annotate:
+    example:
         import jars
 
         def the_winter_is_coming()
@@ -32,7 +32,7 @@
                 print("Something went terribly wrong!")
 
 = slide 'Синтаксис и семантика' do
-    annotate:
+    example:
         try
             # блок
         except Изключение
@@ -49,7 +49,7 @@
             # блок изпълнява се винаги
 
 = slide 'Стандартни изключения' do
-    annotate:
+    example:
         BaseException
          +-- SystemExit
          +-- KeyboardInterrupt
@@ -77,7 +77,7 @@
                    +-- ...
 
 = slide 'Повече информация рядко е излишна' do
-    annotate:
+    example:
         try:
             x = [] / 4
         except TypeError as data:
@@ -86,7 +86,7 @@
 
 
 = slide "Ако за няколко изключения имаме една и съща реакция, можем да ги прихванем накуп" do
-    annotate:
+    example:
         try:
             doomed()
         except (NameError, TypeError) as data:
@@ -100,7 +100,7 @@
     p С празен except прихващаме изключения, които не са били хванати до момента. Трябва да бъде поставен след всички други except-и.
 
 = slide "finally" do
-    annotate:
+    example:
         file = open('data.txt')
         try:
             mymodlist:e.load_info(file)
@@ -115,7 +115,7 @@
     p Ако присъства, finally стои винаги най-отдолу.
 
 = slide "Създаване на изключения" do
-    annotate:
+    example:
         class XmasError(Exception):
             def __init__(self):
                 self.issuer, self.message = 'Robosanta', 'watches you'
@@ -138,7 +138,7 @@
     list:
         Когато Python се натъкне на изключение в даден блок и в него то не се обработи, изключението се праща към горния блок, после към по-горния и така докато или изключението не бъде прехванато или не стигнем най-отгоре и интерпретаторът не спре програма по познатия ни вече начин (в червеничко).
         Можем да се намесим в следната схема или като прихванем изключението (вече знаем как), или като пратим изключението нагоре по трасето. Последното става с голо извикване на raise:
-    annotate:
+    example:
         try:
             bender.live_a_day()
         except BenderError:
@@ -164,7 +164,7 @@
 = slide "Finally <em>finally</em>?" do
     list:
         Искаме да обърнем реда на редовете на файл?
-    annotate:
+    example:
         try:
             source_file = open(src, 'r')
             buffer = []
@@ -185,7 +185,7 @@
 
 
 = slide "Too long; didn't read?" do
-    annotate:
+    example:
         buffer = []
         try:
             with open(src) as source_file:
@@ -200,7 +200,7 @@
 
 
 = slide "with" do
-    annotate:
+    example:
         with израз [as име]:
            блок
     list:
@@ -212,13 +212,13 @@
 
 
 = slide "with нагледно" do
-    annotate:
+    example:
         with open('/etc/passwd') as source_file:
             buffer = source_file.readlines()
         print('Done!')
 
     p е същото като
-    annotate:
+    example:
         source_file = open('/etc/passwd').__enter__()
         try:
           buffer = source_file.readlines()
@@ -230,7 +230,7 @@
 
 
 = slide "Малък пример" do
-    annotate:
+    example:
         class Manager:
             def __enter__(self):
                 print("I've been entered!")
@@ -249,13 +249,13 @@
 
 
 = slide "with с няколко аргумента" do
-    annotate:
+    example:
         with foo() as f, bar() as b:
            ...
 
     p е същото като
 
-    annotate:
+    example:
         with foo() as f:
             with bar() as b:
                ...
@@ -273,7 +273,7 @@
 
     p <em>contextlib.closing</em> вика метода <em>close</em> на обекта, с който работим, след изпълнение на блока:
 
-    annotate:
+    example:
         class closing(object):
             def __init__(self, thing): self.thing = thing
             def __enter__(self): return thing
@@ -282,7 +282,7 @@
 
     p ...и ви позволява да пишете следното:
 
-    annotate:
+    example:
         from contextlib import closing
         import codecs
 
