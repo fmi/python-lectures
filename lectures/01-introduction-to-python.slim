@@ -6,7 +6,7 @@
 
 = slide 'Python е предсказуем' do
     p Когато не сте сигурни, просто пробвайте.
-    annotate:
+    example:
       $ python
       >>> 5 + 10
       15
@@ -23,14 +23,14 @@
 
 = slide 'Първа помощ' do
     p В интерактивната конзола, help() показва документацията на всяка функция, клас или тип.
-    annotate:
+    example:
        >>> help(str)
        >>> help(5)
        >>> help(SomeClass)
        >>> help(some_function)
 
 = slide 'Един ред код' do
-    annotate:
+    example:
        my_var = 'spam'.upper()
        print(my_var) # SPAM
     ul
@@ -46,7 +46,7 @@
         li.action Пробвай 2 ** 4 ** 8 (степенуване)
 
 = slide 'Типове: str' do
-    annotate:
+    example:
        >>> "hello".upper()
        "HELLO"
        >>> len("абвгдеж")
@@ -72,7 +72,7 @@
         li.action Когато една функция не върне нищо, тя връща None
 
 = slide 'Типове' do
-    annotate:
+    example:
       >>> type(5.5)
       <class 'float'>
       >>> type(type)
@@ -89,7 +89,7 @@
     ul
         li Можем да дадем име на стойност и получаваме променлива. velocity = distance / 60
         li  Динамичен език - стойностите имат тип, но имената - не.
-    annotate:
+    example:
        а = 5
        type(a) # <class 'int'>
        a = 'test'
@@ -104,7 +104,7 @@
         li.action Както винаги: help(dict)
 
 = slide 'Списъци' do
-    annotate:
+    example:
        my_list = []
        my_list = list()
     ul
@@ -115,7 +115,7 @@
         li.action Могат да се смесват типове
 
 = slide 'Списъци' do
-    annotate:
+    example:
        my_list = []
        my_list.append('word')
        my_list.append(5)
@@ -129,7 +129,7 @@
        False in my_list # True
 
 = slide 'Речник (dict)' do
-    annotate:
+    example:
        ages = {'Кай': 1, 'Бобо': 2}
        ages['Йоан'] = 25
        ages['Алек'] = 25
@@ -145,7 +145,7 @@
         li.action Асоциира ключ със стойност
 
 = slide 'tuple' do
-    annotate:
+    example:
        >>> args = (9.8, 3.14, 2.71)
        >>> args[2]
        2.71
@@ -161,7 +161,7 @@
         li.action Може и без скобите
 
 = slide 'Структури от данни: set' do
-    annotate:
+    example:
        >>> unique_numbers = {2,3,5,6}
        >>> unique_numbers
        {2, 3, 5, 6}
@@ -180,14 +180,14 @@
         li.action Спомнете си теория на категориите
 
 = slide 'Mutable vs immutable' do
-    annotate:
+    example:
        a = 5
        a += 2 # 7
     ul
         li.action Immutable са стойностите, които не могат да бъдат променяни.
         li.action Този код не променя стойноста на 5, а кара а да сочи към друга стойност (7).
         li.action Immutable са числа, низове, tuples, True, False, None, дата/час (datetime), класове и функции.
-    annotate:
+    example:
        a = [1,2,3]
        a.append(4)
     ul
@@ -202,7 +202,7 @@
         li.action for
 
 = slide 'if' do
-    annotate:
+    example:
        if a == 5:
            print("a is five")
        elif a == 3 and not b == 2:
@@ -216,7 +216,7 @@
 
 = slide 'if' do
     p Булеви тестове:
-    annotate:
+    example:
        a = True
        if a:
            print("a is True")
@@ -226,7 +226,7 @@
 
 = slide 'if' do
     p тестове за принадлежност:
-    annotate:
+    example:
         my_list = [1, 2, 3, 4]
         if 1 in my_list:
             print('1 is in my list')
@@ -243,13 +243,13 @@
         li.action Настройте редактора си да слага 4 празни места когато натиснете Tab.
 
 = slide 'while' do
-    annotate:
+    example:
        while a > 5:
            a -= 1
            print("a is %d" % a)
 
 = slide 'for' do
-    annotate:
+    example:
        primes = [3,5,7,11]
        for e in primes:
            print(e ** 2) # prints 9 25 49 121
@@ -265,7 +265,7 @@
         li.action Не увеличава индекси, а обхожда структури от данни
 
 = slide 'for като в C' do
-    annotate:
+    example:
        for i in range(0, 20):
            print(i)
            # 0 1 2 3 4 5 6 .. 19
@@ -284,7 +284,7 @@
 
 
 = slide 'Функции' do
-    annotate:
+    example:
        def say_hello(name, from):
            return "Hello, {}! -- {}".format(name, from)
     ul
@@ -294,7 +294,7 @@
         li.action Имената
 
 = slide 'Аргументи на функции' do
-    annotate:
+    example:
        def multiply(a, b=2):
            return a * b
 
@@ -308,7 +308,7 @@
        is_pythagorean(1, c=3) # a = 1, b = 3
 
 = slide 'Променливи аргументи' do
-    annotate:
+    example:
        def varfunc(some_arg, *args, **kwargs):
            #...
 

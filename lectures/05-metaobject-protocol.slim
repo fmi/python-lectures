@@ -50,7 +50,7 @@
         Вградените типове (тези, за които има литерали) нямат такъв.
 
     .action
-        annotate:
+        example:
             def spam(): pass
             spam.foo = 8
             print(spam.__dict__)
@@ -78,7 +78,7 @@
         li.action Очевидно, те могат да се предефинират.
         li.action Счита се, че не е особено добра идея да се предефинира `__getattribute__`.
 
-    annotate:
+    example:
         class Foo:
             bar = 1
             def __getattribute__(self, name):

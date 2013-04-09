@@ -11,7 +11,7 @@
 
 
 = slide 'Типична грешка' do
-    annotate:
+    example:
         # Грешно
         temp = sqrt(b ** 2 - 4 * a * c)
         x1 = (-b + temp) / (2 * a)
@@ -24,7 +24,7 @@
 
 
 = slide 'Лоши имена' do
-    annotate:
+    example:
         old = read_old()
         tpl = get_values("c:/")
         tup = {}
@@ -37,7 +37,7 @@
 
 
 = slide 'Добри имена' do
-    annotate:
+    example:
         old_hashsums = read_cached_hashsums()
         new_hashsums = find_hashsums('c:/')
 
@@ -75,7 +75,7 @@
 
 
 = slide 'Как пишем документация' do
-    annotate:
+    example:
         # Това е моята функция, която променя флукса на
         # кондензатора
         def modify_flux_capacitor(new_value):
@@ -85,7 +85,7 @@
 
 
 = slide 'Как пишем документация' do
-    annotate:
+    example:
         def modify_flux_capacitor(new_value):
             # Това е моята функция, която променя флукса на
             # кондензатора
@@ -94,7 +94,7 @@
     p Не.
 
 = slide 'Как пишем документация' do
-    annotate:
+    example:
         def modify_flux_capacitor(new_value):
             """Това е моята функция, която променя флукса на
             кондензатора."""
@@ -118,7 +118,7 @@
         li __init__.py често е празен, но не е задължително
 
 = slide 'Модули' do
-    annotate:
+    example:
         # delorean/__init__.py
         def time_travel_possible(speed):
             return speed >= 88
@@ -127,12 +127,12 @@
         from delorean import time_travel_possible
 
 = slide 'Модули' do
-    annotate:
+    example:
         from module import a, b, c
         a()
 
 = slide 'Модули' do
-    annotate:
+    example:
         from module import a, b, c
         a()
 
@@ -140,7 +140,7 @@
         b()
 
 = slide 'Модули' do
-    annotate:
+    example:
         from module import a, b, c
         a()
 
@@ -151,7 +151,7 @@
         my_user = User()
 
 = slide 'Модули' do
-    annotate:
+    example:
         from module import a, b, c
         a()
 
@@ -164,12 +164,12 @@
         from module import * # не се препоръчва
 
 = slide 'Модули' do
-    annotate:
+    example:
         from django.db import models
         my_model = models.Model()
 
 = slide 'Модули' do
-    annotate:
+    example:
         import datetime
         now = datetime.datetime.now()
 
@@ -247,7 +247,7 @@
 
 
 = slide 'Кой кого?' do
-    annotate:
+    example:
         class Rectangle:
                 def a(self): ...
                 def b(self): ...

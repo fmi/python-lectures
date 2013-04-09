@@ -5,7 +5,7 @@
   p
     | Хубаво е данни които сте сигурни че са константни и няма да се променят
     | да ги изнасяте извън функциите и да ги именовате С_ГЛАВНИ_БУКВИ_И_ДОЛНИ_ЧЕРТИ
-  annotate:
+  example:
     def what_is_my_sign(day, month):
     days_and_signs = [
     {(1, 20): 'Козирог', (20, 32): 'Водолей'},
@@ -30,30 +30,30 @@
 
 = slide 'Въпрос' do
   p Какво ще изведе следният код:
-  annotate:
+  example:
     'hello'[:2]
 
   ul
     li.action
-        annotate:
+        example:
           'he'
 
 = slide 'Въпрос' do
   p Какво ще изведе следният код:
-  annotate:
+  example:
     1, 2 is 1, 2
   ul
     li.action
-        annotate:
+        example:
           (1, False, 2)
 
 = slide 'Въпрос' do
   p Какво ще изведе следният код:
-  annotate:
+  example:
     type({1, 2, 3, 4, 5})
   ul
     li.action
-        annotate:
+        example:
           builtins.set
 
 = slide 'За обектите...' do
@@ -63,7 +63,7 @@
         li.action Има множествено наследяване.
         li.action Може да предефинирате оператори.
 = slide 'Класове 101' do
-    annotate:
+    example:
         class Person:
             first_name = "Кънчо"
             last_name = "Кънчев"
@@ -78,7 +78,7 @@
         li.action В противен случай, стават статични атрибути на класа.
 
 = slide 'Конструктор' do
-    annotate:
+    example:
         class Person:
             def __init__(self, first_name, last_name):
                 self.first_name = first_name
@@ -108,7 +108,7 @@
     p
         | Искаме да можем да кажем на колко години ще е Кънчо през еди-коя-си година
 
-    annotate:
+    example:
         class Person:
             def __init__(self, first_name, last_name, birth_year):
                 self.first_name = first_name
@@ -126,14 +126,14 @@
 
     ul
         li.action
-            annotate:
+            example:
                 TypeError: age_at() takes 1 positional argument but 2 were given
 
 = slide 'Показвали ли сме ви как да сравнявате обекти?' do
     ul
         li Можете да проверите дали два обекта са равни по стойност с оператора ==
         li Можете да проверите дали две имена сочат към един и същи обект с оператора is
-    annotate:
+    example:
         >>> a = ['spam', 'eggs', 42]
         >>> b = ['spam', 'eggs', 42]
 
@@ -163,19 +163,19 @@
     ul
         li Нужно е да дефинираме метод __eq__ в нашия клас.
         li Освен инстанцията, приема другият обект като аргумент
-    annotate:
+    example:
         def __eq__(self, other):
             return [self.first_name, self.last_name] == [other.first_name, other.last_name]
 
 = slide 'Други методи за сравнение на обекти' do
-    annotate:
+    example:
         __lt__(self, other)  # self < other
         __le__(self, other)  # self <= other
         __gt__(self, other)  # self > other
         __ge__(self, other)  # self >= other
 
 = slide 'Аритметични оператори' do
-    annotate:
+    example:
         __add__(self, other)  # self + other
         __sub__(self, other)  # self - other
         __mul__(self, other)  # self * other
@@ -189,7 +189,7 @@
         __or__(self, other)  # self | other
 
 = slide 'Преобразуване до стандартни типове' do
-    annotate:
+    example:
         __int__(self)  # int(обект)
         __float__(self)  # float(обект)
         __complex__(self)  # complex(обект)
@@ -197,7 +197,7 @@
 
 = slide 'Колекции' do
     p Python ви предлага и оператори, с които можете да третирате вашия клас като колекция:
-    annotate:
+    example:
         __len__(self)  # len(обект)
         __getitem__(self, key)  # обект[key]
         __setitem__(self, key, value)  # обект[key] = value
@@ -207,29 +207,29 @@
 = slide 'Lambda функции' do
     p Съкратен синтаксис за създаване на функции, с някои сериозни ограничения
 
-    annotate:
+    example:
         def squared(n):
             return n**2
 
     p е същото като
 
-    annotate:
+    example:
         squared = lambda n: n**2
 
 = slide 'Могат да се използват и повече аргументи' do
 
-    annotate:
+    example:
         power = lambda base, exp: base**exp
 
 = slide 'Най-полезни са когато се налага да се подаде функция като аргумент' do
 
-    annotate:
+    example:
         >>> map(lambda n: n**2, [0, 1, 2, 3, 4, 5])
         [0, 1, 4, 9, 16, 25]
 
 = slide 'Могат и да се използват директно в списъци и речници' do
 
-    annotate:
+    example:
         >>> actions = [lambda n: n**2, lambda n: n**3, lambda n: n**4]
         >>> for f in actions:
         ...    print(f(2))
@@ -239,7 +239,7 @@
 
 = slide 'Можете да използвате тернарният оператор:' do
 
-    annotate:
+    example:
         >> lower = lambda x, y: x if x < y else y
         >> lower("Aa", "Bb")
         'Aa'
@@ -248,7 +248,7 @@
 
 = slide 'Ламбдите могат да се извикват и веднага след като се създадат:' do
 
-    annotate:
+    example:
         >>> for line, n in [("Who let the dogs out?", 1), ("Who?", 4)]:
         ...  (lambda a, b: print(a*b))(line, n)
         ...
@@ -263,14 +263,14 @@
 = slide 'Това означава че НЕ МОЖЕ' do
     ul
         li Да се присвояват стойности
-        annotate:
+        example:
             >>> lambda n, p: result = n * p
             File "<stdin>", line 1
             SyntaxError: can't assign to lambda
 
         li Да се хвърлят изключения
 
-        annotate:
+        example:
             >>> lambda: raise Exception
             File "<stdin>", line 1
                 lambda: raise Exception
