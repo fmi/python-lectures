@@ -43,6 +43,14 @@
   date: 2013-04-08
   slug: 11-metaprogramming
 12:
-  title: 12. Дебобулечкване
+  title: 12. Django (част I)
+  date: 2013-04-10
+  url: https://speakerdeck.com/aandr/uieb-proghramiranie-s-django-liektsiia-1
+13:
+  title: 13. Django (част II)
+  date: 2013-04-10
+  url: https://speakerdeck.com/aandr/uieb-proghramiranie-s-django-liektsiia-2
+14:
+  title: 14. Дебуболечкване
   date: 2013-04-17
-  slug: 12-debugging
+  slug: 14-debugging
