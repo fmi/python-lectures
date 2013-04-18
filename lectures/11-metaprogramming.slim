@@ -198,6 +198,12 @@
         Foo = metacls('Foo', (A, B, C), {'x':1, 'y':2})
         type(Foo) # metacls
 
+= slide 'Мета със захар' do
+        example:
+            class Foo(A, B, C, metaclass=metacls):
+                x = 1
+                y = 2
+
 = slide 'Tim Peters on metaclasses' do
     p [Metaclasses] are deeper magic than 99% of the users should ever worry about. If you wonder whether you need them, you don't (the people who actually need them know with certainty that they need them, and don't need an explanation about why).
     p — Tim Peters
