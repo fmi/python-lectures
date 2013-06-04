@@ -1,0 +1,216 @@
+= slide 'Бази данни: кратка история' do
+    ul
+        li Текстови файлове (като CSV)
+        li Key-value stores (BerkleyDB, Redis, shelve)
+        li Обектни бази данни
+        li Релационни бази данни (MySQL, SQLite, PostgreSQL, Oracle)
+        li Документни бази данни (MongoDB, CouchDB)
+        li Клиент/сървър или вградени
+
+
+= slide 'Видове схеми (schema)' do
+    p (Схема - структурата на една база данни)
+    p Фиксирана схема
+    ul
+        li.action SQL
+        li.action Силна, добре обмислена структура
+        li.action Базата гарантира валидността на данните
+        li.action Нормализация (данните не се повтарят)
+        li.action Опит, стабилност и традиции
+        li.action Но...
+        li.action Промените по схемата са тромави до невъзможни
+        li.action Денормализация
+
+
+= slide 'Видове схеми 2' do
+    p Динамична схема
+    ul
+        li.action Key-value и документни бази данни
+        li.action Структурата е по конвенция
+        li.action Бързо разработка и лесни промени
+        li.action Гъвкави типове данни
+        li.action Но...
+        li.action Няма стандарт и портабилност
+        li.action По-малко помощни технологии
+        li.action Сами гарантирате интегритета на данните
+        li.action Кодът ви трябва да е очаква много повече специални случаи
+
+= slide 'Защо релационни бази данни?' do
+    ul
+        li.action Доказан вариант
+        li.action Интегритет
+        li.action ACID: Atomicity, Consistency, Isolation, Durability
+        li.action Всеки програмист може да работи с тях
+        li.action Ако не ни кефи релационният модел имаме ORM
+
+= slide 'Защо да бягаме от релационни бази данни?' do
+    ul
+        li.action Лесно се ползват, трудно се ползват правилно
+        li.action Data Definition Language е сложен
+        li.action Data Modification Language е още по-сложен
+        li.action Транзакции и нива на изолaция
+        li.action LEFT INNER JOIN? RIGHT OUTER JOIN?
+        li.action Нормализация (1NF, 2NF, 3NF, EKNF, BCNF, 4NF, 5NF, DKNF, 6NF)
+
+
+= slide 'Key-value Stores' do
+    p Изпълняват две операции:
+    ul
+        li get(key)
+        li set(key, value)
+
+    p Стойностите са непрозрачни, може да се търси само по ключ.
+
+    example:
+        >>> import shelve
+        >>> s = shelve.open("mydb.db")
+        >>> s['hello'] = True
+        >>> s['goodbye'] = 'Bob'
+        >>> s.close()
+
+    p <em>dbm</em> е по-гъвкава алтернатива на <em>shelve</em>
+
+= slide 'Документни бази данни' do
+    ul
+        li Като key-value store, но със структурирани стойности.
+        li Стойностите са JSON (или подобни) документи.
+        li Отделните полета могат да съдържат сложни обекти (няма нужда от релации).
+        li Може да се търси и индексира по отделни полета в документа.
+        li Могат да се променят отделни полета в документа.
+
+= slide 'Влиза Mongo' do
+    ul
+        li Клиент/сървър документна база данни
+        li <a href="//mongohq.org">mongohq.org</a>
+        li Бърза разработка
+        li Стабилна - ползва се в големи сайтове
+        li Удобен език за търсене и редактиране
+        li Репликация и многосървърна работа, търсене, записване на файлове, MapReduce, и т.н.
+
+= slide 'Как се казват нещата в Mongo' do
+    ul
+        li Наименовани бази (пр. "myapp")
+        li ...съдържат наименовани колекции (пр. "users")
+        li ...съдържат записи с ключ и документ (пр. ключ "25")
+
+
+= slide 'Операции' do
+    ul
+        li <em>collection.insert(value)</em>
+        li <em>collection.find_one({conditions})</em>
+        li <em>collection.find({conditions})</em>
+        li <em>collection.update({conditions}, {changes})</em>
+        li <em>collection.save({document})</em>
+
+= slide 'Ключове и стойности' do
+    ul
+        li Стойноста на всеки Mongo запис е JSON-подобен обект
+        li Ключът на всеки запис е или случайно избран, или стойноста на полето <em>_id</em> в обекта
+        li Случайно избраните ключове изглеждат така: 4c2209f9f3924d31102bd84a и са тип ObjectId
+
+= slide 'ObjectId' do
+    p Уникален идентификатор за всеки запис
+
+= slide 'Инсталация' do
+    p Качваме Mongo с любимия си package manager.
+
+    example:
+        pip install pymongo
+
+    p Пускаме сървър
+
+    example:
+        $ mongod
+
+    p Пускаме клиент
+
+    example:
+        $ mongo
+
+= slide 'Код' do
+    example:
+        import pymongo
+        mongo = pymongo.Connection('localhost')
+        db = mongo['myapp']
+        users = db['users']
+        users.insert({'_id': 'bob', 'firstname': 'Bob', 'lastname': 'Red', 'phones': ['0888112233', '0899334455']})
+        user.find_one('_id': 'bob')
+
+= slide 'Библиотека' do
+    ul
+        li Книги
+        li Автори
+        li Магазини
+
+= slide 'Ключове' do
+    p Как да си изберем ID (primary key)?
+    ul
+        li ISBN?
+        li Баркод?
+        li Заглавие?
+        li Използвайте поредни/случайни числа за ID, освен ако нямате много силна друга причина.
+
+= slide 'Книги' do
+    p Книгата има следните полета:
+    ul
+        li title
+        li isbn
+        li authors
+        li publisher
+        li year_of_publishing
+        li description
+        li price
+        li qty_available
+
+= slide 'Автори' do
+    ul
+        li first_name
+        li last_name
+        li bio
+        li books
+
+= slide 'Ъпдейти' do
+    ul
+        li $inc
+        li $set
+        li $unset
+        li $push
+        li $pushAll
+        li $addToSet
+        li $each
+        li $pop
+        li $pull
+        li $pullAll
+        li $rename
+        li $bit
+
+= slide 'Търсения' do
+    example:
+        books.find({'title': '1984'}).sort({'year_of_publishing': 1})
+    ul
+        li Можем да избираме кои полета да получим
+        li Очевидно можем да укажем и кои да НЕ получим
+        li Можем да избираме по коя колоне ще сортираме
+        li От кой елемент нататък да започнем
+
+= slide 'Сложни търсения' do
+    ul
+        li &gt;, =, &lt;, &gt;=, &lt;=
+        li $all
+        li $exists
+        li $mod
+        li $ne
+        li $in
+        li $nin
+        li $nor
+        li $or
+        li $and
+        li $size
+        li $type
+
+
+= slide 'Индексиране' do
+    ul
+        li Концептуално подобни са с <em>RDBMSes</em>
+        li С <em>ensureIndex()</em> избираме кои полета да са индекси
+
