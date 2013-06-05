@@ -164,6 +164,91 @@
         Worker-ите и клиентите автоматично пробват отново при загуба на мрежа или други проблеми
         Почти всяка част от Celery може да бъде наследена и нагодена до вашите нужди
         Интегрира се лесно с Django
+= slide 'urwid' do
+  example:
+    pip install urwid
+  p urwid е библиотека за конзолни GUI-та
+  p Съдържа всичко което ви трябва за да направите удобно изцяло конзолно плиожение:
+
+  list:
+    Widget класове
+    Поддръжка на мишка и клавиатура
+    Дисплей модули за различни видове конзоли както и за web/html
+    Функции за форматиране на текст
+
+= slide 'urwid - форматиране на текст и input' do
+  example:
+    import urwid
+    from urwid import Text, AttrMap, Filler, MainLoop
+
+    palette = [
+        ('banner', 'black', 'light gray'),
+        ('streak', 'black', 'dark red'),
+        ('bg', 'black', 'dark blue')]
+
+    text_widget = Text(("banner", "Hello World!"), align="center")
+    map1 = AttrMap(text_widget, "streak")
+    fill_widget = Filler(map1, valign="middle")
+    map2 = AttrMap(fill_widget, "bg")
+
+    def show_or_exit(key):
+        if key in('q', 'Q'):
+            raise urwid.ExitMainLoop()
+        else:
+            text_widget.set_text(repr(key))
+
+    loop = MainLoop(map2, palette, unhandled_input=show_or_exit)
+
+    if __name__ == "__main__":
+        loop.run()
+
+= slide 'urwid менюта' do
+  example:
+    import urwid
+
+    choices = 'Chapman Cleese Gilliam Idle Jones Palin'.split()
+
+    def menu(title, choices):
+        body = [urwid.Text(title), urwid.Divider()]
+        for c in choices:
+            button = urwid.Button(c)
+            urwid.connect_signal(button, 'click', item_chosen, c)
+            body.append(urwid.AttrMap(button, None, focus_map='reversed'))
+        return urwid.ListBox(urwid.SimpleFocusListWalker(body))
+
+    def item_chosen(button, choice):
+        response = urwid.Text(['You chose ', choice, '\n'])
+        done = urwid.Button('Ok')
+        urwid.connect_signal(done, 'click', exit_program)
+        main.original_widget = urwid.Filler(urwid.Pile([response,
+            urwid.AttrMap(done, None, focus_map='reversed')]))
+
+    def exit_program(button):
+        raise urwid.ExitMainLoop()
+
+    main = urwid.Padding(menu('Pythons', choices), left=2, right=2)
+    top = urwid.Overlay(main, urwid.SolidFill('\N{MEDIUM SHADE}'),
+        align='center', width=('relative', 60),
+        valign='middle', height=('relative', 60),
+        min_width=20, min_height=9)
+
+    urwid.MainLoop(top, palette=[('reversed', 'standout', '')]).run()
+
+= slide 'Coverage' do
+  example:
+    pip install coverage
+
+  p Проверява през каква част от кода ви се изпълнява в дадени случаи
+
+  example:
+    coverage run баба.py
+    coverage report
+
+= slide 'ipython и ipdb' do
+  example:
+    pip install ipython ipdb
+
+  p По-удобен терминал и дебъгър
 
 = slide 'Бира!' do
   p На 2013-06-09 в Борисовата градина ще пием бира
