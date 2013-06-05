@@ -1,0 +1,135 @@
+= slide 'Полезни щуротии в стандартната библиотека,' do
+  p ... които може би сте виждали.
+
+= slide 'datetime' do
+  p datetime е модул, който ви дава основна функционалност за дати
+
+  list:
+    datetime.date(year, month, day) - клас за дата
+    datetime.time(hour, minute, second, microsecond, tzinfo=None) - клас за време
+    datetime.datetime(...) - клас за дата и време
+    datetime.timedelta - разлика м/у datetime.datetime
+
+  p.action ... ама това трябва да сте го виждали вече.
+
+= slide 'os' do
+  p os - функционалност от операционната система
+  p os.path - функционалност за работа с пътища във файловата система
+
+  list:
+    os.system(command) - изпълнява командата
+    os.getcwd() - дава текущата директория
+    os.chdir(path) - сменя текущата директория
+    os.listdir(path) - дава съдържанието на директорията
+    os.makedirs(path) - създава директория и родители
+    os.remove(path) - трие файл
+    os.rmdir(path) - трие празна директория
+    os.stat(path) - данни за файла
+    os.walk(path) - ходи из разни неща
+    os.path.exists(path) - проверява дали нещото съществува
+    os.path.isdir(path)- проверява дали нещото е директория
+
+  p.action ... ама и това сте го виждали по време на семестъра
+
+= slide 'json' do
+  p Нещо, което може би не сме ви показали
+
+  p.action json е модул, който може да сериализира прости Python обекти.
+
+  list:
+    json.dump(object, file) - Приема binary отворен за писане файл file и Python обект object. Записва обекта в файла.
+    json.load(file) - Приема binary отворен за четене файл и прочита един обект, който е и резултат от функцията
+    json.dumps(object) - връща низ
+    json.loads(str) - връща обект от низ
+
+= slide 'Ако ще си говорите с код на C' do
+  list:
+    ctypes
+    bytes
+    struct
+
+= slide 'И още...' do
+  list:
+    configparser - модул за обработка на конфигурационни файлове
+    getopt - parser за опции от командния ред
+    StringIO - буфер, който създава стабилното впечатление, че е файл
+    xml.dom.minidom - ако някой ви е излъгал, че работата с DOM дървета е яка
+    html.parser - парсва html
+    hashlib - хешира разни неща с md5, sha1, sha256, sha512...
+    logging - логва разни неща
+    email - праща разни мейли
+
+= slide 'Архивиране и компресия' do
+  list:
+    zlib
+    gzip
+    bz2
+    zipfile
+    tarfile
+
+= slide 'Сега към малко по-забавни неща,' do
+  p ... коити няма да намерите в стандартната библиотека
+
+= slide 'requests - HTTP for humans' do
+  p Преди това да обясним какъв му е проблемът на urllib
+
+  p.action Да речем, че правим някакви заявки към някакво API и си казваме какво ни връща
+  p.action Имайки urllib, в стандартната библиотека ще направим ей така:
+
+= slide '' do
+  example:
+    import urllib.request
+    import urllib.error
+    import urllib.parse
+
+    gh_url = 'https://api.github.com'
+
+    req = urllib.request.Request(gh_url)
+
+    password_manager = urllib.request.HTTPPasswordMgrWithDefaultRealm()
+    password_manager.add_password(None, gh_url, 'user', 'pass')
+
+    auth_manager = urllib.request.HTTPBasicAuthHandler(password_manager)
+    opener = urllib.request.build_opener(auth_manager)
+
+    urllib.request.install_opener(opener)
+
+    handler = urllib.request.urlopen(req)
+
+    print(handler.getcode())
+    print(handler.getheader('content-type'))
+
+  p Не трябваше ли нещата в Python да са кратки и лесни?
+
+= slide 'В питонски стил' do
+  example:
+    import requests
+
+    r = requests.get('https://api.github.com', auth=('user', 'pass'))
+
+    print(r.status_code)
+    print(r.headers['content-type'])
+
+= slide 'Идва си с цялата каруца' do
+  example:
+    > pip install requests
+
+  list:
+    International Domains and URLs
+    Keep-Alive & Connection Pooling
+    Sessions with Cookie Persistence
+    Browser-style SSL Verification
+    Basic/Digest Authentication
+    Elegant Key/Value Cookies
+    Automatic Decompression
+    Unicode Response Bodies
+    Multipart File Uploads
+    Connection Timeouts
+    .netrc support
+    Thread-safe.
+
+= slide 'Celery' do
+    p
+
+= slide 'Бира!' do
+  p На 2013-06-09 в Борисовата градина ще пием бира
