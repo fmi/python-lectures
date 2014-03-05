@@ -1,4 +1,8 @@
 0:
   title: 00. Нулева лекция
   date: 2014-02-26
-  url: https://speakerdeck.com/skanev/python-0-2014 
+  url: https://speakerdeck.com/skanev/python-0-2014
+1:
+  title: 01. Въведение в Python
+  date: 2014-03-05
+  slug: 01-intro
