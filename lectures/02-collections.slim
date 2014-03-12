@@ -17,7 +17,7 @@
 = slide 'Още един:' do
     annotate:
         my_string = '1234567890'
-        >>a[10]
+        >>my_string[10]
     p.action  IndexError: string index out of range
 
 = slide 'И още един..' do
@@ -50,8 +50,8 @@
 
 = slide 'Излъгах :)' do
     annotate:
-        my_dict = dict('12 34 16'.split() + [(False, False)]
-        print(len(c), c[0])
+        my_dict = dict('12 34 16'.split() + [(False, False)])
+        print(len(my_dict), my_dict[0])
 
 
     p.action 3 False
@@ -455,7 +455,7 @@
 
             return by_owner
 
-= slide 'defauldict' do
+= slide 'defaultdict' do
     annotate:
         from collections import defaultdict
         data = [ ('John', 'Tilsit'), ('Eric', 'Cheshire'), ('Michael', 'Camembert'),
@@ -494,7 +494,7 @@
         [израз for променлива in поредица if условие]
 
         >>> [x * x for x in range(0, 10)]
-        [1, 4, 9, 16, 25, 36, 49, 64, 81]
+        [0, 1, 4, 9, 16, 25, 36, 49, 64, 81]
 
         >>> [x * x for x in range(0, 10) if x % 2]
         [1, 9, 25, 49, 81]
