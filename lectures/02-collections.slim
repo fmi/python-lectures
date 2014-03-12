@@ -18,7 +18,7 @@
 = slide 'Още един:' do
     annotate:
         my_string = '1234567890'
-        >>a[10]
+        >>my_string[10]
     p.action  IndexError: string index out of range
 
 = slide 'И още един..' do
@@ -51,7 +51,7 @@
 
 = slide 'Излъгах :)' do
     annotate:
-        my_dict = dict('12 34 16'.split() + [(False, False)]
+        my_dict = dict('12 34 16'.split() + [(False, False)])
         print(len(c), c[0])
 
 
