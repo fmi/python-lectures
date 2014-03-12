@@ -8,7 +8,7 @@ class Annotator
     if mark_count > 0
       collecting = add_mark_collecting marked_code
       values     = run_code collecting
-      replace_marks marked, values
+      replace_marks marked_code, values
     else
       marked_code
     end
@@ -43,13 +43,11 @@ FOOTER
   end
 
   def run_code(code)
-    puts "Running code"
     Open3.popen3('python3') do |stdin, stdout, stderr|
       stdin.puts code
       stdin.close
 
       puts stderr.read
-      puts stdout.read
 
       JSON.parse stdout.read
     end
