@@ -205,7 +205,7 @@
 
         li.action <b>lower_snake_case</b> за имена на функции, методи, променливи, параметри 
         li.action имена на "константи" в <b>UPPER_SNAKE_CASE</b>
-        li.action <b>_turn_around, __seriously_turn_around</b> за "частни"("private")
+        li.action <b>_turn_around, __seriously_turn_around</b> за "частни" ("private")
         li.action използване на запазени думи? 1 подчетавка след името: <b>range_</b>, но..
         li.action <i>по-добре използвайте друго име</i>
 
@@ -258,8 +258,8 @@
         things_i_like = [coffee, cheese, crackers]
         things_you_like = [crackers, coffee, tea]
 
-        things_i_like[0] == things_i_like[1] # True
-        things_i_like[0] is things_i_like[1] # True
+        things_i_like[0] == things_you_like[1] # True
+        things_i_like[0] is things_you_like[1] # True
 
 = slide 'списъци' do
     p Това позволява някои интересни неща
@@ -278,7 +278,7 @@
         breakfast = [cheeses, teas]
         print(breakfat[0][1]) # bergkäse
 
-        breakfast[1][2] = ['шкембе', 'люби чушки', 'оцет с чесън']
+        breakfast[1][2] = ['шкембе', 'люти чушки', 'оцет с чесън']
         print(teas) # ?
 
     p.action ['chai', 'earl grey', ['шкембе', 'люби чушки', 'оцет с чесън'], 'oolong']
@@ -449,7 +449,7 @@
         def cheeses_by_owner(cheeses_data):
             by_owner = {}
             for owner, cheese in cheeses_data: # <- tuple unpacking
-                if record[0] in by_owner:
+                if owner[0] in by_owner:
                     by_owner[owner].append(cheese)
                 else:
                     by_owner[owner] = [cheese]
@@ -472,7 +472,7 @@
 
 = slide 'map/filter/reduce' do
     ul
-        li.action map(function, iterable) създава колекция от резултатите от прилагането на function върху всеки елекемент от iterable
+        li.action map(function, iterable) създава колекция от резултатите от прилагането на function върху всеки елемент от iterable
         li.action filter(function, iterable) създава колекция само с елементите, за които function върне True
         li.action
             | reduce(function, iterable) вика function с елементите на колекцията, докато сведе всичко до една стойност (във functools вж.
