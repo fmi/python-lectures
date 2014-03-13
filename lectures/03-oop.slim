@@ -1,0 +1,278 @@
+= slide 'OOP' do
+  p Обектно-ориентирано програмиране
+
+
+= slide 'Преговор, философски' do
+  ol
+    li.action Абстракция
+    li.action Енкапсулация
+    li.action Модулярност
+
+
+= slide 'Преговор, по същество' do
+  ol
+    li.action Всичко е обект
+    li.action Отворени обекти
+    li.action Отворени класове
+
+
+= slide 'Примерен клас Vector' do
+  example:
+    class Vector:
+        def __init__(self, x, y, z):
+            self.x = x
+            self.y = y
+            self.z = z
+
+    spam = Vector(1.0, 2.0, 3.0)
+    print(spam.x)
+
+  ol
+    li.action Конструктура се казва __init__
+    li.action Първия аргумент на метода е инстанцията, върху която се извиква
+    li.action Атрибутите ("член-променливите") не е задължително да се декларират (класовете са отворени)
+    li.action Инстанцира се с оператор ()
+
+
+= slide 'Примерен клас Vector (2)' do
+  example:
+    class Vector:
+        def __init__(self, x, y, z): ...
+
+        def length(self)
+            return (self.x * self.x + self.y * self.y + self.z * self.z) ** 0.5
+
+        spam = Vector(1.0, 2.0, 3.0)
+        print(spam.length())
+
+  ol
+    li.action В методите атрибутите се достъпват през self
+    li.action Методите се извикват с обект.име_на_метод()
+
+
+= slide 'Примерен клас Vector (3)' do
+  example:
+      class Vector:
+          def __init__(self, x, y, z): ...
+
+          def _coords(self):
+              return (self.x, self.y, self.z)
+
+          def length(self):
+              return sum(_ ** 2 for _ in self._coords()) ** 0.5
+
+  ol
+    li.action _coords е protected метод
+    li.action Отново, методите се извикват върху self
+    li.action _ е валидно име за променлива
+
+
+= slide 'Извикване през класа' do
+  example:
+    v1 = Vector(1.0, 2.0, 3.0)
+    v2 = Vector(4.0, 5.0, 6.0)
+    v3 = Vector(7.0, 8.0, 9.0)
+
+    print(Vector.length(v1))
+    print(Vector.length(v2))
+    print(list(map(Vector.length, [v1, v2, v3])))
+
+
+= slide 'Vector (4)' do
+  example:
+    class Vector:
+        def __init__(self, x, y, z): ...
+
+        def length(self): ...
+
+        def normalize(self):
+            length = self.length()
+            self.x /= length
+            self.y /= length
+            self.z /= length
+
+
+= slide 'Vector (5)' do
+  example:
+    class Vector:
+        def __init__(self, x, y, z): ...
+
+        def length(self): ...
+
+        def normalize(self):
+            length = self.length()
+            return Vector(self.x / length,
+                          self.y / length, self.z / length)
+
+
+= slide 'normalize vs normalized' do
+  example:
+    class Vector:
+
+    def normalize(self):
+        length = self.length()
+        self.x /= length
+        self.y /= length
+        self.z /= length
+
+    def normalized(self)
+        return Vector(self.x / self.length(), self.y / self.length(),
+                      self.z / self.length())
+
+  ul
+    li.action Ако имате само едно от двете, кое предпочитате?
+    li.action (верен отговор по-късно)
+
+
+= slide 'Сравняване на обекти' do
+  ul
+    li.action Можете да проверите дали два обекта са равни по стойност с ==
+    li.action Можете да проверите дали две имена сочат към един и същи обект с is
+    li.action Можете да предефинирате равенството за обекти от даден клас с метода __eq__
+    example:
+      class Vector:
+          def __init__(self, x, y, z):
+              self._coords = (x, y, z)
+
+          def __eq__(self, other)
+              return self._coords == other._coords
+    li.action По подразбиране, __eq__ е имплементирана с is
+
+
+= slide 'Аритметични оператори' do
+  p Можете да предефинирате аритметичните оператори за вашите типове.
+  ul
+    li.action __add__(self, other) за self + other
+    li.action __sub__(self, other) за self - other
+    li.action __mul__(self, other) за self * other
+    li.action __truediv__(self, other) за self / other
+    li.action __floordiv__(self, other) за self // other
+    li.action __mod__(self, other) за self % other
+    li.action __lshift__(self, other) за self << other
+    li.action __rshift__(self, other) за self >> other
+    li.action __and__(self, other) за self & other
+    li.action __xor__(self, other) за self ^ other
+    li.action __or__(self, other) за self | other
+
+
+= slide 'Преобразуване до стандартни типове' do
+  p Има методи, които може да предефинирате, за преобразования от вашия клас към стандартен тип
+  ul
+    li.action __int__(self) за int(обект)
+    li.action __float__(self) за float(обект)
+    li.action __complex__(self) за complex(обект)
+    li.action __bool__(self) за bool(обект)
+
+
+= slide 'Обекти, които могат да бъдат извиквани като функции' do
+  p Можете да предефинирате оператора две скоби ().
+  example:
+    class Stamp:
+        def __init__(self, name): self.name = name
+        def __call__(self, something)
+            print("{0} was stamped by {1}".format(something, self.name))
+
+    >>> stamp = Stamp("The government")
+    >>> stamp("That thing there")
+    That thing there was stamped by The government
+
+
+= slide 'Статични методи' do
+  p Можете да "декорирате" методи, така че те да станат статични -- т.е. да нямат нужда от инстанция
+  example:
+    class GoatSimulator:
+        goats = []
+
+        @staticmethod
+        def register(name):
+            GoatSimulator.goats.append(name)
+            print(len(GoatSimulator.goats), " goats are registered now")
+
+    >>> GoatSimulator.register("Pip the Happy Goat")
+    1 goats are registered now
+    >>> GoatSimulator.register("George the Gutsy Goat")
+    2 goats are registered now
+
+
+= slide 'Класови методи' do
+  p Можете да използвате и @classmethod, за да получите класа от който е извикан метода като първи аргумент
+  example:
+    class Something:
+        @classmethod
+        def greet(cls, someone):
+            print(someone, "was greeted from", cls)
+
+    >>> Something.greet("Stefan")
+    Mityo was greeted from <class '__main__.Something'>
+
+= slide 'Property методи' do
+  p Декораторът @property може се използва за да накарате някой метод да се преструва на property
+
+  example:
+    class Goat:
+        def __init__(self, name, trait):
+            self.name = name
+            self.trait = trait
+
+        @property
+        def description(self):
+            return "{} the {} goat".format(self.name, self.trait)
+
+        >>> g = Goat("George", "Gutsy")
+        >>> g.description
+        'George the Gutsy goat'
+
+= slide 'Property методи (2)' do
+  ul
+    li.action Но можем ли да променим стойността на метод, който се преструва на атрибут?
+    li.action На помощ идват setter-ите
+
+= slide 'Property методи (3)' do
+  example:
+    class Color:
+        def __init__(self, rgba):
+          self._rgba = tuple(rgba)
+
+        @property
+        def rgba(self):
+          return self._rgba
+
+        @rgba.setter
+        def rgba(self, value):
+          self._rgba = tuple(value)
+
+    >>> red = Color([255,0,0])
+    >>> red.rgba
+    (255, 0, 0)
+    >>> red.rgba = [127,0,0]
+    >>> red.rgba
+    (127, 0, 0)
+
+= slide 'mutable срещу immutable' do
+  ul
+    li.action Обекти, чието състояние не може да се промени се наричат immutable.
+    li.action Такива са tuple, int и str
+    li.action Обекти, чието състояние може да се промени се наричат mutable.
+    li.action Такива са dict, list и set.
+    li.action Код, използващ immutable обекти обикновено е по-лесно разбираем от код, използващ mutable обекти.
+
+
+= slide 'Vector (6)' do
+  example:
+    def addition(a, b):
+        return Vector(a.x + b.x, a.y + b.y, a.z + b.z)
+
+    class Vector:
+        def __init__(self, x, y, z): ...
+
+        __add__ = addition
+
+    print(Vector(1.0, 2.0, 3.0) + Vector(4.0, 5.0, 6.0))
+
+
+  ol
+    li.action Функциите са първокласни обекти
+    li.action Методите са атрибути на класа
+    li.action Класовете са динамични
+    li.action Ето защо self е явен
+
