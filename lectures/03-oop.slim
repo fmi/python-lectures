@@ -39,7 +39,7 @@
     class Vector:
         def __init__(self, x, y, z): ...
 
-        def length(self)
+        def length(self):
             return (self.x * self.x + self.y * self.y + self.z * self.z) ** 0.5
 
         spam = Vector(1.0, 2.0, 3.0)
@@ -115,7 +115,7 @@
         self.y /= length
         self.z /= length
 
-    def normalized(self)
+    def normalized(self):
         return Vector(self.x / self.length(), self.y / self.length(),
                       self.z / self.length())
 
@@ -134,7 +134,7 @@
           def __init__(self, x, y, z):
               self._coords = (x, y, z)
 
-          def __eq__(self, other)
+          def __eq__(self, other):
               return self._coords == other._coords
     li.action По подразбиране, __eq__ е имплементирана с is
 
@@ -169,7 +169,7 @@
   example:
     class Stamp:
         def __init__(self, name): self.name = name
-        def __call__(self, something)
+        def __call__(self, something):
             print("{0} was stamped by {1}".format(something, self.name))
 
     >>> stamp = Stamp("The government")
