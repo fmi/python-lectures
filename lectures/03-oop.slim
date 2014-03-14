@@ -52,14 +52,14 @@
 
 = slide 'Примерен клас Vector (3)' do
   example:
-      class Vector:
-          def __init__(self, x, y, z): ...
+    class Vector:
+        def __init__(self, x, y, z): ...
 
-          def _coords(self):
-              return (self.x, self.y, self.z)
+        def _coords(self):
+            return (self.x, self.y, self.z)
 
-          def length(self):
-              return sum(_ ** 2 for _ in self._coords()) ** 0.5
+        def length(self):
+            return sum(_ ** 2 for _ in self._coords()) ** 0.5
 
   ol
     li.action _coords е protected метод
@@ -108,16 +108,17 @@
 = slide 'normalize vs normalized' do
   example:
     class Vector:
+        ...
 
-    def normalize(self):
-        length = self.length()
-        self.x /= length
-        self.y /= length
-        self.z /= length
+        def normalize(self):
+            length = self.length()
+            self.x /= length
+            self.y /= length
+            self.z /= length
 
-    def normalized(self):
-        return Vector(self.x / self.length(), self.y / self.length(),
-                      self.z / self.length())
+        def normalized(self):
+            return Vector(self.x / self.length(), self.y / self.length(),
+                          self.z / self.length())
 
   ul
     li.action Ако имате само едно от двете, кое предпочитате?
@@ -218,9 +219,9 @@
         def description(self):
             return "{} the {} goat".format(self.name, self.trait)
 
-        >>> g = Goat("George", "Gutsy")
-        >>> g.description
-        'George the Gutsy goat'
+    >>> g = Goat("George", "Gutsy")
+    >>> g.description
+    'George the Gutsy goat'
 
 = slide 'Property методи (2)' do
   ul
@@ -231,15 +232,15 @@
   example:
     class Color:
         def __init__(self, rgba):
-          self._rgba = tuple(rgba)
+            self._rgba = tuple(rgba)
 
         @property
         def rgba(self):
-          return self._rgba
+            return self._rgba
 
         @rgba.setter
         def rgba(self, value):
-          self._rgba = tuple(value)
+            self._rgba = tuple(value)
 
     >>> red = Color([255,0,0])
     >>> red.rgba
