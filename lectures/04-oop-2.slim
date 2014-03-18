@@ -1,0 +1,400 @@
+= slide 'ООП част 2' do
+  p Обектно-ориентирано програмиране част втора
+
+= slide 'PEP 8' do
+  p
+    a href="http://legacy.python.org/dev/peps/pep-0008/" http://legacy.python.org/dev/peps/pep-0008/
+  ul
+    li.action Много държим да спазвате PEP 8
+    li.action Можете да проверявате дали домашните ви покриват PEP8 като направите следното
+    li.action
+      code pip install pep8
+    li.action
+      code pep8 solution.py
+    li.action
+      ' Вижте още на 
+      a href="https://pypi.python.org/pypi/pep8" https://pypi.python.org/pypi/pep8
+
+= slide 'Преговор' do
+  p Кои от следните оператори не могат да бъдат предефинирани?
+  example:
+    obj = SomeClass()
+
+    obj + 5
+    obj + [1,2,3,4]
+    "muffin" in obj
+    obj // 3
+    "Cake" is obj
+    obj % "Muffin"
+    obj += 1337
+    obj ** 10
+
+= slide 'Преговор (1.5)' do
+  p Кои от следните оператори не могат да бъдат предефинирани?
+  example:
+    obj > BigClass()
+    obj = "Sweet cakes and milkshakes"
+    obj.menu = "Sweet cakes and milkshakes"
+    obj **= 42
+    obj %= 3
+    obj.cake_count
+    obj[1337]
+    obj("Hello", "World")
+
+  ul
+    li.action
+      code >>> import operator
+    li.action
+      code >>> help(operator)
+
+= slide 'Преговор (2)' do
+  example:
+    class Muffin:
+        def __init__(color, taste, calories):
+            self.color = color
+            self.taste = taste
+            self.calories = calories
+
+= slide 'Преговор (3)' do
+
+  example:
+    >>> yum = Muffin("Green", "sweet", 420)
+    Traceback (most recent call last):
+      File "<stdin>", line 1, in <module>
+      TypeError: __init__() takes 3 positional arguments but 4 were given
+
+= slide 'Преговор (4)' do
+  p Кога не е нужно метод на един клас да приема инстанция (self) като първи аргумент?
+  ul
+    li.action Когато метода е декориран със <code>@staticmethod</code>
+    li.action Когато метода е декориран с <code>@classmethod</code> първият метод ще е самият клас. Конвенцията е при такъв случай да кръщаваме аргумента <code>cls</code>
+    li.action Защо не може да кръстим аргумента <code>class</code>?
+    li.action ...<code>class</code> e запазена дума
+
+
+= slide 'Vector (7)' do
+  p Ако искате да достъпвате компонентите на вектора с v[0], v[1] и v[2]
+  example:
+    class Vector:
+        def __init__(self, x, y, z): ...
+        def __getitem__(self, i)
+            return (self.x, self.y, self.z)[i]
+
+
+= slide 'Vector (8)' do
+  p Можете да направите вектора да се държи като колекция
+  example:
+    class Vector:
+        def __init__(self, x, y, z):
+            self.x = x
+            self.y = y
+            self.z = z
+
+        def __getitem__(self, i):
+            return (self.x, self.y, self.z)[i]
+
+        def __str__(self):
+            return str((self.x, self.y, self.z))
+
+        def __len__(self):
+            return 3
+
+        def __add__(self, other):
+             return Vector(*map(sum, zip(self, other)))
+
+
+= slide 'Vector (9)' do
+  p Може и да имплементирате присвояване на индекс
+  example:
+    class Vector:
+        def __init__(self, x, y, z): ...
+        def __getitem__(self, i): ...
+        def __setitem__(self, index, value):
+            if   index == 0: self.x = value
+            elif index == 1: self.y = value
+            elif index == 2: self.z = value
+            else: pass # Тук е добро място за изключение
+
+    v = Vector(1, 2, 3)
+    v[1] = 10
+    print(v.y) # 10
+
+
+= slide 'Атрибути' do
+  ul
+    li.action <code>getattr(obj, 'name')</code> е като <code>obj.name</code>
+    li.action <code>setattr(obj, 'name', value)</code> е като <code>obj.name = value</code>
+    li.action <code>delattr(obj, 'name')</code> е като <code>del obj.name</code>
+
+  example:
+    class Spam: pass
+
+    spam = Spam()
+
+    spam.eggs = "Eggs"
+    print(getattr(spam, 'eggs')) # Eggs
+
+    setattr(spam, 'bacon', 'Spam, eggs and bacon')
+    print(spam.bacon) # Spam, eggs and bacon
+
+
+= slide 'Атрибути (2)' do
+  p Може да дефинирате <code>__getitem__</code> и <code>__setitem__</code> по-компактно
+  example:
+    class Vector:
+        def __init__(self, x, y, z): ...
+
+        def __getitem__(self, i):
+            return getattr(self, ('x', 'y', 'z')[i])
+
+        def __setitem__(self, index, value)
+            return setattr(self, ('x', 'y', 'z')[i], value)
+
+
+= slide 'Атрибути (3)' do
+  p Може да предефинирате "оператора точка"
+  ul
+    li.action <code>__getattr__(self, name)</code> за <code>object.name</code>
+    li.action <code>__setattr__(self, name, value)</code> за <code>object.name = 'Foo'</code>
+    li.action <code>__delattr__(self, name)</code> за <code>del object.name</code>
+
+
+= slide 'Атрибути (4)' do
+  p <code>__getattr__(self, name)</code> се извиква само ако обекта няма атрибут name.
+  example:
+    class Spam:
+        def __init__(self):
+            self.eggs = 'larodi'
+
+        def __getattr__(self, name)
+            return name.upper()
+
+        def answer(self)
+            return 42
+
+    spam = Spam()
+    print(spam.foo) # FOO
+    print(spam.bar) # BAR
+    print(spam.eggs) # larodi
+    print(spam.answer()) # 42
+
+
+= slide 'Атрибути (5)' do
+  p __setattr__ се извиква, когато присвоявате стойност на атрибут на обект.
+  p За да не изпаднете в безкрайна рекурсия, ползвайте object.__setattr__.
+  example:
+    class Spam:
+        def __setattr__(self, name, value):
+            print("Setting {0} to {1}".format(name, value))
+            return object.__setattr__(self, name.upper(), value + 10)
+
+    spam = Spam()
+    spam.foo = 42
+    print(spam.FOO) # 52
+    print(spam.foo) # грешка!
+
+
+= slide 'Атрибути (6)' do
+  ol
+    li.action __getattr__ се извиква само когато в обекта няма такъв атрибут.
+    li.action Ако искате да предефинирате достъпа до атрибут винаги, метода е __getattribute__. Но за това по-натам
+
+
+= slide 'Обектите и питоните' do
+  p Опростен модел: Всеки обект се състои от две неща
+  ol
+    li.action речник, съдържащ атрибутите на обекта (достъпен в __dict__)
+    li.action връзка към класа на обекта (достъпен в __class__)
+  example:
+    class Spam: pass
+
+    spam = Spam()
+    spam.foo = 1
+    spam.bar = 2
+    print(spam.__dict__) # {'foo': 1, 'bar': 2}
+    print(spam.__class__) # <class '__main__.Spam'>
+    print(spam.__class__ is Spam) # True
+
+
+= slide 'Обектите и питоните (2)' do
+  p Още по-опростено: Функциите и променливите дефинирани в тялото на класа са атрибути на класа.
+  example:
+    class Spam
+        def foo(self):
+            return 1
+
+        bar = 42
+
+    print(Spam.foo) # <function foo at 0x0c4f3b4b3>
+    print(Spam.bar) # 42
+
+
+= slide 'Обектите и питоните (3)' do
+  p Когато извикате object.attr
+  ol
+    li.action Python връща object.__dict__['attr']
+    li.action Ако няма такъв, Python търси в object.__class__, ако това е функция, се връща специален обект (bound method), на който може да извикате ().
+    li.action Ако това в object.__class__ не е функция, то просто се връща
+    li.action Ако го няма там се вика object.__getattr__('attr')
+
+
+= slide 'Обектите и питоните (4)' do
+  ol
+    li.action В Python има наследяване
+    li.action Всичко наследява от object
+    li.action Това преди малко е поведението на object.__getattribute__
+    li.action Можете да го предефинирате (стига да имате причина)
+
+
+= slide 'Наследяване' do
+  example:
+    class Person:
+        def __init__(self, first_name, last_name):
+            self.first_name = first_name
+            self.last_name = last_name
+
+        def name(self):
+            return self.first_name + " " + self.last_name
+
+    class Star(Person):
+        def greet_audience(self):
+            print("Hello Sofia, I am {0}!".format(self.name()))
+
+    david = Star("David", "Gaham")
+    david.greet_audience()
+    # Hello Sofia, I am David Gaham!
+
+
+= slide 'Наследяване (2)' do
+  example:
+    class Person:
+        def __init__(self, first_name, last_name):
+            self.first_name, self.last_name = first_name, last_name
+
+        def name(self):
+            return "{0} {1}".format(self.first_name, self.last_name)
+
+    class Japanese(Person):
+        def name(self):
+            return "{0} {1}".format(self.last_name, self.first_name)
+
+    print(Person("Edward", "Murdsone").name()) # Edward Murdstone
+    print(Japanese("Yukihiro", "Matsumoto").name()) # Matsumoto Yukihiro
+
+
+= slide 'Наследяване (3)' do
+  example:
+    class Person:
+        def __init__(self, first_name, last_name):
+            self.first_name, self.last_name = first_name, last_name
+
+        def name(self)
+            return "{0} {1}".format(self.first_name, self.last_name)
+
+    class Doctor(Person):
+        def name(self):
+            return "{0}, M.D.".format(Person.name(self))
+
+    print(Doctor("Gregory", "House").name()) # Gregory House, M.D.
+
+
+= slide 'Множествено наследяване' do
+  example:
+    class Spam
+        def spam(self): return "spam"
+
+    class Eggs
+        def eggs(self): return "eggs"
+
+    class CheeseShop(Spam, Eggs)
+        def food(self):
+            return self.spam() + " and " + self.eggs()
+
+= slide 'Mixins' do
+  ul
+    li.action Миксините са добра причина (една от малкото) за използване на множествено наследяване
+    li.action Миксин класовете не се използват сами по себе си. Те са написани за да се наследяват.
+    li.action Можете да гледате на Mixin като интерфейс с имплементирани методи
+    li.action Има два главни случая в които е добра идея да използвате Миксини
+  ol
+    li.action Когато искате да "забъркате" множество атрибути и методи в един клас
+    li.action Когато искате клас който предлага само едно поведение и искате да използвате да го ползвате само като част от много други класове
+
+= slide 'Mixins (2)' do
+  p Гледайте на миксините като резервни части които не можете да ползвате сами по себе си, но можете да сглобите нещо от тях
+  example:
+    class Screen: # ...
+    class RadioTransmitter: # ...
+    class GSMTransmitter(RadioTransmitter): # ...
+    class Input: # ...
+    class MultiTouchInput(Input): # ...
+    class ButtonInput(Input): # ...
+    class MassStorage: # ...
+    class ProcessingUnit: # ...
+
+    class Phone(ProcessingUnit, Screen, GSMTransmitter,
+                MultiTouchInput, ButtonInput, MassStorage): # ...
+
+    class Tablet(ProcessingUnit, Screen, RadioTransmitter, 
+                 MultiTouchInput, MassStorage): # ...
+
+= slide 'Mixins (3)' do
+  example:
+    class Serializable: # ...
+    class NetworkSupport: # ...
+
+= slide 'Динамично създаване на класове' do
+  p type функцията може да се използва за да получите класа на някой обект или да си създадете динамично клас
+  example:
+    >>> type(3.14)
+    <class 'float'>
+    >>> Goat = type("Goat", (object,), {"color": "white"})
+    >>> MountainGoat = type("MountainGoat", (Goat,), {"color": "gray"})
+    >>> Goat
+    <class '__main__.Goat'>
+    >>> MountainGoat
+    <class '__main__.MountainGoat'>
+
+= slide 'private и protected' do
+  ol
+    li.action В Python енкапсулацията е въпрос на добро възпитание
+    li.action Имена от типа _име са protected
+    li.action Имена от типа __име са private
+    li.action Интерпретатора променя имената от тип __име до _клас__име. Нарича се name mangling и създава ефект, подобен на този в C++/Java.
+  example:
+    class Spam
+        def __init__(self):
+            self.__var = 42
+
+    print(dir(Spam())) # ['_Spam__var', '__class__', ...]
+
+= slide 'private и protected (2)' do
+  example:
+    class Base:
+        def __init__(self, name, age):
+            self.__name = name
+            self._age = age
+        def report_base(self):
+            print("Base:", self.__name, self._age)
+
+    class Derived(Base):
+        def __init__(self, name, age, derived_name):
+            Base.__init__(self, name, age)
+            self.__name = derived_name
+            self._age = 33
+        def report_derived(self):
+            print("Derived:", self.__name, self._age)
+
+    derived = Derived("John", 0, "Doe")
+    print(derived.report_base()) # Base: John 33
+    print(derived.report_derived()) # Derived: Doe 33
+    print(derived._Base__name, derived._Derived__name, sep=', ') # John, Doe
+
+= slide 'isinstance и issubclass' do
+  example:
+    print(isinstance(3, int)) # True
+    print(isinstance(4.5, int)) # False
+
+    print(issubclass(int, object)) # True
+    print(issubclass(float, int)) # False
+
