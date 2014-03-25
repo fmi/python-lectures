@@ -1,0 +1,434 @@
+= slide 'Що е то итериране' do
+    p Обикновено колекциите съдържат данни, които искаме да обхождаме.
+    p Понякога тези данни не са подредени и няма начин да ги достъпваме директно.(set-ове, dict-ове)
+
+= slide 'Как можем да итерираме' do
+    p с for
+
+    example:
+        for cheese in cheeses:
+            print('-{0}?'.format(cheese))
+            print('-No...')
+
+= slide 'Какво можем да итерираме' do
+    p Итеруеми
+    ul
+        li
+            code list
+        li
+            code set
+        li
+            code tuple
+        li
+            code dict
+        li
+            code range
+        li
+            code map
+            |  и 
+            code filter
+            |  обекти
+        li всичко в collections
+        li
+            strong всеки обект от клас имплементиращ __getitem__
+        li ...
+
+= slide 'многократно vs. еднократно' do
+    p Някои обекти могат да се итерират многократно(списъци, множества...). Но не всички.
+
+    annotate:
+        squares = map(lambda x: x ** 2, range(5))
+        for number in squares:
+            print(number)
+        # 1 4 9 16 25
+
+        for number in squares:
+            print(number)
+        #
+
+    p Обикновено мързеливите се итерират по веднъж.
+
+= slide '__iter__' do
+    p Индексирането не винаги има смисъл, въпреки че обекта може да се итерира 
+    p 
+        code __iter__
+        |  Връща обект-итератор, с който можем да обходим нашата "колекция"
+    p Итератора е обект, пазещ позицията на текущо обхождане на колекция
+    p 
+        | (обект, който има 
+        code __next__
+        |  метод)
+
+= slide '__next__' do
+    li Връща следващата стойност в обхождането
+    li
+        | Предизвиква специална грешка(
+        code StopIteration
+        | ) когато елементите свършат
+
+= slide 'dunders' do
+    li
+        code iter(a)
+        |  <=>
+        code  a.__iter__()
+    li
+        code next(a)
+        |  <=>
+        code a.__next__()
+    li Има ред други подобни примери, за които споменахме предния път
+
+    div.action
+        p
+            strong Забележка:
+            |  трябва да имате МНОГО ДОБРА основателна причина, за да ползвате
+            code a.__method__()
+            | вместо 
+            code method(a)
+        p
+            strong НЯМАТЕ
+            |  такава причина
+
+= slide 'What does the for do?' do
+    p
+        | С разликата, че for ще обработи
+        code StopIteration
+        |  грешката:
+    annotate:
+        interjections = [
+            'Ring-ding-ding-ding-dingeringeding!',
+            'Wa-pa-pa-pa-pa-pa-pow!',
+            'Hatee-hatee-hatee-ho!',
+            'Joff-tchoff-tchoffo-tchoffo-tchoff!'
+        ]
+        iterator = iter(interjections)
+        while True:
+            interjection = next(iterator)
+            print(interjection)
+
+= slide 'Кой итерира итератора?' do
+    p
+        | Итераторите на стандартните обекти в python също имат
+        code __iter__
+        |  метод, който не прави нищо особено зашеметяващо
+
+    example:
+        >>> iterable = iter([1, 2, 3])
+        >>> iter(iterable) is iterable
+        True
+
+= slide 'Итераторите са мързеливи' do
+    p
+        | Казахме, че 
+        code map
+        | , 
+        code filter
+        |  и 
+        code range
+        |  са мързеливи. Това означава, че всеки елемент се
+        strong  генерира
+        |  чак когато е необходим.
+    annotate:
+        >>> odd = filter(lambda num: num % 2, range(10))
+        >>> iter(odd) is odd
+        True
+
+= slide 'След като вече знаем това' do
+    p Какво ще се случи тук?
+    annotate:
+        >>> loud_names = ['JEFF', 'STONE', 'MIKE', 'EDDIE', 'MATT']
+        >>> quiet_names = map(lambda name: name.lower(), loud_names)
+        >>> loud_names[3] = 'VEDDER'
+        >>> print(list(quiet_names))
+
+    div.action
+        annotate:
+            ['jeff', 'stone', 'mike', 'vedder', 'matt']
+
+= slide 'sort' do
+    p
+        code list
+        |  обектите имат метод 
+        code sort
+
+    example:
+        >>> numbers = [12, 15, 14, 10, 5, 7, 6]
+        >>> print(numbers.sort())
+        None
+        >>> print(numbers)
+        [5, 6, 7, 10, 12, 14, 15]
+
+    p mutable нещата често пъти внасят усложнения
+
+= slide 'sorted' do
+    p
+        | Има вградена функция
+        code sorted
+
+    example:
+        >>> numbers = [12, 15, 14, 10, 5, 7, 6]
+        >>> print(sorted(numbers))
+        [5, 6, 7, 10, 12, 14, 15]
+        >>> print(numbers)
+        [12, 15, 14, 10, 5, 7, 6]
+
+= slide 'Сортиране по ключ' do
+    p
+        code sorted
+        |  приема keyword аргумент(?) 
+        code key
+        | , който оказва как да се извлекат сравними стойности от елементите.
+
+    example:
+        >>> points = [(10, 3), (4, 8), (5, 9), (2, 3), (12, 6), (7, 4)]
+        >>> sorted(points)
+        [(2, 3), (4, 8), (5, 9), (7, 4), (10, 3), (12, 6)]
+        >>> sorted(points, key=lambda point: point[1])
+        [(10, 3), (2, 3), (7, 4), (12, 6), (4, 8), (5, 9)]
+
+= slide 'reverse/reversed' do
+    p Аналогично
+    ul
+        li
+            code reverse
+            |  - метод на 
+            code list
+            | , който обръща списъка на място
+
+        li
+            code reversed
+            |  - вградена функция, която връща ново итеруемо
+
+    example:
+        >>> numbers = [12, 15, 14, 10, 5, 7, 6]
+        >>> reversed(numbers)
+        <list_reverseiterator object at 0x7f14ff534490>
+        >>> list(_)
+        [6, 7, 5, 10, 14, 15, 12]
+
+    p
+        | Ако добавяте/махате елементи докато итерирате резултата от
+        code reversed
+        |  няма да останете доволни
+
+
+= slide 'yield' do
+    ul
+        li.action албум на "Pearl Jam"
+        li.action знак "Дай предимство" в Канада, Ирландия, ЮАР, Южна Корея и САЩ
+        li.action ключова дума в python
+
+= slide 'Генератори' do
+    annotate:
+        def actors_generator():
+            yield 'Graham Chapman'
+            yield 'John Cleese'
+            yield 'Terry Gilliam'
+            yield 'Eric Idle'
+            yield 'Terry Jones'
+            yield 'Michael Palin'
+
+        actors = actors_generator()
+        for actor in actors:
+            print(actor + ' as seen on British TV')
+
+= slide 'Защо?' do
+    p Iterator pattern
+    annotate:
+        class squares_up_to:
+            def __init__(self, up_to):
+                self.up_to = up_to
+                self.num = 0
+
+            def __iter__(self):
+                return self
+
+            def __next__(self):
+                if self.num > self.up_to:
+                    raise StopIteration
+
+                square = self.num ** 2
+                self.num += 1
+                return square
+
+
+= slide 'Защо?' do
+    p Можем да го използваме ето така
+    annotate:
+        squares = squares_up_to(100)
+
+        for square in squares:
+            print(square)
+
+= slide 'С генератор' do
+    annotate:
+      def squares_up_to(number):
+          value = 0
+          while value <= number:
+              yield value ** 2
+              value += 1
+          raise StopIteration
+
+
+= slide 'Generator expression' do
+    p Като list comprehension, но с обли скоби и "мързелив":
+    example:
+       squares_up_to_ten = (number ** 2 for number in range(10))
+
+
+= slide 'Функции по темата' do
+    ul
+        li
+            code any
+            | , 
+            code all
+        li
+            code map
+            | , 
+            code filter
+        li
+            code list
+            | , 
+            code tuple
+            | , 
+            code set
+        li
+            code enumerate
+        li
+            code zip
+
+= slide 'Проверки' do
+    p Ако искаме да проверим дали елементите на итеруемо отговарят на условие
+    annotate:
+        >>> all([True, True])
+        True
+        >>> all([True, False])
+        False
+        >>> any([True, False])
+        True
+
+= slide 'Какво правят map и filter' do
+    p Приемат итеруеми и връщат итератори.(2 vs. 3)
+
+    annotate:
+        def numbers():
+            num = 0
+            while True:
+                yield num
+                num += 1
+
+        doulbes = map(lambda num: num*2, numbers())
+
+= slide 'enumerate' do
+    p Когато индексите ни интересуват
+
+    annotate:
+        >>> exclamations = ['кòли', 'бèси', 'сèчи']
+        >>> for index, exclamation in enumerate(exclamations):
+        ...     print('{0}. {1}!'.format(index, exclamation))
+        ...
+
+    div.action
+        example:
+            0. кòли!
+            1. бèси!
+            2. сèчи!
+
+
+= slide 'zip' do
+    p Итерира едновременно няколко итеруеми
+
+    annotate:
+        titles = ['Ænima', 'Lateralus', '10,000 Days']
+        positions_US = [2, 1, 1]
+        positions_UK = [108, 16, 4]
+        template = 'Tool\'s {0} was at {1} in the US and at {2} in the UK'
+
+        for title, us_pos, uk_pos in zip(titles, positions_US, positions_UK):
+            print(template.format(title, us_pos, uk_pos))
+
+= slide 'itertools' do
+    p Удобства за работа с итеруеми обекти.
+    p Всички функции в него са "мързеливи".
+
+= slide 'itertools.accumulate' do
+    annotate:
+        >>> from itertools import accumulate
+        >>> accumulate(range(1, 101), lambda a, b: a + b)
+        >>> print(sums)
+        <itertools.accumulate object at 0x7ff61d24b518>
+        >>> next(sums)
+        1
+        >>> next(sums)
+        3
+        >>> next(sums)
+        6
+        >>> list(sums)[-1]
+        5050
+
+= slide 'itertools.chain' do
+    p Конкатенира итеруеми
+    annotate:
+        >>> from itertools import chain
+        >>> all_to_15 = chain(range(10), range(11, 15))
+        >>> list(all_to_15)
+        [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 12, 13, 14]
+
+= slide 'itertools.compress' do
+    p Връща част от итеруемо според маска
+    annotate:
+        >>> from itertools import compress
+        >>> list(compress(range(10), [True, False]*5)
+        [0, 2, 4, 6, 8]
+
+= slide 'itertools.groupby' do
+    p Групира сортирана последователност от елементи по ключ
+    annotate:
+        >>> from itertools import groupby
+        >>> from collections import defaultdict
+        >>> data = [ ('John', 'Tilsit'), ('Eric', 'Cheshire'), ('Michael', 'Camembert'),
+        ...                  ('Terry', 'Gouda'), ('Terry', 'Port Salut'), ('Michael', 'Edam'),
+        ...                  ('Eric', 'Ilchester'), ('John', 'Fynbo') ]
+        >>> data = sorted(data, key=lambda record: record[0])
+        >>> by_owner = defaultdict(list)
+        >>> for key, group in groupby(data, lambda record: record[0]):
+        ...     for record in group:
+        ...         by_owner[key].append(record[1])
+        ...
+        >>> by_owner['Terry']
+        ['Gouda', 'Port Salut']
+
+= slide 'also starring' do
+    ul
+        li.action
+            code itertools.repeat(objects[, times])
+            |  - връща итеруемо с опредлен брой(или безкрайно много) повторения на един обект
+        li.action
+            code itertools.cycle(iterable)
+            |  - безкрайна конкатенация на един итеруем обект
+        li.action
+            code itertools.filterfalse(function, iterable)
+            |  - filter, тълкуващ предиката на обратно(ако function е None връща falsy елементите)
+        li.action
+            code itertools.permutations(iterable)
+            |  - генерира пермутациите на елементите в итеруемото
+        li.action
+            code itertools.product(*iterables [,repeat=1])
+            |  - връща декартово произведение на итеруеми
+        li.action
+            code itertools.takewhile(function, iterable)
+            |  - генерира елементите на итеруемото, до първото което не отговаря на предиката
+        li.action
+            code itertools.dropwhile(function, iterable)
+            |  - генерира елементите на итеруемото, от първото което не отговаря на предиката нататък
+        li.action
+            code itertools.tee(iterable, n)
+            |  - връща кортеж от n независими итеруеми
+
+= slide 'itertools' do
+    p EXPLORE!
+
+    div.action
+        annotate:
+            import itertools
+            dir(itertools)
+            help(itertools)
