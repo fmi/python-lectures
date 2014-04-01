@@ -1,0 +1,267 @@
+= slide 'Предговор' do
+  list:
+    Какво различава функцията от всеки друг обект?
+    __call__
+    Какви типове обекти може да връща една функция?
+    Всякакви.
+
+= slide 'Области на видимост' do
+    example:
+        global_one = 1
+
+
+        def foo():
+            local_one = 2
+            print(locals())
+
+
+        print(globals())    # {..., 'global_one': 1}
+        foo()               # {'local_one': 2}
+
+= slide 'Области на видимост(2)' do
+   ul
+     li.action Всяка функция си има своя област на видимост, в която стоят локално дефинираните параметри
+     li.action Ако една функция не може да намери дадена променлива в локалния си скоуп, търси в глобалния за променлива със същото име
+
+     example:
+         global_one = 1
+
+
+         def foo():
+             print(global_one)
+
+         foo()
+
+= slide 'Области на видимост(3)' do
+    p А какво ще изведе следния код?
+
+    example:
+         global_one = 1
+
+
+         def foo():
+             global_one = 2
+             print(global_one)
+             print(locals())
+
+
+         foo()
+
+= slide 'Животът на една променлива' do
+    p Една променлива "умира", заедно със своя скоуп
+
+
+= slide 'Аргументи' do
+    ul
+      li.action Можем да ги подаваме като позиционни или като именовани
+      li.action След именован аргумент не можем да подадем позиционен
+      li.action Подадените аргументи отиват в locals
+      li.action Очевидно умират с приключването на функцията си
+
+= slide 'Вложени функции' do
+    ul
+      li.action Вече знаете, че можете да дефинирате функция във функцията
+      li.action Друга тема е кога това е добра идея
+      li.action Какво се случва тогава с променливите на двете функции и къде отиват?
+
+    example:
+      def outer(x):
+          print(x)
+          def inner():
+              x = 0
+              print(x)
+          inner()
+          print(x)
+
+= slide 'Функциите са първокласни обекти' do
+  ul
+    li.action Те са като всички останали обекти
+    li.action Наследяват от object
+    li.action Можем да ги подаваме като аргументи
+    li.action Можем да ги връщаме като резултат
+    li.action Можем да ги записваме в колекции
+    li.action Можем да ги присвояваме на променлива
+    li.action Имат идентитет
+
+= slide 'Closures' do
+  example:
+      def start(x):
+          def increment(y):
+              return x + y
+          return increment
+
+      first_inc = start(0)
+      second_inc = start(8)
+
+      first_inc(3)
+      second_inc(3)
+
+      first_inc(1)
+      second_inc(2)
+
+
+= slide 'Фибоначи.' do
+    example:
+         def fibonacci(x):
+             if x in [0,1]:
+                 return 1
+             return fibonacci(x-1) + fibonacci(x-2)
+
+    p Рекурсивната версия на fibonacci, освен че е бавна, е много бавна. особено когато x >= 40.
+
+    p Проблемът е, че fibonacci се извиква стотици пъти с един и същ аргумент. Можем спокойно да прегенерираме първите стотина резултати в един речник или...
+
+= slide 'Да изчисляваме всеки резултата само по веднъж...' do
+    example:
+         if x not in memory:
+             memory[x] = fibonacci(x)
+         print(memory[x])
+
+    p  Разбира се тази идея може да се използва и на много повече места!
+       Можем да я направим още по-елегантно.
+
+= slide 'Функции които опаковат други функции' do
+   ul
+     li.action f(функция) -> функция
+     li.action резултатът е нова ф-я, която "опакова" старата и може да разшири нейната функционалност
+
+= slide 'memoize' do
+   example:
+        def memoize(func):
+            memory = {}
+            def memoized(*args):
+                if args in memory:
+                    return memory[args]
+                result = func(*args)
+                memory[args] = result
+                return result
+            return memoized
+
+        fibonacci = memoize(fibonacci)
+
+= slide 'Красивият синтаксис' do
+   example:
+         def fibonacci(x):
+             if x in [0,1]:
+                 return 1
+             return fibonacci(x-1) + fibonacci(x-2)
+
+         fibonacci = memoize(fibonacci)
+
+   p Декорацията става след дефиницията на функцията, което е малко объркващо.
+
+   example:
+        @memoize
+        def fibonacci(x):
+            if x in [0,1]:
+                return 1
+            return fibonacci(x-1) + fibonacci(x-2)
+
+= slide 'Клинт Ийстууд' do
+    example:
+        @memoize
+        def fibonacci(x):
+            if x in [0,1]:
+                return 1
+            return fibonacci(x-1) + fibonacci(x-2)
+
+= slide 'Друг пример за декоратор' do
+  example:
+    def notifyme(f):
+        def logged(*args, **kwargs):
+            print(f.__name__, ' called with', args, 'and', kwargs)
+            return f(*args, **kwargs)
+        return logged
+
+    @notifyme
+    def square(x):
+        return x * x
+
+    res = square(25) # 625
+    #square was called with (25,) and {}.
+
+= slide 'Няколко декоратора на една функция' do
+    example:
+        class Mityo:
+            @staticmethod
+            @notifyme
+            def work(): pass
+
+        Mityo.work()
+        work was called with () and {}
+    p Първо се извикват най-вътрешните декоратори.
+
+= slide 'Прави същото като:' do
+    example:
+        def work(): pass
+        work = notifyme(work)
+        work = staticmethod(work)
+    example:
+        work = staticmethod(notifyme(work))
+    ul
+        li.slide Какво правим, ако искаме да му подаваме аргументи?
+
+= slide 'На лов за патици' do
+    p Всъщност, защо да не си направим следния декоратор:
+    example:
+        @accepts(int, int)
+        def add(a, b):
+            return a+b
+    p Превод на недекораторски:
+    example:
+        add = accepts(int, int)(add)
+
+= slide 'код > думи' do
+    example:
+      def accepts(*types):
+          def accepter(f):
+              def decorated(*args):
+                  for (i, (arg, t)) in enumerate(zip(args, types)):
+                      if not isinstance(arg, t):
+                          raise TypeError(
+                              """Argument #{0} of '{1}' is not {2}""".format(
+                                  i,
+                                  f.__name__,
+                                  t.__name__))
+                  #TODO: more complex checks
+                  return f(*args)
+              return decorated
+          return accepter
+
+= slide 'За патиците с любов' do
+    p duck typing е много важна част от философията на Python. @accepts е забавен пример и дори има някои употреби, но избягвайте да го ползвате масово. В повечето случаи губите, а не печелите.
+
+= slide 'Полезни декоратори' do
+    ul
+        li <em>classmethod</em> — прави метода класов (приема клас, а не обект като първи аргумент)
+        li <em>staticmethod</em> — прави метода статичен
+        li.slide <em>property</em>
+
+= slide '@property' do
+    example:
+        class Battery(object):
+            def __init__(self):
+                self._voltage = 100000
+
+            @property
+            def voltage(self):
+                """Get the current voltage."""
+                return self._voltage
+    p Това превръща voltage в getter към атрибут само за четене със същото име
+
+= slide '@property си има и setter' do
+    example:
+          @voltage.setter
+          def voltage(self, value):
+              self._voltage = value
+
+= slide 'Вече сме ги виждали' do
+    example:
+         @staticmethod
+         def register(name)
+             Person.people.append(name)
+             print(len(Person.people), "people are registered now")
+         [...]
+         @classmethod
+         def greet(cls, someone)
+             print(someone, "was greeted from", cls)

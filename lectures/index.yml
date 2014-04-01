@@ -20,5 +20,9 @@
   slug: 04-oop-2
 5:
   title: 05. Итератори и генератори
-  date: 2014-03-24
+  date: 2014-03-26
   slug: 05-iterators-generators
+6:
+  title: 06. Декоратори
+  date: 2014-03-31
+  slug: 06-decorators
