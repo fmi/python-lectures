@@ -275,7 +275,7 @@
         teas = ['chai', 'earl grey', 'jasmine', 'oolong']
 
         breakfast = [cheeses, teas]
-        print(breakfat[0][1]) # bergkäse
+        print(breakfast[0][1]) # bergkäse
 
         breakfast[1][2] = ['шкембе', 'люби чушки', 'оцет с чесън']
         print(teas) # ?
@@ -425,7 +425,7 @@
             'James': 'LaBrie',
         }
 
-        print('Eddie\'s last names is ' + names['Eddie'])
+        print('Eddie\'s last names is ' + artist_names['Eddie'])
 
 = slide '{}' do
     p {} е празен речник, по простата причина, речниците са доста по-често използвана структура от множествата
@@ -448,7 +448,7 @@
         def cheeses_by_owner(cheeses_data):
             by_owner = {}
             for owner, cheese in cheeses_data: # <- tuple unpacking
-                if record[0] in by_owner:
+                if owner in by_owner:
                     by_owner[owner].append(cheese)
                 else:
                     by_owner[owner] = [cheese]
@@ -465,7 +465,7 @@
         def cheeses_by_owner(cheeses_data):
             by_owner = defaultdict(list)
             for owner, cheese in cheeses_data:
-                by_owner[owner].append(chese)
+                by_owner[owner].append(cheese)
 
             return by_owner
 
