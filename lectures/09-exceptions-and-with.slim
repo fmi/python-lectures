@@ -7,13 +7,13 @@
 
         def the_winter_is_coming():
             jar = jars.Jar()
-            if jar.clean() == jars.ERROR
+            if jar.clean() == jars.ERROR:
                 print("Something went terribly wrong!")
                 return ERROR
-            if jar.fill('python juice') == jars.ERROR
+            if jar.fill('python juice') == jars.ERROR:
                 print("Something went terribly wrong!")
                 return ERROR
-            if jar.close() == jars.ERROR
+            if jar.close() == jars.ERROR:
                 print("Something went terribly wrong!")
                 return ERROR
             return SUCCESS
@@ -22,7 +22,7 @@
     example:
         import jars
 
-        def the_winter_is_coming()
+        def the_winter_is_coming():
             try:
                 jar = jars.Jar()
                 jar.clean()
