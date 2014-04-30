@@ -75,17 +75,20 @@
 
     example:
         from copy import deepcopy
+
+
         def bubblesort(data):
-         data = deepcopy( data )
-         for repeat in range(0, len(data)-1):
-          index = 0
-          while(index < len(data) - 1):
-           if data[index] > data[index + 1] :
-            # Something smells fishy here
-            import pdb; pdb.set_trace()
-            data[index], data[index + 1] = data[index + 1], data[index]
-           index += 1
-         return data
+            data = deepcopy(data)
+            for repeat in range(0, len(data)-1):
+                index = 0
+                while index < len(data) - 1:
+                    if data[index] > data[index + 1]:
+                        # Something smells fishy here
+                        import pdb; pdb.set_trace()
+                        data[index], data[index + 1] = data[index + 1], data[index]
+                    index += 1
+            return data
+
 
 = slide 'PDB breakpoint 2' do
     p Добавяне на breakpoint без пипане на кода
