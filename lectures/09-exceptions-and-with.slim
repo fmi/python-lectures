@@ -302,10 +302,11 @@
 
     example:
         from contextlib import closing
-        import codecs
+        from urllib.request import urlopen
 
-        with closing(urllib.urlopen('http://www.python.org')) as page:
+        with closing(urlopen('http://www.python.org')) as page:
             for line in page:
                 print(line)
+
 
 
