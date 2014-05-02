@@ -353,7 +353,7 @@
 = slide 'itertools.accumulate' do
     annotate:
         >>> from itertools import accumulate
-        >>> accumulate(range(1, 101), lambda a, b: a + b)
+        >>> sums = accumulate(range(1, 101), lambda a, b: a + b)
         >>> print(sums)
         <itertools.accumulate object at 0x7ff61d24b518>
         >>> next(sums)
