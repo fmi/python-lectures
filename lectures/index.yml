@@ -38,8 +38,15 @@
   title: 9. Изключения и with
   date: 2014-04-23
   slug: 09-exceptions-and-with
-
 10:
   title: 10. Дебъгване
   date: 2014-04-28
   slug: 10-debugging
+11:
+  title: 11. Как *не* работят компютрите
+  date: 2014-05-12
+  slug: 11-how_computers_do_not_work
+12:
+  title: 12. Python + C
+  date: 2014-05-12
+  slug: 12-python_plus_c
