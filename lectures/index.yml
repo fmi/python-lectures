@@ -54,3 +54,7 @@
   title: 13. Конкурентност
   date: 2014-05-19
   slug: 13-threading
+14:
+  title: 14. asyncio
+  date: 2014-05-21
+  slug: 14-asyncio
