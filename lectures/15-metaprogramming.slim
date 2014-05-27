@@ -1,0 +1,250 @@
+= slide "Преговор: атрибути" do
+    p __dict__
+    p __getattribute__
+    p __getattr__
+    p __setattr__
+    p __delattr__
+
+= slide "Преговор: атрибути (2)" do
+    p dir
+    p getattr
+    p setattr
+    p hasattr
+    p delattr
+
+= slide "Дескриптори: Теория" do
+    example:
+        def __get__(self, instance, owner): ...
+        def __set__(self, instance, value): ...
+        def __delete__(self, instance): ...
+
+    list:
+        Викат се върху обект, който бива достъпван като атрибут на друг обект.
+        Ако класът A има атрибут foo, със стойност обект от тип B, достъпвайки A.foo ще се извика __get__ на B.
+        Опитвайки се да го предефинираме, удряме __set__
+        Познайте какво става ако опитаме да го изтрием с del
+
+= slide "Дескриптори: Практика" do
+    example:
+        class B:
+            def __get__(self, instance, owner):
+                return "You came to the wrong neighborhood, motherflower!"
+
+            def __set__(self, instance, value):
+                print("What!? You think you can change my personality just like that!?")
+
+            def __delete__(self, instance):
+                print("Can't touch me!")
+
+        class A:
+            foo = B()
+
+        a = A()
+        print(a.foo)
+        a.foo = 'bar'
+        del a.foo
+
+= slide "Bound methods" do
+    example:
+        >>> increment = (1).__add__
+        >>> map(increment, [0, 1, 2, 3])
+        [1, 2, 3, 4]
+
+    ul
+        li.action "Закача" инстанция за метод
+        li.action Прилича на частично прилагане на функция
+        li.action Единствено `self` може да бъде приложен
+
+= slide "Bound methods: Проста имплементация!" do
+    example:
+        class MyMethod:
+            def __init__(self, func):
+                self.func = func
+
+            def __get__(self, instance, owner):
+                if instance:
+                    return lambda: self.func(instance)
+                else:
+                    return lambda explicit_instance: self.func(explicit_instance)
+
+        class Python:
+            name = 'Monty'
+            greet = MyMethod(lambda self: 'My name issss %s' % self.name)
+
+= slide "Bound methods: Проста имплементация!" do
+    example:
+
+        snake = Python()
+        snake.greet() # 'My name issss Monty'
+        snake.name = 'Nagini'
+        Python.greet() # TypeError: <lambda>() takes exactly 1 argument (0 given)
+        Python.greet(snake) # 'My name issss Nagini'
+
+= slide 'Още достъп до атрибути' do
+    p Редът за обхождане на базови класове
+
+    example:
+
+        class A(int): pass
+
+        class B: pass
+
+        class C(A, B, int): pass
+
+        C.__mro__
+        # <class '__main__.C'>, <class '__main__.A'>, <class '__main__.B'>,
+        # <class 'int'>, <class 'object'>
+
+= slide 'Всичко за достъп до атрибути' do
+    p за пълната информация...
+    p
+        a href="http://hg.python.org/cpython/file/d9893d13c628/Objects/object.c#l1060" target="_blank" Кодът на object в Python 3.3.1
+
+= slide 'And now for something completely different' do
+    p Как бихме могли да имплементираме клас Pair, наследник на tuple?
+
+    example:
+        class FaultyPair(tuple):
+            def __init__(self, a, b):
+                self[0] = a
+                self[1] = b
+
+        class FaultierPair(tuple):
+            def __init__(self, a, b):
+                self = (a, b)
+
+    ul
+        li.action В __init__ не можем да постигнем нищо
+        li.action Решение има...
+
+= slide 'Конструктори' do
+  p Помните ли как ви казахме, че __init__ е инструктура на всеки клас?
+
+= slide 'We lied!' do
+  img src='http://cdn.alltheragefaces.com/img/faces/large/troll-i-lied-light-l.png' height='400px' width='auto'
+
+= slide '__new__' do
+    ul
+        li __new__ е истинският конструктор
+        li.action Той връща обекта, върху който ще се извика __init__
+
+    div.action
+        example:
+            class KindaFaultyPair(tuple):
+                def __new__(klass, x, y):
+                     return (x, y)
+
+            type(KindaFaultyPair(1, 2)) # tuple
+
+    p.action Но ние не искахме точно това...
+
+= slide '__new__ (2)' do
+    ul
+        li __new__ се имплементира от object и се наследява от другите типове
+        li.action Можем да го предефинираме
+        li.action Обикновено искаме да извикаме __new__ на базовия тип
+
+    div.action
+        example:
+            class Pair(tuple):
+                def __new__(klass, x, y):
+                     return tuple.__new__(klass, (x, y))
+
+            type(Pair(1, 2)) # Pair
+
+= slide 'Метакласове' do
+    ul
+        li всичко в Пайтън е обект, включително и класовете
+        li всеки обект е инстанция на някакъв клас, включително и класовете
+        li класовете на класовете си имат специално име - метакласове
+        li има един стандартен метаклас - type
+
+= slide 'type' do
+  p Помните ли как ви казахме, че type може само да връща типа на обект?
+
+= slide 'We lied!' do
+  img src='http://cdn.alltheragefaces.com/img/faces/large/troll-i-lied-light-l.png' height='400px' width='auto'
+
+= slide 'Забележка' do
+    p В Пайтън type значи няколко неща
+    ul
+        li с един аргумент type(x) връща типа на x
+        li без аргументи е просто класът type
+        li с три аргумента се конструира инстанция на type
+
+= slide 'Типът на типовете' do
+    p Класовете са просто инстанции на type.
+
+    example:
+        type(name, bases, dict)
+
+    ul
+        li name - име на новия клас
+        li bases - tuple с базовите му класове
+        li dict - речник с полетата му (не по-различно от __dict__)
+
+= slide 'Начини да направим клас' do
+    div.action
+        example:
+            Foo = type('Foo', (A, B, C), {'x':1, 'y':2})
+
+    p.action Долното е синтактична захар за горното...
+    div.action
+        example:
+            class Foo(A, B, C):
+                x = 1
+                y = 2
+
+= slide 'Мета' do
+    ul
+        li type е тип и си има конструктор
+        li type може да бъде наследен
+        li няма причина следното да не работи...
+
+    example:
+        class metacls(type):
+             def __new__(mcs, name, bases, dict):
+                 dict['foo'] = 'metacls was here'
+                 return type.__new__(mcs, name, bases, dict)
+
+        Foo = metacls('Foo', (A, B, C), {'x':1, 'y':2})
+        type(Foo) # metacls
+
+= slide 'Мета със захар' do
+        example:
+            class Foo(A, B, C, metaclass=metacls):
+                x = 1
+                y = 2
+
+= slide 'Един пример' do
+    example:
+         class R(metaclass=ReverseNames):
+             def forward(self):
+                 print('forward')
+
+         >>> r = R()
+         >>> r.forward()
+         AttributeError: 'R' object has no attribute 'forward'
+         >>> r.drawrof()
+         forward
+
+= slide 'dafuq!?' do
+  example:
+    class ReverseNames(type):
+       def __new__(klass, name, bases, _dict):
+           reversed = [(k[::-1], v) for k, v in _dict.items()]
+           return type.__new__(klass, name, bases, dict(reversed))
+
+= slide 'Tim Peters on metaclasses' do
+    p [Metaclasses] are deeper magic than 99% of the users should ever worry about. If you wonder whether you need them, you don't (the people who actually need them know with certainty that they need them, and don't need an explanation about why).
+    p — Tim Peters
+
+= slide 'Предефиниране на "десните" оператори' do
+    ul
+        li __rmul__
+        li __radd__
+        li NotImplemented
+
+= slide '__slots__' do
+    p Не съм сигурен, че искаме да ви говорим за това
+
