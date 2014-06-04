@@ -1,0 +1,169 @@
+= slide 'Meta' do
+  list:
+    Qt, а не QT (/ˈkjuːt/ "cute")
+    Cross-platform application framework
+    Написан е на C++, но с известно количество разширения (MOC)
+    Наличен е под комерсиален лиценз, LGPL v2 и GPL v3
+    Създаден от Trolltech, която е купена от Nokia, сега е собственост на Digia
+
+= slide 'Поддържани платформи' do
+  list:
+    Android
+    Embedded Linux
+    iOS
+    OS X
+    QNX / BlackBerry 10
+    Sailfish OS
+    VxWorks
+    Wayland
+    Windows
+    Windows CE
+    X11
+
+= slide 'Неофициални' do
+  list:
+    OpenSolaris
+    Haiku
+    OS/2
+    webOS
+    Amazon Kindle DX
+    Ubuntu
+    AmigaOS
+    Tizen
+
+  p Deprecated
+  list:
+    Symbian
+    Windows Mobile
+
+= slide 'В началото бе QApplication' do
+  example:
+    #include <QApplication>
+    #include <QLabel>
+
+    int main(int argc, char *argv[])
+    {
+        QApplication app(argc, argv);
+        QLabel *label = new QLabel("Hello Qt!");
+        label->show();
+        return app.exec();
+    }
+
+= slide 'Същото ама на Python (PyQt)' do
+  example:
+    import sys
+    from PyQt5 import Qt
+
+    app = Qt.QApplication(sys.argv)
+    label = Qt.QLabel("Hello Qt!")
+    label.show()
+    app.exec_()
+
+= slide 'Хайде сега по-сериозно' do
+  p Qt е необятен. Нека разгледаме една имплементация на тетрис.
+
+  p https://github.com/baoboa/pyqt5/blob/master/examples/widgets/tetrix.py
+
+= slide 'Първоначален план' do
+  list:
+    Имаме нужда от истински прозорец
+    Бутони за старт, пауза и изход
+    Четири кутии, в които да показваме следваща фигурка, точки, премахнати линии и ниво
+    ...
+    Очевидно самия борд на играта
+
+
+= slide 'Прозорец' do
+  p Имаме опцията да използваме `QMainWindow`. Това ни дава:
+
+  img src="http://qt-project.org/doc/qt-4.8/images/mainwindowlayout.png"
+
+  p В нашия случай това ще е overkill. Прозорецът ни може да е един обикновен `QWidget`.
+
+= slide 'Layouts' do
+  p Тъй като ще има повече от един widget, ще трябва да ги разположим по някакъв начин
+
+  p Qt ни дава няколко такива:
+  list:
+    QHBoxLayout
+    QVBoxLayout
+    QFormLayout
+    QGridLayout
+
+= slide 'Layouts' do
+  example:
+    layout = QGridLayout()
+    layout.addWidget(self.createLabel("NEXT"), 0, 0)
+    layout.addWidget(nextPieceLabel, 1, 0)
+    layout.addWidget(self.createLabel("LEVEL"), 2, 0)
+    layout.addWidget(levelLcd, 3, 0)
+    layout.addWidget(startButton, 4, 0)
+    layout.addWidget(self.board, 0, 1, 6, 1)
+    layout.addWidget(self.createLabel("SCORE"), 0, 2)
+    layout.addWidget(scoreLcd, 1, 2)
+    layout.addWidget(self.createLabel("LINES REMOVED"), 2, 2)
+    layout.addWidget(linesLcd, 3, 2)
+    layout.addWidget(quitButton, 4, 2)
+    layout.addWidget(pauseButton, 5, 2)
+    window.setLayout(layout)
+
+= slide 'Елементите' do
+  p В случая ни трябват:
+  list:
+    QLabel
+    QLCDNumber
+    QPushButton
+
+= slide 'Сигнали и слотове' do
+  p Вместо events или callbacks, Qt изпраща сигнал ot потребителско действие в слот (функция)
+
+  example:
+    startButton.clicked.connect(self.board.start)
+    pauseButton.clicked.connect(self.board.pause)
+    quitButton.clicked.connect(QApplication.instance().quit)
+
+= slide 'Сигнали и слотове' do
+  img src="http://qt-project.org/doc/qt-4.8/images/abstract-connections.png"
+
+= slide 'Фреймове' do
+  p
+    | Ако правим игра, а не просто приложение с графичен интерфейс, 
+    | опираме до това, че трябва да имаме фреймове. N пъти в секунда 
+    | ще трябва да преначертаваме дадена област, лъжейки човешкото 
+    | око, че разни неща се движат. В нашия случай, това е борда.
+
+  example:
+    class TetrixBoard(QFrame):
+        BoardWidth = 10
+        BoardHeight = 22
+        scoreChanged = pyqtSignal(int)
+        levelChanged = pyqtSignal(int)
+        linesRemovedChanged = pyqtSignal(int)
+
+        def start(self):...
+        def pause(self):...
+        def paintEvent(self):...
+        def keyPressEvent(self):...
+        def keyPressEvent(self):...
+        def timerEvent(self, event):...
+        def oneLineDown(self):...
+        def dropDown(self):...
+        ...
+
+= slide 'Collision detection' do
+  p 4 основни подхода:
+
+  list:
+    Axis-Aligned Bounding Box
+    Circle-Circle
+    HashMap
+    Pixel-Perfect
+
+= slide 'But wait...' do
+  list:
+    Data storage
+    Multimedia
+    Networking
+    Mobile APIs
+    QML
+
