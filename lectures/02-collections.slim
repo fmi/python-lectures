@@ -162,7 +162,7 @@
     li Запазете вашето решение във файл с името `solution.py`.
     li Свалете `sample_test.py` в същата директория, в която е решението ви
     li През командния ред на операционната си система отидете във въпросната директория
-    li Изпълнете `python3.4 test.py`
+    li Изпълнете `python3.4 sample_test.py`
     li Ако имате дълбока фундаментална грешка в решението си това ще ви покаже каква е
 
 = slide 'Малко стил' do
@@ -171,7 +171,7 @@
         li Индентация с <b>4</b> интервала за всяко ниво на влагане
         li Максимално <b>79</b> символа на ред!
 
-        li <b>snake_case</b> за имена на функции, методи, променливи, параметри 
+        li <b>snake_case</b> за имена на функции, методи, променливи, параметри
         li имена на "константи" в <b>SCREAMING_SNAKE_CASE</b>
         li <b>_turn_around, __seriously_turn_around</b> за "частни"("private")
         li използване на запазени думи? 1 подчертавка след името: <b>range_</b>, но..
@@ -182,14 +182,14 @@
     ul
         li интервал след "," при изброяване и ":" при конструиране на dict:  <b> [1, 2, 3] {1: 2, 2: 4, 13: 26} </b>
         li без интервали след (, [, { и след ), ], }:  <b> func(1, 2, 3), [5, 6, 7, 8]</b>
-        li по един интервал около оператори:  <b> a == b; 3 > 4; "abra" +  "-" + "kadabra"</b> 
+        li по един интервал около оператори:  <b> a == b; 3 > 4; "abra" +  "-" + "kadabra"</b>
         li изключение: може да липсват около оператори с по-висок приоритет в подходящ конеткст:  <b> 42 - 6*9</b>
         li без интервали, когато задаваме стойност по подразбиране:  <b>	def my_func(a, b, option=True): .. </b>
         li и при подаване на именовани параметри при извикване  <b> my_func(option=False, b=13, a=666)</b>
         li без скоби около условията на while/for/if/elif/return: <b> while True; return my_result ... </b>
 
     p.action
-        |Още много от 
+        |Още много от
         a href="http://legacy.python.org/dev/peps/pep-0008/" източника
 
 = slide 'PEP8' do
@@ -247,8 +247,8 @@
         things_i_like = [coffee, cheese, crackers]
         things_you_like = [crackers, coffee, tea]
 
-        things_i_like[0] == things_i_like[1] # True
-        things_i_like[0] is things_i_like[1] # True
+        things_i_like[0] == things_you_like[1] # True
+        things_i_like[0] is things_you_like[1] # True
 
 = slide 'списъци' do
     p Това позволява някои интересни неща
@@ -383,7 +383,7 @@
         >>> [1, 2] < [1, 3]
         True
         >>> (1, 2) < [1, 3] # tuple vs. list
-        # поражда грешка: 
+        # поражда грешка:
         #    TypeError: unorderable types: tuple() < list()
 
 = slide 'Популярни структури от данни' do
@@ -546,8 +546,8 @@
 = slide 'Comprehensions' do
     ul
         li
-            |Изрази, които 
-            em генерират 
+            |Изрази, които
+            em генерират
             | колекции
         li Елегантен заместител на map и/или filter
         li Колекциите могат да са динамични
