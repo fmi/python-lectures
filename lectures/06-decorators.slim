@@ -1,0 +1,394 @@
+= slide 'Предговор' do
+  list:
+    Какво различава функцията от повечето други обекти?
+    __call__
+    Какви типове обекти може да връща една функция?
+    Всякакви.
+
+= slide 'Области на видимост' do
+    ul
+      li Всяка променлива (име) може да бъде свързана със стойност (binding)
+      li Има операции, които променят свързването, например =
+
+    example:
+        global_one = 1
+
+
+        def foo():
+            local_one = 2
+            print(locals())
+
+
+        print(globals())    # {..., 'global_one': 1}
+        foo()               # {'local_one': 2}
+
+= slide 'Области на видимост(2)' do
+   ul
+     li Всеки блок от код (напр. функция, модул, дефиниция на клас) си има своя област на видимост, в която стоят локално дефинираните променливи
+     li Ако една функция не може да намери дадена променлива в локалния си скоуп, търси в обграждащия (глобалния) за променлива със същото име
+
+
+     example:
+         global_one = 1
+
+
+         def foo():
+             print(global_one)
+
+         foo()
+
+= slide 'Области на видимост(3)' do
+    p А какво ще изведе следният код?
+
+    example:
+         global_one = 1
+
+
+         def foo():
+             global_one = 2
+             print(global_one)
+             print(locals())
+
+
+         foo()
+
+         class Foo:
+            global_one = 2
+            print(global_one)
+            print(locals())
+
+         print(globals())
+
+    ul
+      li.action По подразбиране пренасочването на имена става в локалния скоуп
+      li.action Използването на ключовата дума global позволява пренасочването на глобални имена
+
+
+= slide 'Животът на една променлива' do
+    p Една променлива "умира" заедно със своя скоуп
+
+
+= slide 'Аргументи' do
+    ul
+      li.action Можем да ги подаваме като позиционни или като именовани
+      li.action След именован аргумент не можем да подадем позиционен
+      li.action Подадените аргументи отиват в locals
+      li.action Очевидно умират с приключването на функцията си
+
+= slide 'Вложени функции' do
+    ul
+      li.action Вече знаете, че можете да дефинирате функция във функцията
+      li.action Друга тема е кога това е добра идея
+      li.action Какво се случва тогава с променливите на двете функции и къде отиват?
+
+    example:
+      def outer(x):
+          print(x)
+          def inner():
+              x = 0
+              print(x)
+          inner()
+          print(x)
+
+    ul
+      li.action Името inner също отива в locals() на outer
+      li.action Ключовата дума nonlocal позволява пренасочване на име, дефинирано в обграждащ блок
+      li.action Още информация: <a href="https://docs.python.org/3/reference/executionmodel.html#naming-and-binding">Naming and binding</a>
+
+= slide 'Функциите са първокласни обекти' do
+  ul
+    li.action Те са като всички останали обекти
+    li.action Наследяват от object
+    li.action Можем да ги подаваме като аргументи
+    li.action Можем да ги връщаме като резултат
+    li.action Можем да ги записваме в колекции
+    li.action Можем да ги присвояваме на променлива
+    li.action Имат идентитет
+
+= slide 'Closures' do
+  p Имаме closure, когато вложена функция достъпва променлива, дефинирана в обграждаща функция
+
+  example:
+      def start(x):
+          def increment(y):
+              return x + y
+          return increment
+
+      first_inc = start(0)
+      second_inc = start(8)
+
+      first_inc(3)
+      second_inc(3)
+
+      first_inc(1)
+      second_inc(2)
+
+= slide 'Един сериозен проблем' do
+  ul
+    li.action Занимаваме се с известен ресторант
+    li.action В него може да се поръчва храна със следните функции
+    li.action Игнорирайте това, че функциите ще се държат странно с n <= 1
+    li.action Ще трябва да ни повярвате, че знаем как да се справим с проблема
+
+  example:
+
+      def spam(n):
+          spams = ("spam", ) * (n - 1)
+          return "I would like {} and spam".format(", ".join(spams))
+
+      def eggs(n):
+          return "I would like {} eggs".format(n)
+
+= slide 'Обноски' do
+  ul
+    li.action Внезапно се сещаме, че преувеличените обноски са хубаво нещо
+    li.action Искаме след поръчката да кажем "dear sir" или "dear madam" в зависимост от пола на обслужващия ни този ден
+
+= slide 'Начин 1' do
+  ul
+    li.action Easy! Добавяме втори аргумент
+    li.action Да, но сега всеки път като си поръчваме нещо ще трябва да се сещаме какъв беше пола на сервитьора. Би било хубаво ако можеше някак си само веднъж да се занимаваме с това.
+    li.action Ако ресторанта ни имаше 100 различни неща за поръчване? Ако искаме да сменим формата от "dear madam" на нещо друго?
+
+  example:
+
+      def spam(n, server):
+          spams = ("spam", ) * (n - 1)
+          return "I would like {} and spam, dear {}".format(", ".join(spams), server)
+
+      def eggs(n, server):
+          return "I would like {} eggs, dear {}".format(n, server)
+
+      spam(3, "sir")
+
+= slide 'До преди малко говорихме за функции' do
+  example:
+
+      def spam(n):
+          spams = ("spam", ) * (n - 1)
+          return "I would like {} and spam".format(", ".join(spams))
+
+      def eggs(n):
+          return "I would like {} eggs".format(n)
+
+      def served_by(func, server):
+          def cached_server(n):
+              return "{}, dear {}".format(func(n), server)
+          return cached_server
+
+      eggs = served_by(eggs, "sir")
+      spam = served_by(spam, "sir")
+
+= slide 'Да благодарим' do
+  ul
+    li.action Когато поръчваме яйца, винаги да благодарим
+
+  example:
+      def thank_you(func):
+          def with_thanks(n):
+              return "{}. Thank you very much!".format(func(n))
+          return with_thanks
+
+      eggs = thank_you(served_by(eggs, "sir"))
+      spam = served_by(spam, "sir")
+
+= slide 'Започна да става сложно' do
+  ul
+    li.action Доста се натовари създаването на нашите функции
+    li.action Има по - добър начин. Ще го покажем след малко
+    li.action Но преди това един друг пример
+
+
+= slide 'Фибоначи.' do
+    example:
+         def fibonacci(x):
+             if x in [0,1]:
+                 return 1
+             return fibonacci(x-1) + fibonacci(x-2)
+
+    p Рекурсивната версия на fibonacci, освен че е бавна, е много бавна. особено когато x >= 40.
+
+    p Проблемът е, че fibonacci се извиква стотици пъти с един и същ аргумент. Можем спокойно да прегенерираме първите стотина резултати в един речник или...
+
+= slide 'Да изчисляваме всеки резултат само по веднъж...' do
+    example:
+         if x not in memory:
+             memory[x] = fibonacci(x)
+         print(memory[x])
+
+    p  Разбира се тази идея може да се използва и на много повече места!
+       Можем да я направим още по-елегантно.
+
+= slide 'Функции които опаковат други функции' do
+   ul
+     li.action f(функция) -> функция
+     li.action резултатът е нова ф-я, която "опакова" старата и може да разшири нейната функционалност
+
+= slide 'memorize' do
+   example:
+        def memorize(func):
+            memory = {}
+            def memorized(*args):
+                if args in memory:
+                    return memory[args]
+                result = func(*args)
+                memory[args] = result
+                return result
+            return memorized
+
+        fibonacci = memorize(fibonacci)
+
+= slide 'Красивият синтаксис' do
+   example:
+         def fibonacci(x):
+             if x in [0,1]:
+                 return 1
+             return fibonacci(x-1) + fibonacci(x-2)
+
+         fibonacci = memorize(fibonacci)
+
+   p Декорацията става след дефиницията на функцията.
+
+   example:
+        @memorize
+        def fibonacci(x):
+            if x in [0,1]:
+                return 1
+            return fibonacci(x-1) + fibonacci(x-2)
+
+= slide 'Клинт Ийстууд' do
+    example:
+        @memorize
+        def fibonacci(x):
+            if x in [0,1]:
+                return 1
+            return fibonacci(x-1) + fibonacci(x-2)
+
+= slide 'Друг пример за декоратор' do
+  example:
+    def notifyme(f):
+        def logged(*args, **kwargs):
+            print(f.__name__, ' called with', args, 'and', kwargs)
+            return f(*args, **kwargs)
+        return logged
+
+    @notifyme
+    def square(x):
+        return x * x
+
+    res = square(25) # 625
+    #square was called with (25,) and {}.
+
+= slide 'Няколко декоратора на една функция' do
+    example:
+        class Mityo:
+            @staticmethod
+            @notifyme
+            def work(): pass
+
+        Mityo.work()
+        work was called with () and {}
+    p Първо се извикват най-вътрешните декоратори.
+
+= slide 'Прави същото като:' do
+    example:
+        def work(): pass
+        work = notifyme(work)
+        work = staticmethod(work)
+    example:
+        work = staticmethod(notifyme(work))
+    ul
+        li.slide Какво правим, ако искаме да му подаваме аргументи?
+
+= slide 'Яйца?' do
+    example:
+
+      def served_by(server):
+          def decorator(func):
+              def cached_server(n):
+                  return "{}, dear {}".format(func(n), server)
+              return cached_server
+          return decorator
+
+      def thank_you(func):
+          def with_thanks(n):
+              return "{}. Thank you very much!".format(func(n))
+          return with_thanks
+
+      @served_by("sir")
+      def spam(n):
+          spams = ("spam", ) * (n - 1)
+          return "I would like {} and spam".format(", ".join(spams))
+
+      @thank_you
+      @served_by("sir")
+      def eggs(n):
+          return "I would like {} eggs".format(n)
+
+= slide 'На лов за патици' do
+    p Всъщност, защо да не си направим следния декоратор:
+    example:
+        @accepts(int, int)
+        def add(a, b):
+            return a+b
+    p Превод на недекораторски:
+    example:
+        add = accepts(int, int)(add)
+
+= slide 'код > думи' do
+    example:
+      def accepts(*types):
+          def accepter(f):
+              def decorated(*args):
+                  for (i, (arg, t)) in enumerate(zip(args, types)):
+                      if not isinstance(arg, t):
+                          raise TypeError(
+                              """Argument #{0} of '{1}' is not {2}""".format(
+                                  i,
+                                  f.__name__,
+                                  t.__name__))
+                  #TODO: more complex checks
+                  return f(*args)
+              return decorated
+          return accepter
+
+= slide 'За патиците с любов' do
+    p duck typing е много важна част от философията на Python. @accepts е забавен пример и дори има някои употреби, но избягвайте да го ползвате масово. В повечето случаи губите, а не печелите.
+
+= slide 'Полезни декоратори' do
+    ul
+        li <em>classmethod</em> — прави метода класов (приема клас, а не обект като първи аргумент)
+        li <em>staticmethod</em> — прави метода статичен
+        li.slide <em>property</em>
+
+= slide '@property' do
+    example:
+        class Battery(object):
+            def __init__(self):
+                self._voltage = 100000
+
+            @property
+            def voltage(self):
+                """Get the current voltage."""
+                return self._voltage
+    p Това превръща voltage в getter към атрибут само за четене със същото име
+    example:
+        b = Battery()
+        print(b.voltage) # 100000
+
+= slide '@property си има и setter' do
+    example:
+          @voltage.setter
+          def voltage(self, value):
+              self._voltage = value
+
+= slide 'Вече сме ги виждали' do
+    example:
+         @staticmethod
+         def register(name)
+             Person.people.append(name)
+             print(len(Person.people), "people are registered now")
+         [...]
+         @classmethod
+         def greet(cls, someone)
+             print(someone, "was greeted from", cls)
