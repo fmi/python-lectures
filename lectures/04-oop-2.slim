@@ -166,10 +166,10 @@
         def __init__(self):
             self.eggs = 'larodi'
 
-        def __getattr__(self, name)
+        def __getattr__(self, name):
             return name.upper()
 
-        def answer(self)
+        def answer(self):
             return 42
 
     spam = Spam()
