@@ -77,7 +77,7 @@
   example:
     class Vector:
         def __init__(self, x, y, z): ...
-        def __getitem__(self, i)
+        def __getitem__(self, i):
             return (self.x, self.y, self.z)[i]
 
 
@@ -147,7 +147,7 @@
         def __getitem__(self, i):
             return getattr(self, ('x', 'y', 'z')[index])
 
-        def __setitem__(self, index, value)
+        def __setitem__(self, index, value):
             return setattr(self, ('x', 'y', 'z')[index], value)
 
 
@@ -166,10 +166,10 @@
         def __init__(self):
             self.eggs = 'larodi'
 
-        def __getattr__(self, name)
+        def __getattr__(self, name):
             return name.upper()
 
-        def answer(self)
+        def answer(self):
             return 42
 
     spam = Spam()
@@ -288,7 +288,7 @@
         def __init__(self, first_name, last_name):
             self.first_name, self.last_name = first_name, last_name
 
-        def name(self)
+        def name(self):
             return "{0} {1}".format(self.first_name, self.last_name)
 
     class Doctor(Person):
