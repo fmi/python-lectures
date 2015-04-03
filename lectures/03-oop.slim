@@ -4,24 +4,29 @@
     elements = (1, 'larodi', 42),
     for element in elements:
       print(element)
+  p.action (1, 'larodi', 42)
 
 = slide 'Въпрос 2' do
   example:
     {x+y for x in range(3) for y in range(3)}
+  p.action {0, 1, 2, 3, 4}
 
 = slide 'Въпрос 3' do
   example:
     keys = [1, 2, 3]
     keys.append([4, 5, 6])
     {key: "Panda" for key in keys}
+  p.action TypeError: unhashable type: 'list'
 
 = slide 'Въпрос 4' do
   example:
     len(x ** 2 for x in range(5))
+  p.action TypeError: object of type 'generator' has no len()
 
 = slide 'Въпрос 5' do
   example:
     {1, 2, 3, 3, 3, 4, 5}.count(3)
+  p.action AttributeError: 'set' object has no attribute 'count'
 
 = slide 'OOP' do
   p Обектно-ориентирано програмиране
