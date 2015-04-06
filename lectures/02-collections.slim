@@ -189,12 +189,12 @@
         li без скоби около условията на while/for/if/elif/return: <b> while True; return my_result ... </b>
 
     p.action
-        |Още много от
+        |Още много от 
         a href="http://legacy.python.org/dev/peps/pep-0008/" източника
 
 = slide 'PEP8' do
   p Никой не е запомнил целия pep8 само с четене
-  p Всеки редактор може да бъде конфигуриран, така че да използва pep8, за да проверява кода ви и да се кара когато не правите нещо правилно
+  p Всеки редактор може да бъде конфигуриран, така че да използва pep8, за да проверява кода ви и да се кара, когато не правите нещо правилно
   p Научете се как да ползвате добре редактора, който сте си избрали, това е много важно
 
   annotate:
@@ -276,7 +276,7 @@
 
 = slide 'методи на списъци' do
     list:
-        `.index(element)` - Индекса на първото срещане на element в списъка или гърми с ValueError
+        `.index(element)` - Индексът на първото срещане на element в списъка или гърми с ValueError
         `.count(element)` - Броят срещания на element в списъка
         `.append(element)` - Добавя element в края на списъка
         `.extend(elements)` - Добавя елементите на elements в списъка (като + ама по-бързо)
@@ -407,7 +407,7 @@
     p Stack?
 
 = slide 'sets' do
-    p Множества(за всякакви практически цели неразличими от математическата абстракция със същото име)
+    p Множества(за всякакви практически цели, неразличими от математическата абстракция със същото име)
     annotate:
         favourite_numbers = set()
         favourite_numbers.add(13)
@@ -420,7 +420,7 @@
         print(favourite_numbers) # {32, 73, 666, 13, 1024}
 
 = slide 'sets' do
-    p Множествата са итеруеми и НЕподредени
+    p Множествата са итерируеми и НЕподредени
 
     annotate:
         for num in favourite_numbers:
@@ -532,10 +532,10 @@
 
 = slide 'map/filter/reduce/all/any' do
     ul
-        li.action map(function, iterable) създава колекция от резултатите от прилагането на function върху всеки елекемент от iterable
+        li.action map(function, iterable) създава колекция от резултатите от прилагането на function върху всеки елемент от iterable
         li.action filter(function, iterable) създава колекция само с елементите, за които function върне True
         li.action
-            | reduce(function, iterable) вика function с елементите на колекцията, докато сведе всичко до една стойност (във functools вж.
+            | reduce(function, iterable) вика function с елементите на колекцията, докато сведе всичко до една стойност (във functools виж 
             a href="http://www.artima.com/weblogs/viewpost.jsp?thread=98196" тук
             | )
         li.action all(iterable) всички елементи се оценяват на истина
@@ -546,9 +546,9 @@
 = slide 'Comprehensions' do
     ul
         li
-            |Изрази, които
+            |Изрази, които 
             em генерират
-            | колекции
+            |  колекции
         li Елегантен заместител на map и/или filter
         li Колекциите могат да са динамични
 
@@ -572,7 +572,7 @@
     ul
         li.action Кръгли скоби вместо квадратни
         li.action Като list comprehension, но се изпълнява динамично (lazy evaluation)
-        li.action На всяка стъпка итератора оценява условието и израза за следващата стройност
+        li.action На всяка стъпка итераторът оценява условието и израза за следващата стойност
 
 = slide 'Set comprehension' do
     ul
