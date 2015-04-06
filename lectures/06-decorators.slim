@@ -385,10 +385,10 @@
 = slide 'Вече сме ги виждали' do
     example:
          @staticmethod
-         def register(name)
+         def register(name):
              Person.people.append(name)
              print(len(Person.people), "people are registered now")
          [...]
          @classmethod
-         def greet(cls, someone)
+         def greet(cls, someone):
              print(someone, "was greeted from", cls)
