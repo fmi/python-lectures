@@ -1,0 +1,365 @@
+= slide 'Конкурентност vs. паралелизъм?' do
+  p anyone?
+
+= slide 'Похвати за конкурентност?' do
+  list:
+    процеси
+    нишки
+    "зелени" нишки
+
+  p.action зелена нишка ∈ системна нишка ∈ процес
+
+= slide 'Преди това...' do
+  p Още малко за multiprocessing
+
+= slide 'Паралелизиран map' do
+
+  example:
+    import urllib
+    from multiprocessing import Pool
+
+    urls = [
+        'http://www.python.org',
+        'http://www.python.org/about/',
+        'http://github.com/',
+        'http://kefche.com/',
+    ]
+
+    def fetch(url):
+        try:
+            return urllib.request.urlopen(url).status
+        except urllib.error.URLError as e:
+            return e.code
+
+    pool = Pool(4)
+    statuses = pool.map(fetch, urls)
+    pool.close()
+    pool.join()
+
+= slide 'Gotchas' do
+  p <code>fetch()</code> трябва да е дефинирана преди конструирането на <code>pool</code> (спомнете си какво точно прави <code>fork()</code>)
+
+= slide 'yield from' do
+  ul
+    li Новост в Python 3.3
+    li Делегиране на генератори
+
+= slide 'Дърво 1.0' do
+  p Да обхождаме дървета
+  example:
+    class Node:
+        def __init__(self, value):
+            self.left = []
+            self.value = value
+            self.right = []
+
+        def iterate(self):
+            for node in self.left:
+                yield node.value
+            yield self.value
+            for node in self.right:
+                yield node.value
+
+  p.action Къде сбъркахме?
+
+= slide 'Дърво 2.0' do
+  example:
+    …
+    def iterate(self):
+        for node in self.left:
+            yield from node.iterate()
+        yield self.value
+        for node in self.right:
+            yield from node.iterate()
+
+= slide 'Асинхронно програмиране' do
+  p програмиране смешни. за Шегите са асинхронно винаги
+
+  p Всяка по-голяма задача винаги е последователност от много на брой по-малки задачи, които трябва да бъдат пресметнати в определена последователност. Няколко такива задачи могат да се случват паралелно или поне конкурентно в рамките на отделни нишки или процеси.
+  p Менажирането на такива неща обаче не е проста работа, трябва да join-ваме, wait-ваме, sync-ваме. Има много различни абстракции от по-високо ниво на тази тема, опитващи се да решат проблема с менажирането на такиъв тип конкурентни задачи.
+
+= slide 'Бъдеща' do
+  p <code>future</code> е обект, който енкапсулира нещо за изпълнение в конкурентна среда.</br>Държи състоянието му и ни дава удобен интерфейс за работа с него
+
+= slide 'concurrent.futures' do
+  p Реализация на Future-и в python
+  p Дава ни следните класове, с които да работим
+  example:
+    +-- Future
+    +-- Executor
+      +-- ThreadPoolExecutor
+      +-- ProcessPoolExecutor
+
+= slide 'concurrent.futures.Future' do
+
+  list:
+    cancel()
+    cancelled()
+    running()
+    done()
+    result(timeout=None)
+    exception(timeout=None)
+    add_done_callback(fn)
+
+= slide 'concurrent.futures.Executor' do
+  p Не използваме `Future`-ите директно, а ги създаваме през съответния `Executor`
+  list:
+    submit(fn, *args, **kwargs)
+    map(func, *iterables, timeout=None)
+    shutdown(wait=True)
+
+= slide 'Paralellizing CPU-bound tasks' do
+  p Помните ли как ви казахме, че Python не може да решава такива проблеми?
+  example:
+    PRIMES = [
+        112272535095293,
+        112582705942171,
+        112272535095293,
+        115280095190773,
+        115797848077099,
+        1099726899285419]
+
+    def is_prime(n):
+      # ...
+
+    def main():
+        with concurrent.futures.ProcessPoolExecutor() as executor:
+            for number, prime in zip(PRIMES, executor.map(is_prime, PRIMES)):
+                print('{} is prime: {}'.format(number, prime))
+
+  p
+    a href='https://docs.python.org/3/library/concurrent.futures.html#processpoolexecutor-example' пълния пример
+
+= slide 'Да си поиграем с това' do
+  annotate:
+    import time
+    from concurrent.futures import ProcessPoolExecutor
+
+    futures = []
+    seconds = 0
+
+    with ProcessPoolExecutor(max_workers=3) as executor:
+        print('Starting')
+        for i in range(3):
+            print(i)
+            futures.append(executor.submit(pow, 323, 1235390))
+
+        print('Started')
+        while True:
+            if all(future.done() for future in futures):
+                print('All done!')
+                results = [future.result() for future in futures]
+                break
+            else:
+                print('still waiting')
+                seconds += 1
+                time.sleep(1)
+
+
+    print('It took %d seconds' % seconds)
+
+= slide 'executors' do
+  p Много са забавни, защото наследявайки <code>Executor</code> и имплементирайки съотвентия набор от методи може да направите прозиволни неща от типа на паралелизиране чрез изпращане към remote машини и прочее. Това разбира се не е точно тривиално.
+
+= slide 'Корутини' do
+  p Малки независими изпълними единици, които кооперативно си предават контрол над управлението.
+
+= slide 'Корутини' do
+  img src='13/coroutines.png'
+  p Най-очевидния пример за това в python са генераторите
+
+= slide 'greenlets' do
+  ul
+    li Популярно решение за зелени нишки в python
+    li Имплементира описаната процедура по предаване на контрол
+    li Външен модул силно зависещ от native код
+
+= slide 'асинхронен вход/изход' do
+  ul
+    p В някакъв момент кода очаква данни от външен ресурс
+    li писане във файл
+    li четене от файл
+    li писане по мрежата
+    li чакане на данни от мрежата
+
+  p Както диска, така и мрежата (особено мрежата) могат и почти задължително са в порядъци по-бавни от процесора.</br>Това ще рече, че докато чака за данни процесора спокойно може да свърши много други неща, вместо само да си седи така.
+
+= slide 'асинхронен вход/изход' do
+  p Обикновено операционната система оплътнява такива момента, като предава контрол на друга нишка когато текущата заяви, че чака външни резурси.
+  p Понякога обаче искаме нашата програма да се възползва по-пълноценно от процесора, въпреки чакането на диска и/или мрежата.
+
+= slide 'асинхронен вход/изход' do
+  p „Класически“ подход
+
+  example:
+      …
+      calculations()
+      file_data = open('/some/place') # until the file is read our process does nothing
+      more_caluculations(file_data)
+      …
+
+= slide 'генералната идея' do
+  p Да заявим, че искаме достъп до някакъв ресурс и чак по-късно да обработим данните пристигнали от него
+
+  p Възможни решения
+  ul
+    li нишки - сложна организация
+    li процеси - сложна организация <em>и</em> комуникация
+    li директно подаване на callbacks - елегантно на пръв поглед решение, с потенциал да доведе до много грозни неща (вж. javascript)
+    li long polling - "Are we there yet?!"
+    li futures - не се интересуваме от червата (нишки, процеси, whatever), имаме хубав интерфейс за конкурентна операция, включително четене на файл.
+    li gevent - библиотека за асинхронно IO в python, използваща greenlets. Уви най-вероятно няма да стигне до поддръжка на 3.x
+
+= slide 'МРЕЖАТА(общи приказки)' do
+
+  img src='13/Osi-model.png'
+  p
+    a href="http://en.wikipedia.org/wiki/OSI_model" OSI модела в Wikipedia
+
+= slide 'МРЕЖАТА(общи приказки)' do
+  p <strike>Когато мъж и жена се обичат</strike> Когато две машини обменят информация през мрежата, има няколко нива на абстракция ангажирани в този процес.
+  p За нас са интересни socket-ите. Те са концепция от транспортния слой, което не е толкова важно в момента и може и да го забравите.
+  p socket е обект (генерално в операционната ви система), чрез който пишете в, и чете от, мрежова връзка
+
+= slide 'socket-и' do
+  p До голяма степен интерфейса, който ни се предоставя от socket-ите е сходен с този на файловете (четене, писане). В много операционни системи има някаква обща абстракция над двете.
+  p Четенето и писането по socket-и през мрежата е още по-бавно от достъпването на файлове.
+
+= slide 'asyncio' do
+
+  //http://ntoll.org/article/asyncio
+  //http://sahandsaba.com/understanding-asyncio-node-js-python-3-4.html
+
+  p Появява се в python 3.4
+  p Основната му идея е да даде инфраструктура за асинхронни операции по мрежата
+  p Може да се ползва и за асинхронни дискови операции, но няма хубав интерфейс за тази цел
+
+= slide 'Най-общо казано' do
+  p Дефинираме корутини, които да се изпълняват асинхронно.
+
+= slide 'Event loop' do
+  p Искаме да реагираме на <em>събитие</em> по определен начин.
+  p Event loop-а проверява на определен (относително кратък) период от време дали се е случило <em>събитие</em> и ни уевдомява, за да можем да реагираме
+
+= slide 'Event loop' do
+  p Когато използваме <code>asyncio</code> всяка нишка има по един event loop, отговарящ за задачите в нея
+  ul 
+    li <code>asyncio.get_event_loop</code> - връща текущия event loop обект за нишката, в която сме
+    li <code>asyncio.set_event_loop</code> - позволява да променим event loop-а за текущата нишка
+    li <code>asyncio.set_event_loop_policy</code> - позволява да променим политиката на event loop-а за текущата нишка (не е просто)
+    li <code>asyncio.get_event_loop_policy</code>
+    li <code>asyncio.is_running</code> - проверява дали текущия loop "се върти"
+
+= slide 'Event loop' do
+  p GO! GO! GO!
+  ul
+    li <code>loop.run_until_complete(coroutine)</code> - пускаме <em>събитийния цикъл</em> и той ще спре когато подадената корутина приключи изпълнението си
+    li <code>loop.run_forever()</code> - пускаме <em>събитийния цикъл</em> "завинаги", т.е. докато изрично не го спрем
+    li <code>loop.stop()</code> - спираме съответния loop
+
+=slide 'Пример' do
+
+  example:
+    import asyncio
+    import random
+
+
+    @asyncio.coroutine
+    def slow_operation():
+        sleep = random.choice(range(1, 6))
+        print('Starting slow operation')
+        yield from asyncio.sleep(sleep)
+        print('Finished slow operation')
+        return 'A return value from the slow_operation coroutine took %s seconds' % sleep
+
+
+    def got_result(future):
+        print('Requsting result')
+        print(future.result())
+        print('Got result')
+        loop.stop()
+
+
+    loop = asyncio.get_event_loop()
+    task = asyncio.Task(slow_operation())
+    task.add_done_callback(got_result)
+
+    try:
+        loop.run_forever()
+    finally:
+        loop.close()
+
+= slide 'Пример' do
+  example:
+
+    import asyncio
+
+
+    @asyncio.coroutine
+    def factorial(name, number):
+        f = 1
+        for i in range(2, number+1):
+            print("Task %s: Compute factorial(%s)..." % (name, i))
+            yield from asyncio.sleep(1)
+            f *= i
+        print("Task %s: factorial(%s) = %s" % (name, number, f))
+
+
+    tasks = [
+        asyncio.Task(factorial("A", 2)),
+        asyncio.Task(factorial("B", 3)),
+        asyncio.Task(factorial("C", 4)),
+        asyncio.Task(factorial("D", 10)),
+    ]
+
+
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(asyncio.wait(tasks))
+    loop.close()
+
+= slide 'Пример' do
+  example:
+
+    import asyncio
+    import urllib.parse
+    import sys
+
+
+    @asyncio.coroutine
+    def print_http_headers(url):
+        print('Fetching %s' % url)
+        url = urllib.parse.urlsplit(url)
+        reader, writer = yield from asyncio.open_connection(url.hostname, 80)
+        query = ('HEAD {url.path} HTTP/1.0\r\n'
+                 'Host: {url.hostname}\r\n'
+                 '\r\n').format(url=url)
+        writer.write(query.encode('latin-1'))
+        while True:
+            line = yield from reader.readline()
+            if not line:
+                break
+            line = line.decode('latin1').rstrip()
+            if line:
+                print('HTTP header(%s)> %s' % (url.hostname, line))
+
+
+    loop = asyncio.get_event_loop()
+
+    tasks = [
+        asyncio.async(print_http_headers('http://fmi.ruby.bg')),
+        asyncio.async(print_http_headers('http://fmi.py-bg.net')),
+        asyncio.async(print_http_headers('http://fmi.golang.bg')),
+    ]
+
+    loop.run_until_complete(asyncio.wait(tasks))
+    loop.close()
+
+= slide 'Further reading' do
+  p Силно препоръчваме
+  ul
+    li
+      a href="http://ntoll.org/article/asyncio" един хубав пост за Asynchronous Python
+    li
+      a href="https://docs.python.org/3.4/library/asyncio.html" домументацията на asyncio
+    li
+      a href="https://docs.python.org/3.4/library/asyncio-dev.html" Develop with asyncio
