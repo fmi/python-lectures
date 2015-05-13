@@ -1,0 +1,581 @@
+= slide 'Пайтън и C' do
+  p Две думи за CPython
+  ul
+    li стандартната реализация на Пайтън (CPython) е писана на C
+    li съответно можем да разширяваме интерпретатора със C
+    li както и да комуникираме със C код
+    li или пък да вградим Пайтън в наше приложение, за което няма да говорим днес
+
+
+= slide 'Защо?' do
+  p Защо по * трябва да ползвам C?
+  ul
+    li искам си указателите!
+    li Пайтън е бавеееен! (Numpy, Mercurial)
+    li Три пъти мери, един път режи! (profile, cProfile)
+    li имаме готов C код който искаме да преизползваме (Numpy, PyGTK+, PyObjC и Cocoa)
+    li Пайтън е интересен език но искаме да е още по-интересен (Stackless)
+
+
+= slide 'Python + C > Python' do
+  p Две е повече от едно
+  ul
+    li Пайтън не е подходящ за всичко
+    li просто понякога е по-добре да напишем част от програмата си на C
+
+
+= slide 'Възможностите' do
+  p Как става това?
+  ul
+    li Пайтън C API (утвърдено)
+    li ctypes (стандартен модул)
+    li Cython (експериментално)
+    li SWIG
+
+
+= slide 'Ctypes' do
+  p Ctypes позволява да викам C функции директно от Python без да ни се налага да пишем и капка C код.
+
+  ul
+    li Това е може би най-лесният начин
+
+
+= slide 'Ctypes основни моменти' do
+  ul
+    li предназначено за комуникация с чист C код -- lean&mean
+    li стреми се да бъде минимален и да не "пречи", съответно е от сравнително ниско ниво
+    li зареждане на динамични библиотеки (shared objects, dynamic link libraries a.k.a. DLL)
+    li викане на функции от тези библиотеки и даже достъпване на данни
+    li позволява да описваме интерфейса на функциите който ще ползваме
+    li дефиниране на потребителски структури и обединения
+
+
+= slide 'Забележка: Unix vs. Windows' do
+  ul
+    li разликите са основно в начина на зареждане на библиотеките
+    li msvcrt.dll под Windows става на libc.so.6 (или libm.so.6) в Linux
+
+
+= slide 'Зареждане на библиотеки' do
+  annotate:
+    >>> from ctypes import *
+    >>>
+    >>> libc = cdll.LoadLibrary('msvcrt.dll')
+    >>> libc
+    <CDLL 'msvcrt.dll', handle 7ffc69b80000 at 6ffffe18ed0>
+    >>>
+
+
+= slide 'Calling conventions' do
+  ul
+    li cdll - cdecl
+    li windll - stdcall, oledll -- само за Windows
+
+
+= slide 'Извикване на функции' do
+  annotate:
+    >>> libc.time(None)
+    1243423125
+
+
+= slide 'Good morning world' do
+  annotate:
+    libc.printf(b'good morning world'
+                b', the time is %d\n', libc.time(None))
+  annotate:
+    good morning world, the time is 1243423807
+
+
+= slide 'ASCII vs UTF-16' do
+  annotate:
+    libc.wprintf('hello world')
+    libc.printf(b'hello world')
+
+
+= slide 'Натурални типове' do
+  ul
+    li None &rarr; NULL
+    li int &rarr; int
+    li bytes &rarr; const char *
+    li str &rarr; const wchar_t *
+    li останалите трябва да се конвертират
+
+
+= slide 'Типове' do
+  p Вместо пайтънски стойности трябва да използвате обекти от тези типове
+  style .types-table td { padding: 0 !important; }
+  table class="types-table"
+    tr
+      td type
+      td C type
+      td Python type
+    tr
+      td c_char
+      td char 
+      td 1-character string
+    tr
+      td c_wchar
+      td wchar_t 
+      td 1-character unicode string
+    tr
+      td c_byte
+      td char 
+      td int
+    tr
+      td c_ubyte
+      td unsigned char 
+      td int
+    tr
+      td c_short
+      td short 
+      td int
+    tr
+      td c_ushort
+      td unsigned short 
+      td int
+    tr
+      td c_int
+      td int 
+      td int
+    tr
+      td c_uint
+      td unsigned int 
+      td int
+    tr
+      td c_long
+      td long 
+      td int
+    tr
+      td c_ulong
+      td unsigned long 
+      td int
+    tr
+      td c_longlong
+      td __int64 or long long 
+      td int
+    tr
+      td c_ulonglong
+      td unsigned __int64 or unsigned long long 
+      td int
+    tr
+      td c_float
+      td float 
+      td float
+    tr
+      td c_double
+      td double 
+      td float
+    tr
+      td c_longdouble
+      td long double 
+      td float
+    tr
+      td c_char_p
+      td char * (NUL terminated) 
+      td string or None
+    tr
+      td c_wchar_p
+      td wchar_t * (NUL terminated) 
+      td unicode or None
+    tr
+      td c_void_p
+      td void * 
+      td int or None
+
+
+= slide 'c_* обектите са mutable' do
+  p Имат поленце value което може да променяте.
+  annotate:
+    >>> i = c_int(42)
+    >>> print(i, i.value)
+    c_long(42) 42
+    >>> i.value = -99
+    >>> print(i, i.value)
+    c_long(-99) -99
+
+
+= slide 'Пайтън низовете са immutable!' do
+  p Низовете са immutable! затова когато използвате функции които променят аргумента си трябва да използвате create_string_buffer
+  annotate:
+    >>> buf = create_string_buffer(b'hello', 15)
+    >>> print(sizeof(buf), repr(buf.raw))
+    15 b'hello\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'
+    >>> libc.strcat(buf, b', world')
+    -1214158944
+    >>> print(sizeof(buf), repr(buf.raw))
+    15 b'hello, world\x00\x00\x00'
+  ul
+    li май се досещате защо хората използват Пайтън вместо C
+
+
+= slide 'Отново извикване на функции' do
+  annotate:
+    libc.printf(b'%d bottles of beer\n', 42)
+    libc.printf(b'%f bottles of beer\n', 42.5)
+  annotate:
+    42 bottles of beer
+    Traceback (most recent call last):
+      File "ctypes-basic.py", line 24, in <module>
+        libc.printf(b'%f bottles of beer\n', 42.5)
+    ctypes.ArgumentError: argument 2: <class 'TypeError'>:
+        Don't know how to convert parameter 2
+
+
+= slide 'Експлицитно преобразуване' do
+  annotate:
+    libc.printf(b'%f bottles of beer\n', c_double(42.5))
+  annotate:
+    42.500000 bottles of beer
+
+
+= slide 'Типове на резулата' do
+  p Колко е синус от 1?
+
+  annotate:
+    >>> libm.sin(c_double(1))
+    -1082050016
+
+  p По подразбиране връщаната стойност се интерпретира като int.
+
+  annotate:
+    >>> libm.sin.restype = c_double
+    >>> libm.sin(c_double(1))
+    0.8414709848078965
+
+
+= slide 'Сигнатури' do
+  p Защото нямаме .h фалове.
+
+  annotate:
+    >>> libm.sin.argtypes = [c_double]
+    >>> libm.sin(1)
+    0.8414709848078965
+
+
+= slide 'Наши-TE типо-ВЕ' do
+  annotate:
+    class PentiumBottles:
+
+        def __init__(self, count):
+            self.count = count
+
+        @property
+        def _as_parameter_(self):
+            return c_double(self.count)
+
+    libc.printf(b'there are %f bottles on the wall...\n',
+            PentiumBottles(3.1415926))
+  annotate:
+    there are 3.141593 bottles on the wall...
+
+  ul
+    li I'm willing to kill you, Dave, just like I killed the other 3.792 crew members.
+    li You must think I'm a fool, Dave. I know that two plus two equals 4.000001...  make that 4.000000001.
+
+
+= slide 'Сигнатури и наши-TE типо-ВЕ' do
+  p Ако искаме да използваме наши типове в .argtypes трябва да имплементираме клас-метода за проверка
+  annotate:
+    OurClass.from_param(object_passed_as_argument)
+  p Kойто трябва да връща ctypes натурален тип, c_* или обект с _as_parameter_ метод.
+
+
+= slide 'Лесни аргументи по референция' do
+  annotate:
+    >>> i = c_int()
+    >>> f = c_float()
+    >>> s = create_string_buffer('\000' * 32)
+    >>> print(i.value, f.value, repr(s.value))
+    0 0.0 b''
+    >>> libc.sscanf(b'1 3.14 Hello',
+    ...         b'%d %f %s', byref(i), byref(f), s)
+    3
+    >>> print(i.value, f.value, repr(s.value))
+    1 3.1400001049 b'Hello'
+  ul
+    li иначе трябва да създадем собствен указател който да предадем като аргумент
+
+
+= slide 'Структури' do
+  annotate:
+    class POINT(Structure):
+        _fields_ = [('x', c_double), ('y', c_double)]
+  annotate:
+    >>> point = POINT(10, 20)
+    >>> print(point.x, point.y)
+    10.0 20.0
+    >>> point = POINT(y=5)
+    >>> print(point.x, point.y)
+    0.0 5.0
+    >>> POINT(1, 2, 3)
+    Traceback (most recent call last):
+      File "<stdin>", line 1, in <module>
+    TypeError: too many initializers
+
+
+= slide 'Структури' do
+  p Структурите имат метаклас различен от стандартния type:
+  annotate:
+    >>> type(POINT) == type
+    False
+    >>> type(POINT)
+    <class '_ctypes.PyCStructType'>
+
+
+= slide 'Влагане на структури' do
+  annotate:
+    class RECT(Structure):
+        _fields_ = [('upperleft', POINT), ('lowerright', POINT)]
+  annotate:
+    >>> rc = RECT(point)
+    >>> print(rc.upperleft.x, rc.upperleft.y)
+    0.0 5.0
+    >>> print(rc.lowerright.x, rc.lowerright.y)
+    0.0 0.0
+    >>> rc = RECT((1, 2), (3, 4))
+    >>> rc = RECT(POINT(1, 2), POINT(3, 4))
+
+
+= slide 'Подравняване и byte-order' do
+  p Две думи -- подразбира native
+  ul
+    li за повече виж документацията
+
+
+= slide 'Масиви' do
+  p Масивите си имат собствен тип който включва броя елементи. Типа се указва като умножим типа на елементите по техния брой -- (ElementType * element_count).
+  p Получаваме нов тип:
+  annotate:
+    POINT_ARRAY_10 = POINT * 10
+  annotate:
+    for i in POINT_ARRAY_10():
+        print(i.x, i. y)
+  annotate:
+    >>> (c_int * 3)(1,2,3)[0]
+    1
+
+
+= slide 'Указатели' do
+  p Указатели към c_* обекти (срещу указатели към натурални обекти)
+  annotate:
+    >>> i = c_int(10)
+    >>> p = pointer(i)
+    >>> p.contents
+    c_long(10)
+    >>> j = c_int(10)
+    >>> p.contents = j
+    >>> p.contents.value
+    10
+    >>> p.contents.value = 11
+    >>> j.value
+    11
+    >>> p[0]
+    11
+  ul
+    li всеки път създава нов c_* обект
+    li p.contents is p.contents == False
+    li но реално C обектите които те представят са един и същи
+
+
+= slide 'Типове на указатели' do
+  p Указателите към c_* обекти си имат собствен тип:
+  annotate:
+    >>> point_p = pointer(point)
+    >>> type(point_p)
+    <class '__main__.LP_POINT'>
+    >>> type(point_p) == POINTER(POINT)
+    True
+    >>> POINTER(POINT)
+    <class '__main__.LP_POINT'>
+
+  p POINTER(ctype_type) е типа на указатели към c_* обект или Structure
+
+
+= slide 'POINTER(c_char) vs c_char_p' do
+  p POINTER се използва за указатели към c_* обекти, докато c_{char,wchar,void}_p са указатели към C обекти. Когато функция връща (char *) съответния .restype атрибут трябва да бъде c_char_p:
+  annotate:
+    >>> libc.strstr.restype = POINTER(c_char)
+    >>> found_p = libc.strstr(b'abc def ghi', b'def')
+    >>> found_p[:5]
+    b'\x00\x00\x00\x00\x00' # нищо общо
+    >>> libc.strstr.restype = c_char_p # strstr връща указател към C памет,
+    ...                                # а не към питонски c_char
+    >>> found_p = libc.strstr(b'abc def ghi', b'def')
+    >>> found_p
+    'def ghi'
+  p Забележете че ctypes прави автоматично преобразуване създавайки нов str обект:
+  annotate:
+    >>> type(found_p)
+    <class 'str'>
+
+
+= slide 'Преобразуване на масиви към указатели' do
+  p Ctypes е стриктен и рядко прави преобразувания. Затова ни се налага ние да ги правим използвайки функцията cast:
+  annotate:
+    >>> libc.strstr.argtypes = [c_char_p, c_char_p]
+    >>> byte_array = (c_byte * 12)(*b'abc def ghi')
+    >>> byte_array[:]
+    [97, 98, 99, 32, 100, 101, 102, 32, 103, 104, 105, 0]
+    >>> libc.strstr(byte_array, b'def')
+    Traceback (most recent call last):
+      File "<stdin>", line 1, in <module>
+    ctypes.ArgumentError: argument 1: <class 'TypeError'>: wrong type
+    >>> libc.strstr(cast(byte_array, c_char_p), b'def')
+    'def ghi'
+
+
+= slide 'Указатели' do
+  annotate:
+    >>> p[10]
+    159787148
+    >>> p[10] = 20
+    >>> p[10]
+    20
+  ul
+    li Оп, какво направих!
+
+
+= slide 'Incomplete types' do
+  annotate:
+    struct cell {
+        char *name;
+        struct cell *next;
+    };
+
+  annotate:
+    class CELL(Structure):
+        pass
+    CELL._fields_ = [("name", c_char_p),
+                     ("next", POINTER(CELL))]
+
+
+= slide 'Callbacks' do
+  annotate:
+    IntArray5 = c_int * 5
+    int_array = IntArray5(5, 1, 7, 33, 99)
+    libc.qsort.restype = None
+
+    INT_CMP_FUNC = CFUNCTYPE(c_int, POINTER(c_int), POINTER(c_int))
+
+    def py_cmp_func(a, b):
+        return a[0] - b[0] # a и b са указатели към c_int
+
+    libc.qsort(int_array, len(int_array), sizeof(c_int), INT_CMP_FUNC(py_cmp_func))
+
+
+= slide 'The Grim Reaper' do
+  p Събирачът на боклук (The Grim Reaper) може да събере вашите обекти ако нямате референция към тях, дори и да има такива в C кода. Това важи особено за callbacks.
+
+
+= slide 'За и против' do
+  ul
+    li + преносимо -- работи за Linux, Mac OS X и Windows
+    li + по-лесно и безболезнено отколкото Пайтън C API
+    li + особено когато комуникираме с чист C код
+    li - от ниско ниво е
+    li - трябва да пишем доста Пайтън код
+    li - трябва да се грижим за marshalling
+
+
+= slide 'ctypes изненади' do
+  p вложени структури
+  p callbacks
+  p byte ordering
+  p аргументи по референция
+  p Задължително погледнете за изненадите. (в документацията)
+
+
+= slide 'Python/C API' do
+  ul
+    li Хедърите му, в общия случай, се намират в /usr/include/python{version}/
+    li Можем да го раздаваме и на C++ през това API
+
+= slide 'В началото бе Python.h …' do
+  ul
+    li stdio.h
+    li string.h
+    li errno.h
+    li limits.h
+    li assert.h
+    li stdlib.h (евентуално)
+    li Разни пре-процесори, които трябват на Python
+
+= slide 'Префикси' do
+  ul
+    li Повечето имена, които ни трябват, използват Py
+    li Тези, за „вътрешно“ ползване - _Py
+    li Structure member names си нямат префикс(колко тъжно…)
+
+= slide 'Примери за функции, тип' do
+  ul
+    li PyDict_New, PyDict_Contains, PyDict_SetItem
+    li PyDict_SetItemString, PyDict_GetItem
+    li PyDict_GetItemString, PyDict_Size, PyDict_Merge, PyDict_Update
+    li PyList_ New, PyList_Size, PyList_GetItem
+    li PyList_SetItem, PyList_Insert, PyList_Append
+    li PyList_GetSlice, PyList_Sort, PyList_Reverse
+    li и т.н.
+
+= slide 'Примери за duck-typing' do
+  ul
+    li PyMapping_Length, PyMapping_SetItemString, PyMapping_GetItemString, PyMapping_Keys
+    li PySequence_Index, PySequence_Contains, PySequence_Count
+
+= slide 'Marshalling към Python' do
+  annotate:
+    Py_BuildValue("s", "spam") -> 'spam'
+    Py_BuildValue("i", 42) -> 42
+    Py_BuildValue("(sii)", 42, "hi", 8) -> (42, 'hi', 8)
+    Py_BuildValue("{is,is}", 1, "one", 2, "two") -> {1: 'one', 2: 'two'}
+    Py_BuildValue("") -> None
+
+= slide 'Marshalling към C' do
+  annotate:
+    const char* string;
+    int number;
+    PyArg_ParseTuple(args, "si:string_peek", &string, &number)
+
+= slide 'Cython = Python + (C API) - (C Syntax)' do
+  ul
+    li fork на Pyrex
+    li може да се нарече език за програмиране
+    li "Пайтън със C типове"
+    li не е самостоятелен, трябва му Пайтън и C компилатор
+    li пишете по-малко код и най-вече не се грижите за особеностите на Пайтън C API (marshalling, GC ref count)
+
+= slide 'SWIG & Boost.Python' do
+  ul
+    li Метаданни
+    li Трябва да работите със source файлове
+    li Автоматичен marshalling, който всъщност…работи
+    li Човечна C++ поддръжка
+
+= slide 'Още въпроси?' do
+  ul
+    li Страница на курса: http://fmi.py-bg.net/
+    li Форуми на курса: http://fmi.py-bg.net/topics/
+
+  p Още интересни неща на
+  ul
+    li http://www.cython.org/
+    li http://docs.python.org/3.4/library/ctypes.html откъдето най-нагло копирахме тези слайдове
+    li http://docs.python.org/3.4/extending/index.html
+    li http://docs.python.org/3.4/c-api/index.html
+
+
+= slide 'Real programmers write in FORTRAN' do
+  ul
+    li Real Programmers do List Processing in Fortran.
+    li Real Programmers do String Manipulation in Fortran.
+    li Real Programmers do Accounting (if they do it at all) in Fortran.
+    li Real Programmers do Artificial Intelligence programs in Fortran.
+    li Real Programmers aren't afraid to use GOTOs.
+    li Real Programmers can write five page long DO loops without getting confused.
+    li Real Programmers like Arithmetic IF statements-- they make the code more interesting.
+    li Real Programmers write self-modifying code, especially if they can save 20 nanoseconds in the middle of a tight loop.
+    li Real Programmers don't need comments-- the code is obvious.
+    li Since Fortran doesn't have a structured IF, REPEAT ... UNTIL, or CASE statement, Real Programmers don't have to worry about not using them. Besides, they can be simulated when necessary using assigned GOTOs.
+
+
+= slide 'The Story of Mel' do
+  p Истинският програмист: http://www.pbm.com/~lindahl/mel.html
