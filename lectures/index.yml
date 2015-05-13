@@ -38,3 +38,19 @@
   title: 10. Конкурентност
   date: 2015-04-20
   slug: 10-threading
+11:
+  title: 11. Как (не) работят компютрите
+  date: 2015-04-27
+  slug: 11-how_computers_do_not_work
+12:
+  title: 12. Как (не) работят компютрите 2
+  date: 2015-04-29
+  slug: 12-how_computers_do_not_work_2
+13:
+  title: 13. asyncio
+  date: 2015-05-04
+  slug: 13-asyncio
+14:
+  title: 14. Метапрограмиране
+  date: 2015-05-11
+  slug: 14-metaprogramming
