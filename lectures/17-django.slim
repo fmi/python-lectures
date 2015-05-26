@@ -1,0 +1,196 @@
+= slide 'Django 101' do
+  list:
+    framework за уеб приложения
+    прави скучните неща вместо нас
+    кара ни да пишем структуриран код
+    ... без да ни връзва ръцете
+    позволява rapid prototyping
+
+= slide 'Convention vs. Configuration' do
+  p Ако следваш правилата всичко работи без досадни конфигурации
+
+= slide 'Python 2.x vs. Python 3.x' do
+  p През целия семестър сме ви обяснявали, че има разлика между двете.
+  p Докато ползвате Django това ще боли... много
+
+= slide 'Как се инсталира?' do
+  example:
+    $ pip install django
+
+= slide 'И после?' do
+  example:
+    $ django-admin.py startproject haitter
+
+= slide 'Models, Views, Templates' do
+  p Ако сте чували за MVC:
+  list:
+    Models = Models
+    Views = Controllers
+    Templates = Views
+
+= slide 'Models' do
+  list:
+    Дефинира типовете и структурата на данните
+    Чете и пише в базата данни (ORM)
+
+= slide 'Object-Relational Mapper' do
+  list:
+    Една доста приятна абстракция над базата данни
+    Пишем питонски код, който се конвертира до SQL заявка
+    Не ни интересува каква е точно базата отдолу
+    ORM-а да му мисли
+
+  list:
+    Python клас = SQL таблица
+    Атрибут на класа = Колона в таблицата
+    Инстаснция на класа = Запис в таблицата (кортеж)
+
+= slide 'Пример' do
+  example:
+    class User(models.Model):
+      username = models.CharField(max_length=30, unique=True)
+      first_name = models.CharField(max_length=30, blank=True)
+      last_name = models.CharField(max_length=30, blank=True)
+      email = models.EmailField(blank=True)
+      is_staff = models.BooleanField(default=False)
+      is_active = models.BooleanField(default=True)
+      date_joined = models.DateTimeField(_('date joined'), default=timezone.now)
+
+
+  list:
+    Използвайте наготово: from django.contrib.auth.models import User
+
+= slide 'Пример' do
+  example:
+    unique = True # не може да се повтаря
+    blank = True # не е задължително Django да приеме стойност за него
+    null = True # базата не изисква стойност за него
+    default = "Панда" # стойност по подразбиране
+
+= slide 'Полета' do
+  example:
+    models.CharField(max_length=32)
+    models.TextField()
+    models.IntegerField()
+    models.BooleanField()
+    models.DateTimeField()
+    models.FileField()
+    models.ImageField()
+    models.EmailField()
+    ...
+
+  list:
+    https://docs.djangoproject.com/en/1.7/ref/models/fields/
+
+= slide 'Релационен модел' do
+  list:
+    Полетата могат да държат само скаларни типове
+    За сложни типове трябва да създадем нов клас + таблица
+    Всеки обект има уникален номер (id)
+    За да реферират друг обект, трябва да ползвате него
+
+
+= slide 'Views' do
+  list:
+    "Бизнес логиката" е там
+    Вход и изход между модела и потребителя
+
+= slide 'Views (пример)' do
+  example:
+    from django.shortcuts import render
+
+    def calculator(request):
+        if request.method == 'POST':
+            x = int(request.POST['x'])
+            y = int(request.POST['y'])
+            result = x + y
+
+        return render(request, 'calculator.html', locals())
+
+= slide 'Templates' do
+  ul
+    li Представяме данните в тях
+    li Приемат речник от view-то
+    li Форматират го в текст (най-често HTML)
+    li Изрази:
+
+  example:
+    {{ title }}
+    {{ user.first_name }}
+
+  ul
+    li Само елементарна логика
+
+  example:
+    {% if a > 5 %} а е голямо! {% endif %}
+    {% for user in users %} {{ user.first_name }} {% endfor %}
+
+= slide 'Хайку по темата' do
+  p
+    | Моделът помни.<br>
+    | Темплейтът го показва.<br>
+    | А view-то мисли.<br>
+
+= slide 'URLs' do
+  example:
+    from django.conf.urls import patterns, url
+
+    urlpatterns = patterns('',
+        url(r'^articles/([0-9]{4})/$', 'news.views.year_archive'),
+        url(r'^articles/([0-9]{4})/([0-9]{2})/$', 'news.views.month_archive'),
+        url(r'^articles/([0-9]{4})/([0-9]{2})/([0-9]+)/$', 'news.views.article_detail'),
+    )
+
+  list:
+    Имаме нужда от нещо, което по текущия URL знае кое view да извика
+    Очевидно: регулярни изрази!
+
+= slide 'Apps' do
+  list:
+    Един Django проект е конструиран от app-ове
+    Всеки app има свои модели, view-та и темплейти
+    Създаваме app с `$ python manage.py startapp haikus`
+
+= slide 'Структура на един Django проект' do
+  example:
+    -> tree
+    .
+      ├── haitter
+      │   ├── __init__.py
+      │   ├── settings.py
+      │   ├── urls.py
+      │   └── wsgi.py
+      ├── haikus
+      │   ├── admin.py
+      │   ├── __init__.py
+      │   ├── migrations
+      │   │   └── __init__.py
+      │   ├── models.py
+      │   ├── tests.py
+      │   └── views.py
+      └── manage.py
+
+
+= slide 'Миграции' do
+  list:
+    SQL базите данни разчитат на строго дефинирана стурктура
+    Промените по нея не може да се случват динамично
+    Разбрахме се, че имаме ORM, който се оправя вместо нас със заявките
+    Имаме и модул, който генерира миграции (добавяне/изтриване на поле/таблица)
+
+= slide 'Миграции' do
+  example:
+    python manage.py makemigrations haikus # Създава миграция за този app
+    python manage.py migrate # Изпълнява всички миграции
+
+= slide 'Не откривайте топлата вода' do
+  list:
+    django.contrib.admin - админ панел на готово
+    django.contrib.admindocs - автоматично генерирана документация
+    django.contrib.auth - потребители, права, логин, логаут, ...
+    django.contrib.comments - коментари с модерация
+    django.contrib.flatpages - статични стрници
+    django.contrib.gis - картография, работа с координати и прочее
+    django.contrib.messages - нотификации
+    django.contrib.syndication - генериране на RSS feeds
+    ...
