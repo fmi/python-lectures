@@ -3,7 +3,7 @@
 
   ol
     li.action Python връща <code>object.__dict__['attr']</code>
-    li.action Ако няма такъв, Python търси в <code>object.__class__,</code> ако това е функция, се връща специален обект (bound method), на който може да извикате ().
+    li.action Ако няма такъв, Python търси в <code>object.__class__</code>, ако това е функция, се връща специален обект (bound method), на който може да извикате ().
     li.action Ако това в <code>object.__class__</code> не е функция, то просто се връща
     li.action Ако го няма там, се вика <code>object.__getattr__('attr')</code>
 
@@ -62,7 +62,7 @@
     p Обикновено мързеливите се итерират по веднъж.
 
 = slide '__iter__' do
-    p Индексирането не винаги има смисъл, въпреки че обекта може да се итерира 
+    p Индексирането не винаги има смисъл, въпреки че обектът може да се итерира 
     p <code>__iter__</code> Връща обект-итератор, с който можем да обходим нашата "колекция"
     p Итераторът е обект, пазещ позицията на текущо обхождане на колекция
     p (обект, който има <code>__next__</code> метод)
@@ -102,7 +102,7 @@
         True
 
 = slide 'Обобщено за iter' do
-    p <code>iter</code> се опитва да извика <code>__iter__</code> метода на аргумента си, но ако се окаже, че такъв няма конструира итератор, като просто извиква <code>__getitem__</code> с последователни естествени числа, започвайки от нула, докато не се хвърли <code>StopIteration</code>
+    p <code>iter</code> се опитва да извика <code>__iter__</code> метода на аргумента си, но ако се окаже, че такъв няма, конструира итератор, като просто извиква <code>__getitem__</code> с последователни естествени числа, започвайки от нула, докато не се хвърли <code>StopIteration</code>
 
     example:
         class IterableThingie:
@@ -404,11 +404,11 @@
     ul
         li <code>itertools.repeat(objects[, times])</code> - връща итеруемо с опредлен брой(или безкрайно много) повторения на един обект
         li <code>itertools.cycle(iterable)</code> - безкрайна конкатенация на един итеруем обект
-        li <code>itertools.filterfalse(function, iterable)</code> - filter, тълкуващ предиката на обратно(ако function е None връща falsy елементите)
+        li <code>itertools.filterfalse(function, iterable)</code> - filter, тълкуващ предиката на обратно(ако function е None, връща falsy елементите)
         li <code>itertools.permutations(iterable)</code> - генерира пермутациите на елементите в итеруемото
         li <code>itertools.product(*iterables [,repeat=1])</code> - връща декартово произведение на итеруеми
-        li <code>itertools.takewhile(function, iterable)</code> - генерира елементите на итеруемото, до първото което не отговаря на предиката
-        li <code>itertools.dropwhile(function, iterable)</code> - генерира елементите на итеруемото, от първото което не отговаря на предиката нататък
+        li <code>itertools.takewhile(function, iterable)</code> - генерира елементите на итеруемото до първото, което не отговаря на предиката
+        li <code>itertools.dropwhile(function, iterable)</code> - генерира елементите на итеруемото от първото, което не отговаря на предиката нататък
         li <code>itertools.tee(iterable, n)</code> - връща кортеж от n независими итеруеми
 
 = slide 'itertools' do
