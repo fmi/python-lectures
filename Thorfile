@@ -20,7 +20,7 @@ class Default < Thor
     copy_file 'lectures/index.yml', 'compiled/index.yml'
 
     slides.keys.each do |number|
-      lecture number
+      lecture number.to_s.rjust(2, "0")
     end
   end
 
