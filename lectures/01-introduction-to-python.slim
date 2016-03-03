@@ -1,0 +1,479 @@
+= slide 'Python' do
+  img src='00/logo-zen.png'
+
+= slide 'Обаче първо' do
+  list:
+    От ≅ 140 човека
+    Точно 50
+    >25 точки
+
+= slide 'Което ще рече' do
+  list:
+    Отивате на http://fmi.py-bg.net, където има списък с хората с над 25 точки на теста
+    Ако сте от тях избирате „регистрация“ горе в дясно
+    Изпълнявате изключително сложната процедура по попълване на три текстови полета
+    DONE!
+
+= slide 'Въпросите, които очакваме' do
+  list:
+    Ще можете да видите точния си брой точки и самите тестовете в понеделник
+    Не 25, не е почти 26
+    Да, никой не може и никой не иска да ви спира да посещавате лекциите и да участвате в час
+    Питахме за концепции, които се учили по УП/ООП/СДП, езика не беше важен
+
+= slide 'Предизвикателство' do
+  p Днес ще имате предизвикателство, за което ще имате срок от два дена
+  p Би трябвало да не ви отнеме повече от час-два
+
+= slide 'Къде отива кода?' do
+    list:
+        Код се пише в `.py` файлове (например `gameoflife.py`).
+        Изпълнява се с `python gameoflife.py`
+        Можем да пишем код интерактивно като пуснем `python` без аргументи.
+
+= slide 'Python е предсказуем' do
+    p Когато не сте сигурни, просто пробвайте.
+    example:
+      $ python
+      Python 3.5.1 (default, Dec  7 2015, 12:58:09)
+      [GCC 5.2.0] on linux
+      Type "help", "copyright", "credits" or "license" for more information.
+      >>> 13 + 10
+      23
+      >>> a = 13
+      >>> b = a + 10
+      >>> print(b)
+      23
+      >>> a * 2
+      26
+      >>> a ** 2
+      169
+      >>> "hello" + ', ' + "world"
+      'hello, world'
+
+= slide 'Първа помощ' do
+    p В интерактивната конзола, <code>help()</code> показва документацията на всяка функция, клас или тип.
+    example:
+       >>> help(str)
+       >>> help(5)
+       >>> help(SomeClass)
+       >>> help(some_function)
+
+= slide 'Един ред код' do
+    example:
+       >>> my_var = 'spam'.upper()
+       >>> print(my_var)
+       SPAM
+    list:
+        Съдържа един израз
+        <b>никога не завършва с `;`</b>
+        Всичко след `#` е коментар
+
+= slide 'Типове: int' do
+  list:
+    Цели числа, положителни и отрицателни
+    Стандартни операции: `+`, `-`, `*`, `/`, `%`, `**` (степенуване)
+    Без максимален размер
+    Може да пробваме `2 ** 4 ** 8`
+
+= slide 'Типове: float' do
+  list:
+    Числа с плаваща запетая(точка?) `3.1452`
+    По всичко друго приличат на целите числа
+
+= slide 'Типове: complex' do
+  list:
+    Още един вид число - комплексно
+    Пишат се така: `(2+3j)`
+    Да, `j`, а не `i`
+
+= slide 'Типове: complex' do
+    example:
+      >>> a = 1j * 1j
+      (-1+0j)
+
+= slide 'Типове: str' do
+    example:
+       >>> "hello".upper()
+       "HELLO"
+       >>> len("абвгдеж")
+       7
+       >>> "hello"[1]
+       "e"
+       >>> help(str)
+    list:
+        Текстови низове с произволна дължина
+        Единични или двойни кавички
+        Unicode навсякъде!!!!
+        Поддържат `\n`, `\t` и пр.
+
+= slide 'Типове: bool' do
+    list:
+      `True` и `False`
+      <b>NB!</b> главните букви
+
+= slide 'Типове: None' do
+    list:
+        Като `null` в другите езици.
+        Когато една функция не върне нищо, тя връща `None`.
+        Използвайте го за да кажете "нищо" или "няма"
+
+= slide 'Типове' do
+  ul
+    li.action
+      p Всяка стойност има тип
+      example:
+        >>> type(5.5)
+        <class 'float'>
+        >>> type("баба")
+        <class 'str'>
+    li.action
+      p Включително и функциите
+      example:
+        >>> type(len)
+        <class 'builtin_function_or_method'>
+
+= slide 'Типове' do
+  ul
+    li
+      p Всяка стойност е обект и има клас, включително функциите
+    li
+      p <b>Всичко</b> в python е обект, включително функциите <b>и типовете</b>!
+    li
+      p Можем да проверим типа на един обект с функцията <code>type()</code>
+
+= slide 'Типове' do
+  ul
+    li
+      p <code>type</code> е функция
+      p.action ⇒ <code>type</code> е обект
+      p.action ⇒ <code>type</code> си има тип
+      div.action
+        example:
+          >>> type(type)
+          <class 'type'>
+      div.action
+        example:
+          >>> type(type(type(type)))
+          <class 'type'>
+
+= slide 'It\'s turtles all the way down…' do
+  img src='01/turtles-all-the-way-down.jpg'
+
+= slide 'Имена' do
+    p Можем да присвоим стойност на име, така създаваме променлива
+    p Python е динамичен език, стойностите имат тип, но не и имената
+    example:
+       >>> а = 5
+       >>> type(a)
+       <class 'int'>
+       >>> a = 'test'
+       >>> type(a)
+       <class 'str'>
+
+= slide 'Имена в картинки' do
+    img src='01/name_assignment_1.png'
+    img src='01/name_assignment_2.png'
+    img src='01/name_assignment_3.png'
+
+= slide 'Структури от данни' do
+    list:
+        Списък - `list`
+        Речник - `dict`
+        Tuple - `tuple` a.k.a кортеж
+        Множество - `set`
+        `help` е ваш пръв приятел!
+
+= slide 'Списъци' do
+    example:
+       >>> my_list = [] # препоръчително!
+       >>> my_list = list() # иначе може и така
+    list:
+        Списък = `list` = масив = array
+        Mutable и без фиксирана дължина
+        Бързи за търсене по индекс, бавни за търсене по стойност
+        Гарантиран ред
+        Не е нужно елементите да са от еднакъв тип (т.е. списъците са хетерогенни)
+
+= slide 'Списъци' do
+    example:
+       >>> my_list = []
+       >>> my_list.append('word')
+       >>> my_list.append(5)
+       >>> my_list.append(False)
+
+       >>> my_list[1] == 5
+       True
+
+= slide 'Списъци' do
+    example:
+       >>> my_other_list = ['foo', 'bar', 'quux']
+       >>> len(my_other_list)
+       3
+       >>> del my_other_list[1]
+
+       >>> my_other_list
+       ['foo', 'quux']
+
+       >>> 'foo' in my_other_list
+       True
+       >>> False in my_list
+       True
+       >>> 'spam' in my_list
+       False
+
+= slide 'Речник (dict)' do
+    example:
+       >>> ages = {'Кай': 2, 'Бобо': 3}
+       >>> ages['Стефан'] = 3
+       >>> ages['Кирил'] = 42
+       >>> ages['Николай'] = 23
+
+       >>> ages['Кирил']
+       42
+       >>> 'Николай' in ages
+       True
+
+       >>> ages.get('Стамат')
+       None
+       >>> ages.get('Стамат', 'няма такъв')
+       няма такъв
+
+= slide 'Речник (dict)' do
+    list:
+        Речник = `dict` = hashtable = associative array
+        Реда не е гарантиран
+        Асоциира ключ със стойност
+
+= slide 'tuple' do
+    example:
+       >>> args = (9.8, 3.14, 2.71)
+       >>> args[2]
+       2.71
+       >>> args[1] = 22/7
+       Traceback (most recent call last):
+       File "<stdin>", line 1, in <module>
+       TypeError: 'tuple' object does not support item assignment
+
+= slide 'tuple' do
+    list:
+        `tuple` = кортеж = n-торка
+        Immutable
+        Гарантиран ред
+        Ползват за да подадете или върнете няколко стойности от функция, когато специален клас би бил твърде много
+        Tuple от един елемент - със запетайка на края: ('Your friends will never love you.',)
+        Може и без скобите
+
+= slide 'Структури от данни: set' do
+    example:
+       >>> unique_numbers = {2, 3, 5, 6}
+       >>> unique_numbers
+       {2, 3, 5, 6}
+       >>> unique_numbers.add(5)
+       >>> unique_numbers
+       {2, 3, 5, 6}
+       >>> unique_numbers.remove(5)
+       >>> unique_numbers
+       {2, 3, 6}
+       >>> my_list = [5, 1, 6, 6, 2, 3, 5, 5]
+       >>> set(my_list)
+       {1, 2, 3, 5, 6}
+
+= slide 'Структури от данни: set' do
+    list:
+        `set` = множество = списък без повтарящи се елементи
+        Редът не е гарантиран
+        Нямаме пряк достъп до конкретен елемент
+        Можем да проверяваме за принадлежност
+        Можем да обхождаме всичките(след малко ще видим как)
+
+= slide 'Mutable vs immutable' do
+    example:
+       a = 5
+       a += 2
+       a # 7
+    list:
+        Immutable са стойностите, които не могат да бъдат променяни.
+        Този код не променя стойноста на `5`, а кара `а` да сочи към друга стойност - `7`.
+        Immutable са числата, низовете, `tuple`-ите, `True`, `False`, `None` etc.
+
+= slide 'Mutable vs immutable' do
+    annotate:
+       a = [1, 2, 3]
+       a.append(4)
+       a # [1, 2, 3, 4]
+    list:
+        Този код променя списъка, към който сочи `a`. Списъците са mutable.
+        Всичко останало е mutable.
+        Като ключ на `dict` или елемент на `set` могат да се ползват само immutable стойности.
+        Защо?
+        hashmap
+
+= slide 'Контролни структури' do
+    list:
+        `if` .. `elif` .. `else`
+        `while`
+        `for`
+
+= slide 'if' do
+    example:
+       if a == 5:
+           print("a is five")
+       elif a == 3 and not b == 2:
+           print("a is three, but b is not two")
+       else:
+           print("a is something else or b is two")
+    list:
+        Точно каквото очаквахте.
+        Не слагайте скоби около условията.
+        `and`, `or` и `not`
+        <b>НЕ</b> `&&`, `||`, `!`
+
+= slide 'if' do
+    p с булеви променливи:
+    example:
+       a = True
+       if a:
+           print("a is True")
+
+       if not a:
+           print("a is not True")
+
+= slide 'истина и лъжа' do
+  p В контекста на булевите операции като лъжа се интерпретират следните стойности:
+  list:
+      `False`
+      `None`
+      числото 0 независимо от типа числа (на пример `0`, `0.0`, `0j`)
+      празният низ
+      празни контейнери (`tuple`, `list`, `dict`, `set`, `forzenset`)
+      наши типове могат да дефинират как да бъдат оценявани като булеви променливи
+  p.action Всички останали стойности се интерпретират като истина.
+
+= slide 'if' do
+    p тестове за принадлежност:
+    example:
+        my_list = [1, 2, 3, 4]
+
+        if 1 in my_list:
+            print('1 is in my list')
+
+        if 5 not in my_list:
+            print('5 is not in my list')
+
+= slide 'Индентация' do
+    list:
+        Къде са къдравите скоби?!
+        Всеки блок код (тяло на `if`, тяло на функция, и т.н.) се определя с индентацията му спрямо обгръщащия го блок.
+        Всеки блок код започва само след двуеточие в края на предишния ред.
+        Блокът свършва, когато се върнете към предишната индентация.
+        4 празни места = нов блок.
+        <b>Не 2, не 3, не 8, не табулация</b>
+        Дресирайте редактора си да слага 4 празни места когато натиснете `<Tab>`
+
+= slide 'while' do
+    example:
+       while a > 5:
+           a -= 1
+           print("a is {}".format(a))
+
+= slide 'for' do
+    example:
+       primes = [3, 5, 7, 11]
+       for e in primes:
+           print(e ** 2) # 9 25 49 121
+
+       people = {'bob': 25, 'john': 22, 'mitt': 56}
+       for name, age in people.items():
+           print("{} is {} years old".format(name, age))
+           # bob is 25 years old
+           # john is 22 years old
+           # ...
+    list:
+        `for` е като `foreach` в другите езици
+        Няма иницализация, стъпка и проверка, не е fancy `while`
+        Обхожда структури от данни
+
+= slide 'for като в C' do
+    example:
+       for i in range(0, 20):
+           print(i)
+           # 0 1 2 3 4 5 6 .. 19
+
+       for i in range(0, 20, 3):
+           print(i)
+           # 0 3 6 9 12 15 18
+
+= slide 'Може и наобратно' do
+    example:
+       for i in range(20, 0, -1):
+           print(i)
+           # 20 19 18 17 16 15 .. 1
+
+       for i in range(20, 0, -3):
+           print(i)
+           # 20 17 14 11 8 5 2
+
+= slide 'break и continue' do
+    list:
+        Работят както очаквате във`for` и `while`.
+        Афектират само най-вътрешния цикъл.
+
+= slide 'switch/case' do
+    p Няма
+    p.action Няма и нужда
+
+= slide 'Функции' do
+    example:
+       def say_hello(name, from):
+           return "Hello… It's me…"
+    list:
+        Функцията приема аргументи
+        Функцията може да върне нещо с `return`, а ако няма `return` връща `None`
+        Не се описват типовете на аргументите, нито типа на резултата
+
+= slide 'Аргументи на функции' do
+    example:
+       def multiply(a, b=2):
+           return a * b
+
+       multiply(5) # 10
+       multiply(5, 10) # 50
+
+       def is_pythagorean(a=2, b=3, c=4):
+           return a * a + b * b == c * c
+
+       is_pythagorean(b=5) # a = 2, c = 4
+       is_pythagorean(1, c=3) # a = 1, b = 3
+
+= slide 'Променлив брой аргументи' do
+    example:
+       def varfunc(some_arg, *args, **kwargs):
+           #...
+
+       varfunc('hello', 1, 2, 3, name='Bob', age=12)
+           # some_arg == 'hello'
+           # args = (1, 2, 3)
+           # kwargs = {'name': 'Bob', 'age': 12}
+
+    list:
+        Функциите могат да приемат произволен брой аргументи
+        Позиционните аргументи (тези без име) отиват в `args`, което е `tuple` от агументи
+        Именуваните аргументи отиват в `kwargs`, което е `dict` от имена на аргументи и съответните им стойности
+        Имената `args` и `kwargs` не са специални, <b>но са наложена конвенция</b>
+
+= slide 'λ' do
+  p В python функциите са обекти
+  example:
+    def baba():
+        print('баница')
+
+  div.action
+    example:
+      def call(function, times):
+          for _ in range(times):
+              function()
+
+= slide 'λ' do
+  p Всяка функция може да приема като аргумент обекти от всякакъв тип, включително други функции, вградени типове, наши типове
+  img src='01/simply-explained-duck-typing.jpg'
