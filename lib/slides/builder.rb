@@ -1,5 +1,5 @@
 class Builder
-  attr_accessor :title, :date, :slug
+  attr_accessor :title, :date, :slug, :image, :lectures_path, :templates_path
 
   def initialize(attributes)
     attributes.each do |key, value|
@@ -9,9 +9,9 @@ class Builder
 
   def html
     input   = File.read source_file
-    lecture = Lecture.new input, title, date
+    lecture = Lecture.new input, title, date, image
 
-    lecture.render
+    lecture.render(layout_file: "#{templates_path}/html/layout.slim")
   end
 
   def output_filename
@@ -21,6 +21,6 @@ class Builder
   private
 
   def source_file
-    "lectures/#@slug.slim"
+    "#{lectures_path}/#@slug.slim"
   end
 end

@@ -1,3 +1,2 @@
-__pycache__
-compiled/*.html
-compiled/index.yml
+compiled-lectures
+.bundle
