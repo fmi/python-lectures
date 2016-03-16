@@ -12,5 +12,9 @@
   slug: 02-collections
 3:
   title: 03. Декоратори
-  date: 2015-03-09
+  date: 2016-03-09
   slug: 03-decorators
+4:
+  title: 04. ООП
+  date: 2016-03-14
+  slug: 04-oop
