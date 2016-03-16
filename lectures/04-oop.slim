@@ -8,11 +8,11 @@
         print('Hi, {}'.format(panda))
 
     say_hi()
-    print('Oh, you're still here, {}?'.format(platypus))
+    print("Oh, you're still here, {}?".format(platypus))
 
   p.action Hi, perry
   p.action Hi, shi shi
-  p.action NameError: name 'a' is not defined
+  p.action NameError: name 'platypus' is not defined
 
 = slide 'Ко каза…' do
   example:
@@ -21,6 +21,7 @@
     ...        return initial + x
     ...    def decrement_by(x):
     ...        return initial - x
+    ...    return increment_by, decrement_by
 
     >>> inc, dec = closure(6)
     >>> inc(3)
