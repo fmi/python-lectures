@@ -1,0 +1,416 @@
+= slide 'Но първо…' do
+  p Имахте домашно.
+  p Крайния срок беше преди два часа.
+  p 58 от вас са предали решения.
+  p От общо 80 записани.
+
+= slide 'Но първо…' do
+  p Миналата година тези цифри бяха 38/176.
+
+= slide 'imagine' do
+  img src="06/sheldon.png"
+
+= slide 'И в тоя ред на мисли' do
+  p Имаме някои забележки
+
+= slide 'Имена' do
+  p хубави имена за класове:
+  ul
+    li Expression
+    li Variable
+    li Constant
+    li Operator
+    li BinaryOperator(ако искаме да сме пунктуални)
+
+= slide 'Имена' do
+  p <b>не</b>хубави имена за класове:
+  ul
+    li expression
+    li variable
+    li constant
+    li operator
+    li binaryOperator(ако искаме да сме пунктуални)
+
+= slide 'Имена' do
+  p Още (по-)<b>не</b>хубави имена за класове:
+  ul
+    li binary_Operator
+    li Promenliva/promenliva
+    li Expression_member
+    li OPERATOR
+    li …
+
+  img.action src="06/dontyellatme.png"
+
+= slide 'Прости правила' do
+  p Имената на класовете ви трябва да са винаги UpperCamelCase.
+
+= slide 'Прости правила' do
+  p Имената на методите ви трябва да са винаги snake_case.
+
+= slide 'Прости правила' do
+  p Неща кръстни със SCREAMING_SNAKE_CASE имена се предполага да са константи.
+
+= slide 'Едно очевидно' do
+  p Повтарящия се код трябва да бъде скрит зад някаква абстракция(клас, функция, whatever)
+
+= slide 'Нива на влагане' do
+  p Ние се стараем да ви даваме задачи, които могат да се решават с елегантен и прост код.
+  ul
+    li 80% от <code>for</code>-овете могат да бъдат comprehension-и.
+    li 70% от <code>if/else</code>-овете могат да са нещо друго
+
+= slide 'Код > Думи' do
+  example:
+      def evaluate(self, **variables):
+        rhs = 0
+        lhs = 0
+        result = 0
+        for element in self.expression_structure:
+            if isinstance(element, Operator):
+                operator = element
+            if isinstance(element, Variable):
+                if element.name in self.variable_names:
+                    for key, value in variables.items():
+                        if key == element.name:
+                            element.value = value
+                if lhs == 0:
+                    lhs = element.value
+                else:
+                    rhs = element.value
+            if isinstance(element, Constant):
+                if lhs == 0:
+                    lhs = element.value
+                else:
+                    rhs = element.value
+            if lhs != 0 and rhs != 0 and isinstance(operator, Operator):
+                result = operator.function(lhs, rhs)
+        return result
+
+= slide 'The Zen of Python' do
+  p Няколко малки точки от него:
+  ul
+    li  Beautiful is better than ugly.
+    li  Simple is better than complex.
+    li  Flat is better than nested.
+    li  Readability counts.
+
+= slide 'type checking' do
+  p почти винаги е грешния начин за това, което искате да направите разчитайки на duck typing
+
+= slide 'And now for someth–' do
+  p 
+
+= slide 'Поискай разрешение' do
+    example:
+        import jars
+
+        ERROR = -1
+        SUCCESS = 0
+
+        def the_winter_is_coming():
+            jar = jars.Jar()
+            if jar.clean() == jars.ERROR:
+                print("Something went terribly wrong!")
+                return ERROR
+            if jar.fill('python juice') == jars.ERROR:
+                print("Something went terribly wrong!")
+                return ERROR
+            if jar.close() == jars.ERROR:
+                print("Something went terribly wrong!")
+                return ERROR
+            return SUCCESS
+
+= slide 'Моли се за прошка' do
+    example:
+        import jars
+
+        def the_winter_is_coming():
+            try:
+                jar = jars.Jar()
+                jar.clean()
+                jar.fill('python juice')
+                jar.close()
+            except jars.Error:
+                print("Something went terribly wrong!")
+
+= slide 'Синтаксис и семантика' do
+    example:
+        try:
+            # блок
+        except Изключение/tuple от Изключения:
+            # блок за хващане и обработка на някое от описаните изключения
+        …
+
+        except ДругоИзключение:
+            # блок за хващане и обработка на някое от описаните изключения
+        except:
+            # блок за хващане и обработка на което и да е изключение(== except BaseException)
+        else:
+            # блок изпълняващ се, ако не е възникнала изключителна ситуация
+        finally:
+            # блок изпълняващ се винаги
+
+    p
+        a href="https://docs.python.org/3.3/tutorial/errors.html" подробно тук
+
+= slide 'Стандартни изключения' do
+    example:
+        BaseException
+         +-- SystemExit
+         +-- KeyboardInterrupt
+         +-- GeneratorExit
+         +-- Exception
+              +-- StopIteration
+              +-- ArithmeticError
+                 +-- ...
+              +-- AssertionError
+              +-- AttributeError
+              +-- NameError
+                 +-- UnboundLocalError
+              +-- OSError
+                 +-- ...
+              +-- RuntimeError
+                 +-- NotImplementedError
+              +-- SyntaxError
+                 +-- IndentationError
+                      +-- TabError
+              +-- SystemError
+              +-- TypeError
+              +-- ValueError
+                 +-- ...
+              +-- Warning
+                   +-- ...
+
+    p
+        a href="https://docs.python.org/3.3/library/exceptions.html#exception-hierarchy" Източника
+
+= slide 'Повече информация рядко е излишна' do
+    example:
+        try:
+            x = [] / 4
+        except TypeError as data:
+            print(data)
+    p Какво ще има в data, зависи от самото изключение, но е прието всички да връщат годна за отпечатване стойност, ако се дадат като аргументи на str или repr.
+
+
+= slide "Ако за няколко изключения имаме една и съща реакция, можем да ги прихванем накуп" do
+    example:
+        try:
+            doomed()
+        except (NameError, TypeError) as data:
+            print(data)
+        except (MyError, YourError):
+            print("Opps! This shouldn't have hapenned...")
+        except:
+            print("Unknown exception.")
+        else:
+            print("It's my happy day!")
+    p С празен except прихващаме изключения, които не са били хванати до момента. Трябва да бъде поставен след всички други except-и.
+
+= slide "finally" do
+    example:
+        file = open('data.txt')
+        try:
+            e.load_info(file)
+        except IOError as data:
+            print("Couldn't read from file:", data)
+        except (e.BadDataError, e.InternalError) as data:
+            print('Loading failed:', data)
+        else:
+            print('Data loaded successfully from file.')
+        finally:
+            file.close()
+    p Ако присъства, finally стои винаги най-отдолу.
+
+= slide "Създаване на изключения" do
+    example:
+        class WinterError(Exception):
+            def __init__(self):
+                self.issuer, self.message = 'You are', 'NOT PREPARED!!11!едно!1'
+
+        class WildlingError(WinterError):
+            def __init__(self):
+                super().__init__()
+                self.message = 'We are going to light the biggest fire the North has ever seen!1!!'
+
+        class YgetteError(WildlingError):
+            def __init__(self):
+                super().__init__()
+                self.message = 'You know nothing, John Snow!'
+
+        class WhiteWalkerError(WinterError):
+            pass
+
+        def winter_is_coming(): raise WinterError
+
+        def winter_is_here(): raise WhiteWalker()
+
+    p
+        a href="https://docs.python.org/3.3/tutorial/errors.html#user-defined-exceptions" референция
+
+= slide "Ескалиране на грешката" do
+    example:
+        try:
+            bender.live_a_day()
+        except BenderError:
+            bender.boned = True
+            # Бендър не може да се оправя с това, нека тези отгоре да се грижат
+            raise
+
+    list:
+        Когато Python се натъкне на изключение в даден блок и в него то не се обработи, изключението се праща към горния блок, после към по-горния и така докато изключението не бъде прехванато или не стигнем най-отгоре и интерпретаторът не спре програмата по познатия ни вече начин.
+        Можем да се намесим или като прихванем изключението (вече знаем как), или като пратим изключението нагоре по трасето. Последното става с голо извикване на raise:
+
+= slide "Подходи" do
+    list:
+        Look Before You Leap (LBYL)
+        Easier to Ask for Forgiveness than Permission (EAFP)
+
+= slide "Нека обобщим" do
+    p Няколко неща, за които може да ползваме изключения:
+
+    p обработка на грeшки:
+    list:
+        структурирани, прихващаеми, позволяващи предаване на допълнителна информация
+        вградените функции и твърдения широко ги използват
+        пораждане и прихващане на собствени изключения
+
+= slide "Finally!" do
+    p безусловно извършване на заключителни действия — <strong>finally</strong>
+    p Искаме да обърнем реда на редовете на файл?
+    example:
+        try:
+            source_file = open(src, 'r')
+            buffer = []
+            try:
+                buffer = source_file.readlines()
+            finally:
+                source_file.close()
+
+            target_file = open(target, 'w')
+            try:
+                for line in reversed(buffer):
+                    target_file.write(line)
+            finally:
+                target_file.close()
+        except IOError:
+            print("Tough luck, junior")
+
+
+= slide "TL;DR" do
+    example:
+        buffer = []
+        try:
+            with open(src) as source_file:
+                buffer = source_file.readlines()
+            with open(target) as target_file:
+                for line in reversed(buffer):
+                    target_file.write(line)
+        except IOError:
+            print("Much better, now, ain't it?")
+    p
+        a href="https://docs.python.org/3.3/reference/compound_stmts.html#with" <em>with</em> 
+        |гарантира, че файлът ще бъде затворен автоматично.
+
+
+= slide "with" do
+    example:
+        with израз [as име]:
+           блок
+    list:
+        Резултатът от израза се нарича Context Manager
+        Изпълнява се метода <em>__enter__()</em> на <abbr title='Context Manager'>CM</abbr> и резултатът се записва в името след <em>as</em>
+        Изпълнява се блока
+        Ако е настъпило излючение се изпълнява <em>__exit__(type, value, traceback)</em> на <abbr title='Context Manager'>CM</abbr>
+        Ако <em>не е</em> настъпило излючение се изпълнява <em>__exit__(None, None, None)</em> на <abbr title='Context Manager'>CM</abbr>
+
+
+= slide "with нагледно" do
+    example:
+        with open('/etc/passwd') as source_file:
+            buffer = source_file.readlines()
+        print('Done!')
+
+    p е същото като
+    example:
+        source_file = open('/etc/passwd').__enter__()
+        try:
+          buffer = source_file.readlines()
+          source_file.__exit__(None, None, None)
+        except Exception:
+          source_file.__exit__(*sys.exc_info())
+        print('Done!')
+
+
+
+= slide "Малък пример" do
+    example:
+        class Manager:
+            def __enter__(self):
+                print("I've been entered!") # iYKwIM
+                return 42
+            def __exit__(self, type, value, traceback):
+                print("I've been exited!")
+
+        with Manager() as something:
+            print("Am I inside?")
+            print(something)
+
+        # I've been entered!
+        # Am I inside?
+        # 42
+        # I've been exited!
+
+
+= slide "with с няколко аргумента" do
+    example:
+        with foo() as f, bar() as b:
+           ...
+
+    p е същото като
+
+    example:
+        with foo() as f:
+            with bar() as b:
+               ...
+
+
+= slide "contextlib" do
+    p Вграденият модул <em>contextlib</em> ни предлага три много полезни Context Manager-а:
+    list:
+        <em>closing</em>
+        <em>contextmanager</em>
+        <em>ContextDecorator</em>
+
+    p
+        a href="https://docs.python.org/3.3/library/contextlib.html" contextlib
+
+
+= slide "closing" do
+
+    p <em>contextlib.closing</em> вика метода <em>close</em> на обекта, с който работим, след изпълнение на блока:
+
+    example:
+        class closing(object):
+          def __init__(self, thing):
+              self.thing = thing
+
+          def __enter__(self):
+              return self.thing
+
+          def __exit__(self, type, value, traceback):
+              self.thing.close()
+
+    p ...и ви позволява да пишете следното:
+
+    example:
+        from contextlib import closing
+        from urllib.request import urlopen
+
+        with closing(urlopen('http://www.python.org')) as page:
+            for line in page:
+                print(line)
+
+
+
