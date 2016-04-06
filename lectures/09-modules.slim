@@ -1,0 +1,500 @@
+= slide 'Модули 101' do
+    list:
+      Всяко нещо в Python е част от някой модул
+      Дори нещата, които пишем в интерактивната конзола, са в модул
+      Всеки файл с разширение .py е модул. Името на модула е името на файла (без .py)
+      Всяка директория може да бъде модул
+      Файлът, от който е стартирана програмата, е с име __main__
+
+
+= slide '.pyc' do
+    list:
+        .pyc са прекомпилирани версии на .py файловете ни
+        В Python 3 стоят в директорията __pycache__
+        В Python 2 стоят до .py файловете
+        Можем да ги дезактивираме генерално
+        Не мислим за тях
+        (освен при version control)
+
+
+= slide 'import' do
+    list:
+        Всеки модул се импортва само по веднъж
+        При импортването му се изпълнява целият файл
+
+
+= slide 'В този ред на мисли, показвали ли сме ви това:' do
+    example:
+        import __hello__
+
+
+= slide 'Модули' do
+    example:
+        from module import a, b, c
+        a()
+
+
+= slide 'Модули' do
+    example:
+        from module import a, b, c
+        a()
+
+        from module import a as b
+        b()
+
+
+= slide 'Модули' do
+    example:
+        from module import a, b, c
+        a()
+
+        from module import a as b
+        b()
+
+        from django.contrib.auth.models import User
+        my_user = User()
+
+
+= slide 'Модули' do
+    example:
+        from django.db import models
+        my_model = models.Model()
+
+
+= slide 'Модули' do
+    example:
+        import datetime
+        now = datetime.datetime.now()
+
+
+= slide 'if __name__ == "__main__":' do
+    p Така можете да сте сигурни, че текущият файл е изпълнен, а не импортнат
+
+
+= slide 'Search Path' do
+    list:
+        "вградените модули"
+        текущата директория
+        sys.path
+
+    example:
+      >>> import sys
+      >>> sys.path
+      [
+      '',
+      '/usr/lib/python3.4',
+      '/usr/lib/python3.4/plat-linux',
+      '/usr/lib/python3.4/lib-dynload',
+      '/usr/lib/python3.4/site-packages',
+      ]
+
+= slide 'dir()' do
+    p Връща списък със всички имена в модул
+
+    example:
+        import sys
+        dir(sys)
+        ['__displayhook__', '__doc__', '__excepthook__', '__interactivehook__',
+        '__loader__', '__name__', '__package__', '__spec__', '__stderr__',
+        '__stdin__', '__stdout__', '_clear_type_cache', '_current_frames',
+        '_debugmallocstats', '_getframe', '_home', '_mercurial', '_xoptions',
+        'abiflags', 'api_version', 'argv', 'base_exec_prefix', 'base_prefix',
+        'builtin_module_names', 'byteorder', 'call_tracing', 'callstats',
+        'copyright', 'displayhook', 'dont_write_bytecode', 'exc_info',
+        'excepthook', 'exec_prefix', 'executable', 'exit', 'flags', 'float_info',
+        'float_repr_style', 'getallocatedblocks', 'getcheckinterval',
+        'getdefaultencoding', 'getdlopenflags', 'getfilesystemencoding',
+        'getprofile', 'getrecursionlimit', 'getrefcount', 'getsizeof',
+        'getswitchinterval', 'gettrace', 'hash_info', 'hexversion',
+        'implementation', 'int_info', 'intern', 'maxsize', 'maxunicode',
+        'meta_path', 'modules', 'path', 'path_hooks', 'path_importer_cache',
+        'platform', 'prefix', 'ps1', 'ps2', 'setcheckinterval', 'setdlopenflags',
+        'setprofile', 'setrecursionlimit', 'setswitchinterval', 'settrace',
+        'stderr', 'stdin', 'stdout', 'thread_info', 'version', 'version_info',
+        'warnoptions']
+
+= slide 'Пакети' do
+    list:
+        Модули, изградени само от файлове е твърде плоско решение
+        Можем да групираме няколко файла (модули) в един свръх-модул
+        За да направим една директория модул, трябва да създадем __init__.py файл вътре
+        Това е инициализатора на модула и се изпълнява преди всичко останало
+
+    example:
+        panda/
+            __init__.py
+            head.py
+            body.py
+            belly.py
+            eyes.py
+            tail.py
+            # ...
+
+
+= slide 'Импортване на всичко от даден модул' do
+    example:
+        from panda import *
+
+    ul
+        li По този начин всичко от модула panda ще бъде "изсипано" в текущия скоуп
+        li Нямате добра причина да правите това извън интерактивна конзола
+        li А ние имаме няколко такива да ви отнемаме точки, ако го правите
+
+
+= slide '__all__' do
+    list:
+        Има смисъл в __init__.py да дефинираме списък от стрингове __all__
+        Само имената в него ще бъдат импортнати, ако се използва *
+
+
+= slide 'Релативни пътища' do
+    p Можем да пропуснем търсенето в sys.path и директно да импортнем нещо от текущата директория
+    example:
+        from . import panda
+
+    p Можем да търсим и в "горния" възел
+    example:
+        from .. import panda
+
+    p Или:
+    example:
+        from ..panda import tail
+
+
+= slide 'Инсталиране на пакети' do
+    p Long story short
+    example:
+        pip install package-name-goes-here
+
+
+= slide 'В живия живот' do
+    p Драми
+    list:
+        Различни проекти зависят от различни версии на една и съща библиотека
+        Различни проекти зависят от различни библиотеки между които съществуват конфликти
+        Системно инсталирания питон обикновено в нещо като <code>/usr/lib/python3.4</code> ⇨ трябват ни root права за инсталиране
+        Искаме няколко различни версии на питон, но не искаме да се интересуваме от това когато пускаме нашето приложение
+        Ако ползвате нещо unix-like много вероятно е много неща да зависят от python и python библиотеки. Предпочитаме да не ги чупим
+
+= slide 'virtualenv' do
+    p Изолирани обкръжения за python кода ни, в които можем да инсталираме каквото си искаме и да ползваме която си искаме версия на python
+    example:
+      $ virtualenv ~/panda_env
+      $ source ~/panda_env/bin/activate
+      (panda_env)$ which python
+      /home/pandyo/panda_env/bin/python
+      (panda_env)$ which pip
+      /home/pandyo/panda_env/bin/pip
+      (panda_env)$ pip install dateutils
+      …
+
+= slide 'virtualenv' do
+    example:
+      >>> import dateutils
+      >>> dateutils
+      <module 'dateutils' from '/home/pandyo/panda_env/lib/python3.4/site-packages/dateutils/__init__.py'>
+
+    p Когато приключим можем да изпълним shell функцията <code>deactivate</code> или просто да излезем от shell-а
+
+= slide 'virtualenv is awesome!' do
+    p Изолация, разделяне на отговорности, поддържане на адекватни версии на зависимостите, …
+    p Когато нещо много страшно се счупи триете една папка и инсталирате само пакетите, които са нужни за един проект
+
+= slide 'virtualenv is (pretty) awesome!' do
+    p Само т'ва експлицитно писане на директории и source-ване на shell скриптове е малко грозно…
+
+= slide 'virtualenvwrapper is also awesome!' do
+    example:
+      $ sudo pip install virtualenvwrapper
+      …
+      $ mkvirtualenv panda
+
+    example:
+      $ workon panda
+      (panda)$
+
+= slide 'От къде ги тегли?' do
+    p <a href="https://pypi.python.org/">PyPI - the Python Package Index</a>
+
+
+= slide 'Как да качим пакет там?' do
+    list:
+        Първо трябва да си създадем пакет
+        Имаме нужда от модула setuptools
+        setup.py файл в основата директория на проекта
+        И изпълнение на setup() в него
+
+
+= slide 'Пример' do
+    example:
+        from setuptools import setup, find_packages
+
+        setup(
+            name="hello_world",
+            version="0.1",
+            packages=find_packages(),
+            install_requires=['world>=1'],
+            author="Me",
+            author_email="me@example.com",
+            description="This is an Example Package",
+            license="PSF",
+            keywords="hello world example examples",
+            url="http://example.com/hello_world/"
+        )
+
+= slide 'Classifiers' do
+    example:
+        setup(...,
+            classifiers=[
+              'Development Status :: 4 - Beta',
+              'Environment :: Console',
+              'Environment :: Web Environment',
+              'Intended Audience :: End Users/Desktop',
+              'Intended Audience :: Developers',
+              'Intended Audience :: System Administrators',
+              'License :: OSI Approved :: Python Software Foundation License',
+              'Operating System :: MacOS :: MacOS X',
+              'Operating System :: Microsoft :: Windows',
+              'Operating System :: POSIX',
+              'Programming Language :: Python',
+              'Topic :: Communications :: Email',
+              'Topic :: Office/Business',
+              'Topic :: Software Development :: Bug Tracking',
+            ],
+        )
+
+    p <a href="https://pypi.python.org/pypi?%3Aaction=list_classifiers">List trove classifiers</a>
+
+
+= slide 'Добре, имаме го и сега какво?' do
+    list:
+        python setup.py install - Инсталира
+        python setup.py sdist - Създава архив, който лесно може да бъде инсталиран
+        python setup.py bdist_wininstsdist - Създава инсталатор за уиндолс
+        ...
+
+
+= slide 'PyPI' do
+    example:
+        python setup.py register
+        python setup.py sdist upload
+
+
+= slide 'Терминология' do
+    list:
+        module
+        pure python module
+        extension module
+        package
+        root package
+        egg
+
+
+= slide 'wheel' do
+    list:
+        Нов формат, целящ да замени egg
+        Не изпълнява setup.py на клиентската машина
+        Няма нужда от компилатор за C, ако пакетът зависи от модули на C
+        По-бърза и консистентна инсталация
+
+    p <a href="https://www.python.org/dev/peps/pep-0427/">PEP 427</a>
+
+
+= slide 'Защо пък wheel?' do
+    list:
+        Python packaging - <b>reinvented</b>.
+        A container for cheese.
+        It makes it easier to <b>roll</b> out software.
+        Get it? Get it?
+
+
+= slide 'Какво да направим за целта?' do
+    example:
+        pip install wheel
+        python setup.py bdist_wheel
+
+= slide 'AST' do
+
+    p  A tree representation of the abstract syntactic structure of source code written in a programming language.
+
+= slide 'Бърз пример' do
+
+    p Имаме следната тривиална функция:
+
+    example:
+      def sum(a, b):
+          return a + b
+
+    p Можем да изпарсим функцията и да построим AST дърво за нея:
+
+    example:
+
+        >>> ast.parse(inspect.getsource(sum))
+        <<< <_ast.Module at 0x7f3e85d78e48>
+
+        >>> sum_ast = ast.parse(inspect.getsource(sum))
+
+        >>> ast.dump(sum_ast)
+        Module(body=[
+            FunctionDef(name='sum', args=arguments(args=[
+                arg(arg='a', annotation=None),
+                arg(arg='b', annotation=None),
+              ], vararg=None, kwonlyargs=[], kw_defaults=[], kwarg=None, defaults=[]), body=[
+                Return(value=BinOp(left=Name(id='a', ctx=Load()), op=Add(), right=Name(id='b', ctx=Load()))),
+              ], decorator_list=[], returns=None),
+          ])
+
+    p.action ... очевидно.
+
+= slide 'Визуализация' do
+
+    img src="09/sum_ast.png
+
+
+= slide 'Meet the nodes' do
+
+    p Всеки елемент от питонски код се представя като AST обект
+
+    p.action Литерали
+    list:
+        Num(n)
+        Str(s)
+        Bytes(s)
+        List(elts, ctx)
+        Tuple(elts, ctx)
+        Set(elts, ctx)
+        Dict(keys, values)
+        Ellipsis - (...)
+        NameConstant(value) - True, False, None
+
+    p.action Променливи
+    list:
+        Name(id, ctx)
+        Load
+        Store
+        Del
+        Starred
+
+= slide 'Meet the nodes' do
+
+    p Всеки елемент от питонски код се представя като AST обект
+
+    p.action Изрази
+    list:
+        Expr(value)
+        UnaryOp(op, operand)
+        UAdd
+        BinOp(left, op, right)
+        Add
+        BoolOp(op, values)
+        And
+        Compare(left, ops, comparators)
+        Eq
+        Call(func, args, keywords, starargs, kwargs)
+        keyword(arg, value)
+        IfExp(test, body, orelse)
+        Attribute(value, attr, ctx)
+
+= slide 'Meet the nodes' do
+    p.action Import
+    list:
+        Import(names)
+        ImportFrom(module, names, level)
+        alias(name, asname)
+
+    p.action Control flow
+    list:
+        If(test, body, orelse)
+        For(target, iter, body, orelse)
+        While(test, body, orelse)
+        Break
+        Try(body, handlers, orelse, finalbody)
+        TryFinally(body, finalbody)
+        ExceptHandler(type, name, body)
+        With(items, body)
+        withitem(context_expr, optional_vars)
+
+= slide 'Meet the nodes' do
+    p.action Функции и класове
+    list:
+        FunctionDef(name, args, body, decorator_list, returns)
+        Lambda(args, body)
+        arguments(args, vararg, kwonlyargs, kwarg, defaults, kw_defaults)
+        arg(arg, annotation)
+        Return(value)
+        Yield(value)
+        Global(names)
+        ClassDef(name, bases, keywords, starargs, kwargs, body, decorator_list)
+
+    p.action ...
+
+= slide 'И какво от това?' do
+
+    p.action Можем да се набутаме в парсването на даден модул и да правим магарии.
+
+    p.action ast.NodeVisitor сканира дадено ast дърво. Можем да го наследим.
+
+    p.action ast.NodeVisitor.visit_{нещата изброени в предните слайодве} ще бъдат изпълнени по време на парсване.
+
+= slide 'Какви функции са дефинирани в модул' do
+
+    example:
+        >>> class FuncLister(ast.NodeVisitor):
+                def visit_FunctionDef(self, node):
+                    print(node.name)
+                    self.generic_visit(node)
+
+        >>> import tictac
+        >>> tictac_parsed = ast.parse(inspect.getsource(tictac))
+        >>> FuncLister().visit(tictac_parsed)
+        __init__
+        state
+        _convert_to_coords
+        __setitem__
+        __getitem__
+
+= slide 'И по-забавното' do
+
+    p Напълно нормално е, че 1+3 връща 4 и типът на резултата е int:
+
+    example:
+
+        >>> tree = ast.parse("print(1+3)\nprint(type(1+3))")
+
+        >>> exec(compile(tree, "<ast>", "exec"))
+        4
+        <class 'int'>
+
+= slide 'И по-забавното' do
+
+    p Обаче... ast.NodeTransformer :)
+
+    example:
+
+        >>> class IntegerWrapper(ast.NodeTransformer):
+                """Transform all integers to string."""
+                def visit_Num(self, node):
+                    if isinstance(node.n, int):
+                        return ast.Call(func=ast.Name(id='str', ctx=ast.Load()),
+                                        args=[node], keywords=[])
+                    return node
+
+        >>> tree = IntegerWrapper().visit(ast.parse("print(1+3)\nprint(type(1+3))"))
+
+        >>> ast.fix_missing_locations(tree)
+
+        >>> exec(compile(tree, "<ast>", "exec"))
+        13
+        <class 'str'>
+
+= slide 'Не е ли твърде късно след импорт?' do
+
+    p Да.
+
+    example:
+        >>> with open('tictac.py', 'r') as f:
+                tictac_module = f.read()
+
+        >>> ast.parse(tictac_module)
+        ...
+
