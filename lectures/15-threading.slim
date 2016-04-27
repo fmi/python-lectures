@@ -1,0 +1,573 @@
+= slide 'Въпрос 1' do
+
+  p.action Кои са трите основни неща в един изпълним файл/DLL
+  br
+  p.action Кода на приложението
+  p.action import таблица
+  p.action export таблица
+
+
+= slide 'Въпрос 2' do
+
+  p.action Как работят компилацията и интерпретацията?
+  br
+  p.action Компилацията превежда отделен файл с програмен код към машинни инструкции
+  p.action Интерпретацията изпълнява кода "в реално време" без този процес на превод
+
+
+= slide 'Въпрос 3' do
+
+  p.action Какво са статично и динамично линкване? Плюсове и минуси за всяко
+  br
+  p.action Когато кодът на нужните библиотеки е в изпълнимия файл
+  p.action В изпълнимия файл има единствено имена на библиотеки и функции
+  p.action По-големи изпълними файлове при статично линкване
+  p.action Малко по-бързо изпъленение при статично линкване
+  p.action Няма споделяне на код в обща библиотека при статично линкване
+
+
+= slide 'Въпрос 4' do
+
+  p.action Какво е JIT?
+  br
+  p.action Компилация на код до междинен език (Java bytecode, MSIL)
+  p.action Който после, по време на изпълнение, се компилира до машинен
+
+
+= slide 'Въпрос 5' do
+
+  p.action Плюсове и минуси на JIT
+  br
+  p.action По-бавен startup time, тъй като се налага междинния код да се транслира
+  p.action Евентуално по-бързо изпълнение от чист native код по две причини:
+  p.action - При дълго вървящи процеси, runtime-ът може да оптимизира hot paths
+  p.action - Когато upgrade-нем хардуера и runtime-а, всички "стари" програми ще вървят по-бързо
+  p.action Доста повече метаинформация, идваща от runtime-a
+  p.action Благинки като garbage-collection, reflection
+
+
+= slide 'Ама първо' do
+  p Предадените идеи за проекти са < 15
+  p Крания срок е тази събота, не се мотайте
+
+
+= slide 'Писането на идеите за проекти не е лесно' do
+  div.action
+    p Ама все пак се постарайте
+    img src='15/THEPROJECT.png'
+
+
+= slide 'Предавайте идеите си като решения на задачата' do
+  p Идеите пратени по мейл не важат
+  p ОК е да copy-paste-нете мейла си като решение на задачата
+
+
+= slide 'В петък' do
+  p Ще имате и истинско домашно, за да не страдате.
+
+= slide 'Конкурентност' do
+  p
+
+= slide 'Що е то?' do
+  p <small><strike>Когато две изчисления се случват едновременно</strike></small>
+  p Когато две изчисления нямат ясно дефинирана последователност на изпълнение.
+
+
+= slide 'Демек…?' do
+  ul
+    p Предварително знаем, че:
+    li След момент t<sub>0</sub> ще започне изпълнението на две задачи T<sub>1</sub> и T<sub>2</sub>
+    li В момент t<sub>1</sub> и двете задачи ще са приключили
+
+  ul
+    p Няма как предварително да знаем
+    li реда, в който ще се изпълнят
+    li дали ще си предават управлението
+    li коя ще приключи първа
+
+
+= slide 'Паралелизъм?' do
+  p Това, за което повечето хора си мислят, когато им говориш за конкурентност.
+  p Две изчисления, които реално се изпълняват <strong>едновременно</strong>
+  p Предполага наличието на много ядра/процесори, така че няколко задачи наистина да вървят паралелно
+  p.action Наличието на конкурентност прави паралелизма възможен
+
+
+= slide 'Подходи' do
+  ul
+    li Отделни процеси
+    li Нишки (два вида)
+    li Актьори
+    li Software Transactional Memory
+    li Мега умни компилатори?
+    li …
+
+
+= slide 'В Python' do
+  ul
+    li Отделни процеси
+    li Нишки
+
+
+= slide 'Видове нишки' do
+  ul
+    li Зелени нишки - нашия код се грижи за предаването на контрол
+    li Системни нишки - операционната система се грижи за предаването на контрол
+
+
+= slide 'Global Interpreter Lock' do
+  p Един python процес <strong>винаги</strong> работи върху едно ядро
+  p Досадно е, но уви спестява един ред други проблеми
+  p Възможно е дори реферирането на променлива в няколко нишки едновременно да създаде проблем(защо?)
+
+= slide 'fork' do
+  ul
+    p Как (unixy) операционна система реализира паралелизъм
+    li fork създава ново копие на програмата, която изпълняваме
+    li Всички ресурси и променливи запазват стойността си в процеса-син
+    li След създаването на новия процес, всички промени са локални
+    li Все едно клонираме хора, за да вършим повече работа едновременно
+
+
+= slide 'Пример с fork (на C)' do
+  example:
+    #include <stdio.h>
+
+    int main()
+    {
+        printf("before\n");
+        if (fork())
+            printf("father\n");
+        else
+            printf("son\n");
+        printf("both\n");
+    }
+
+
+    before
+    son
+    both
+    father
+    both
+
+
+= slide 'Пример с fork (на Python)' do
+  example:
+    import os
+
+    print("before")
+    if os.fork():
+        print("father")
+    else:
+        print("son")
+    print("both")
+
+
+= slide 'В картинки' do
+  img src='15/threading_1.png'
+
+
+= slide 'В картинки' do
+  img src='15/threading_2.png'
+
+
+= slide 'В картинки' do
+  img src='15/threading_3.png'
+
+
+= slide 'В картинки' do
+  img src='15/threading_4.png'
+
+
+= slide 'В картинки' do
+  img src='15/threading_5.png'
+
+
+= slide 'По-сложен пример с fork' do
+  example:
+    import os
+    import time
+
+    def log(msg): print("\n* " + msg)
+
+    orders = 0
+    while True:
+        order = input('Enter order: ')
+        if not order: continue
+        if order in ('q', 'x', 'quit', 'exit'): break
+        pid = os.fork()
+        if pid == 0:
+            time.sleep(3)
+            log("Order '{0}' is ready!".format(order))
+            break
+        else:
+            log("Roger that '{0}'({1}). Please, wait.".format(order, orders))
+            orders += 1
+
+
+= slide 'Синхронизация при fork' do
+  example:
+    import os
+
+    pid = os.fork()
+    if pid == 0:
+        os.execlp('date', 'date')
+    else:
+        status = os.wait()
+        print("Father: son has finished {0}".format(status))
+
+
+  p можем да ползваме и сигнали <code>import signal</code>
+
+
+
+= slide 'Предимства и недостатъци на fork' do
+  p Против:
+  ul
+    li Само за UNIX
+    li Създаването на нов процес е бавно и паметоемко
+    li Комуникацията между процеси е трудна - нямат обща памет
+
+  div.action
+    p За:
+    ul
+      li Стабилност
+      li Синът е независим - ако омаже нещо, бащата няма да пострада
+
+
+
+= slide 'Нишки' do
+  ul
+    li Наричат ги lightweight процеси
+    li Много нишки живеят в един и същи процес
+    li Глобалните променливи са общи за нишките
+    li Създават се бързо и лесно
+    li В python модулът threading
+
+
+= slide 'Създаване на нова нишка' do
+  p даваме функция с параметри към нея
+
+  div.action
+    p или
+    ul
+      li Нишка &mdash; наследник на threading.Thread
+      li Код &mdash; в метода run
+      li Създаване и изпълнение на кода паралелно &mdash; метод start
+
+= slide 'Пример с нишки' do
+  example:
+    import threading
+
+    def f(name):
+        print("Hello from {0}".format(name))
+
+    thread = threading.Thread(target=f, args=('Bob',))
+    thread.start()
+    thread.join()
+
+= slide 'Пример с нишки(2)' do
+  example:
+    import threading
+    import time
+
+    orders = 0
+
+    class Chef(threading.Thread):
+        def __init__(self, order):
+            self.order = order
+            threading.Thread.__init__(self)
+        def run(self):
+            time.sleep(3)
+            log("Order '{0}' is ready!".format(self.order))
+
+    while True:
+        order = input('Enter order: ')
+        if not order: continue
+        if order in ('q', 'x', 'quit', 'exit'): break
+        chef = Chef(order)
+        chef.start()
+        log("Roger that '{0}'. Please, wait in quiet desperation.".format(order))
+        orders += 1
+
+= slide 'Вечерящи философи' do
+  example:
+    import random, time, threading
+
+    taken = False
+    class Philosopher(threading.Thread):
+        def __init__(self, name):
+            super().__init__(); self.name = name
+
+        def log(self, msg): print("{0}: {1}".format(self.name, msg))
+        def eat(self): time.sleep(random.random())
+        def ponder(self): time.sleep(random.random())
+
+        def refresh(self):
+            global taken
+            self.log("Please excuse me...");
+            while taken: pass;
+            taken = True; self.log("--> (entered the bathroom)")
+            time.sleep(random.random())
+            taken = False; self.log("<-- (left the bathroom)")
+
+        def run(self):
+            while True:
+                self.eat(); self.ponder(); self.refresh()
+
+
+= slide 'Критични секции' do
+  list:
+    Части от кода, които могат да бъдат изпълнени само от една нишка/процес в даден момент се наричат <strong>критични секции</strong>
+    Те са критична част от многозадачното програмиране
+    Има много похвати за реализирането на критични секции.
+    Всичките са равномощни на нещо, наречено <strong>семафор</strong>.
+
+
+
+= slide 'threading.Lock' do
+  list:
+    threading.Lock() ни връща Lock обект
+    Викането на метода му acquire() ни гарантира, че само ние притежаваме този Lock
+    Викането на release() освобождава Lock-а и разрешава някой друг да го заключи с acquire()
+    Ако викнем acquire() докато Lock-а е зает &mdash; методът чака, докато не се освободи
+
+
+
+= slide 'Философите, отново' do
+  example:
+    import random, time, threading
+
+    bathroom = threading.Lock()
+
+    class Philosopher(threading.Thread):
+        def __init__(self, name):
+            super().__init__(); self.name = name
+
+        def log(self, msg): print("{0}: {1}".format(self.name, msg))
+        def eat(self): time.sleep(random.random())
+        def ponder(self): time.sleep(random.random())
+
+        def refresh(self):
+            self.log("Please excuse me...")
+            bathroom.acquire(); self.log("--> (entered the bathroom)")
+            time.sleep(random.random())
+            bathroom.release(); self.log("<-- (left the bathroom)")
+
+        def run(self):
+            while True:
+                self.eat(); self.ponder(); self.refresh()
+
+= slide 'with и обекти с acquire и release' do
+  ul
+    li Всички Lock-оподбни обекти от threading са и context manager-и
+    li Ако ги ползваме с <code>with</code> ни се гарантира викането на <code>acquire()</code> преди и на <code>release()</code> след блока
+
+  example:
+    with bathroom:
+        self.log("--> (entered the bathroom)")
+        time.sleep(random.random())
+        self.log("<-- (left the bathroom)")
+
+= slide 'Модерно строителство, модерни ресторанти и семафори' do
+  p А aко има повече от една тоалетна в сградата?
+
+  div.action
+    p Или още по-добре
+    ul
+      li Ресторант с 10 човека
+      li Всеки е едновременно готвач и сервитьор
+      li 5 фурни
+
+
+
+= slide 'Семафори в орехова черупка' do
+  list:
+    Числова променлива v
+    Операция P(v) &mdash; чакай докато v > 0, след което v -= 1
+    Операция V(v) &mdash; v += 1
+    Предложени от Едсгер Дейкстра (Едсгар Дийкстра?)
+
+
+= slide 'threading.Semaphore' do
+  list:
+    threading.Semaphore(k) ни връща семафор с интерфейс като на Lock и стойност k
+    При всяко изпълнение на acquire() стойността се намалява с 1
+    При всяко изпълнение на release() стойността се увеличава с 1
+    Ако стойността е 0, acquire() спи, докато някой не я увеличи с release()
+    Lock() е еквивалентен на Semaphore(1)
+
+
+
+= slide 'Ресторанта на Грибоедов' do
+  example:
+    import threading, random, time
+
+    ovens = threading.Semaphore(5)
+
+    class WaiterChef(threading.Thread):
+        def __init__(self, name):
+            super(WaiterChef, self).__init__()
+            self.name = name
+
+        def run(self):
+            while True:
+                print("...({0}) waiting for an oven".format(self.name))
+                ovens.acquire()
+                print("--> ({0}) Cooking...".format(self.name))
+                time.sleep(random.random() * 10)
+                ovens.release()
+                print("<-- ({0}) Serving...".format(self.name))
+                time.sleep(random.random() * 4)
+
+
+    for _ in range(0, 10):
+      WaiterChef(_).start()
+
+= slide 'threading.Event' do
+  list:
+    По-проста комуникация, в която няколко нишки изчакват събитие от друга
+    wait() блокира докато събитието не се случи
+    set() &#8222;случва&#8220; събитието
+
+
+= slide 'Коледа на село' do
+  list:
+    2 баби, майсторки баничарки, пекат баници за 3-мата си внука
+    Искаме след като бабите опекат нещо, някой от свободните внуци да започва да яде
+    Бабите се казват producer-и, внуците &mdash; consumer-и
+
+
+
+= slide 'threading.Condition' do
+  list:
+    wait() &mdash; чака, докато някоя баба не произведе нова баница
+    notify() &mdash; това трябва да каже една баба, която е опекла баница. Ще събуди някой от чакащите. Ако няма чакащи няма да направи нищо.
+    notify_all() &mdash; ще събуди всички чакащи
+    release() и acquire() работят върху вътрешен за Condition Lock, който може да се подаде при конструиране
+    wait и notify работят само ако владеем вътрешния Lock
+
+
+
+= slide 'threading.local' do
+  list:
+    Инстанцира се чрез threading.local()
+    Позволява свободен достъп до атрибути
+    Всяка нишка вижда различни стойности зад атрибутите на този обект
+
+
+
+= slide 'multiprocessing' do
+  p multiprocessing модулът
+  list:
+     Дава ни подобни възможности като threading, но за процеси
+     Crossplatform - Unix/Windows
+     Благинки за синхронизация - Semaphore, Lock, RLock, Condition, Event
+     Благинки за обмен на данни - Queue, Pipe
+     Възможности за обща памен (Value, Array) от елементарни данни (int/float/byte/...) и ctypes структури
+     Възможност за общи обекти - Manager
+     Pool
+
+
+
+= slide 'multiprocessing - пример' do
+  example:
+    from multiprocessing import Process
+    import os
+
+    def info(title):
+        print(title)
+        print('module name:', __name__)
+        print('parent process:', os.getppid())
+        print('process id:', os.getpid())
+
+    def f(name):
+        info('function f')
+        print('hello', name)
+
+    if __name__ == '__main__':
+        info('main line')
+        p = Process(target=f, args=('bob',))
+        p.start()
+        p.join()
+
+
+= slide 'multiprocessing - пример с обща памет' do
+  example:
+    from multiprocessing import Process, Value
+
+    def f(n):
+        # work
+        v = n.value
+        for x in range(0, 30000): x=x+2
+        n.value = v + 1
+        # work
+
+    if __name__ == '__main__':
+        num = Value('i', 0)
+        processes = [Process(target=f, args=(num,)) for i in range(0, 10)]
+        for p in processes:
+            p.start()
+        for p in processes:
+            p.join()
+        print(num.value)
+
+
+= slide 'multiprocessing - Lock' do
+  p Lock - осигурява че само един процес може да го държи
+  example:
+    from multiprocessing import Process, Value, Lock
+
+    def f(n, lock):
+        # work
+        lock.acquire()
+        v = n.value
+        for x in range(0, 30000): x=x+2
+        n.value = v + 1
+        lock.release()
+        # work
+
+    if __name__ == '__main__':
+        num = Value('i', 0)
+        lock = Lock()
+        processes = [Process(target=f, args=(num, lock)) for i in range(0, 10)]
+        for p in processes:
+            p.start()
+        for p in processes:
+            p.join()
+        print(num.value)
+
+= slide 'multiprocessing - Manager' do
+  p Позволява създаването на споделени обекти
+  list:
+    по-удобно от обща памет
+    но и по-бавно
+
+  example:
+    from multiprocessing import Process, Manager
+
+    def f(d, l):
+        d[1] = '1'
+        d['2'] = 2
+        d[0.25] = None
+        l.reverse()
+
+    if __name__ == '__main__':
+        manager = Manager()
+        d, l = manager.dict(), manager.list(range(10))
+        p = Process(target=f, args=(d, l))
+        p.start()
+        p.join()
+        print(d, l)
+
+    {0.25: None, 1: '1', '2': 2}
+    [9, 8, 7, 6, 5, 4, 3, 2, 1, 0]
+
+
+= slide 'multiprocessing - неща, за които трябва да се внимава под Windows' do
+  list:
+     аргументите на Process.__init__() трябва да са &#8222;pickable&#8220;
+     не е хубаво да достъпвате глобални променливи
+     задължително if __name__ == '__main__'
+     трябва да се внимава с действията при import
+
