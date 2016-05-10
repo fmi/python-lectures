@@ -62,3 +62,7 @@
   title: 15. Конкурентност
   date: 2016-04-27
   slug: 15-threading
+16:
+  title: 16. Асинхронно програмиране
+  date: 2016-05-09
+  slug: 16-asyncio
