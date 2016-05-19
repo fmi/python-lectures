@@ -66,3 +66,11 @@
   title: 16. Асинхронно програмиране
   date: 2016-05-09
   slug: 16-asyncio
+17:
+  title: 17. Паяжина
+  date: 2016-05-11
+  slug: 17-web
+18:
+  title: 18. Джанго
+  date: 2016-05-16
+  slug: 18-django

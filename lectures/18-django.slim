@@ -1,0 +1,274 @@
+= slide 'Какво е HTTP' do
+  p.action Client-Server протокол, за раздаване на документи
+  p.action Видове Requests (Заявки)
+  p.action GET / POST / PUT / HEAD / ...
+  p.action Видове Response (Отговори)
+  p.action 1xx / 2xx / 3xx / 4xx / 5xx
+  p.action Headers
+
+= slide 'DNS?' do
+  p.action Domain Name System
+  p.action IP <-> четимо име
+
+= slide 'Зад един сайт' do
+  img src="18/nginx-django.png"
+
+= slide 'Интересуваме се от сериозни неща' do
+  img src="18/magic-pony-django-wallpaper.png"
+
+= slide 'Преди да продължим с тях обаче' do
+  p.action Ако проекта ви е web с python
+  p.action Добре е да може да кажете поне 2 думи за <a href="https://www.python.org/dev/peps/pep-3333/">wsgi</a>
+  p.action БЕЗ значение кой от всичките 66 framework-а си изберете
+
+= slide 'Django' do
+  list:
+    framework за уеб приложения
+    прави скучните неща вместо нас
+    кара ни да пишем структуриран код
+    ... без да ни връзва ръцете
+    позволява rapid prototyping
+
+= slide 'Convention vs. Configuration' do
+  p Ако следваш правилата всичко работи без досадни конфигурации
+
+= slide 'Python 2.x vs. Python 3.x' do
+  p През целия семестър сме ви обяснявали, че има разлика между двете.
+  p Докато ползвате Django това ще боли... много
+
+= slide 'Изненада' do
+  p Предния slide е от миналата година
+  p в предадените идеи за проекти има около 20 различни идеи свързани с "интървеб"
+  p Абсолютно всеки един от тях ще стане гладко с Django + Python3.5 ако имате добро проучване
+
+= slide 'Как се инсталира?' do
+  example:
+    $ pip install django  # не думай
+
+= slide 'И после?' do
+  example:
+    $ django-admin.py startproject djitter
+
+= slide 'Но все пак..' do
+  p.action Помните ли картинката в началото
+  p.action Не тази с розовото пони
+
+= slide 'Не е цялата картинка' do
+  img src="18/introduction-to-django-2-638.jpg"
+
+= slide 'Затова...' do
+  p.action Нахвърили сме нещо за вас <a href="https://github.com/hhursev/django-example">тук</a>
+  p.action Нека го разгледаме...
+
+= slide 'Обратно към Django' do
+  p.action Целта ни днес
+  p.action Фреймуорка има <a href="https://docs.djangoproject.com/en/1.9/">разкошна документация</a>
+  p.action Задължително четиво - Two Scoops Of Django***
+  p.action Как да използвате тази книга
+  p.action Ако проекта ви е с Django...
+
+= slide 'Models, Views, Templates' do
+  p Ако сте чували за MVC:
+  list:
+    Models = Models
+    Views = Controllers
+    Templates = Views
+
+= slide 'Models' do
+  list:
+    Дефинира типовете и структурата на данните
+    Чете и пише в базата данни (ORM)
+
+= slide 'Object-Relational Mapper' do
+  list:
+    Една доста приятна абстракция над базата данни
+    Пишем питонски код, който се конвертира до SQL заявка
+    Не ни интересува каква е точно базата отдолу
+    ORM-а да му мисли
+
+  list:
+    Python клас = SQL таблица
+    Атрибут на класа = Колона в таблицата
+    Инстаснция на класа = Запис в таблицата (кортеж)
+
+= slide 'Пример' do
+  example:
+    class User(models.Model):
+      username = models.CharField(max_length=30, unique=True)
+      first_name = models.CharField(max_length=30, blank=True)
+      last_name = models.CharField(max_length=30, blank=True)
+      email = models.EmailField(blank=True)
+      is_staff = models.BooleanField(default=False)
+      is_active = models.BooleanField(default=True)
+      date_joined = models.DateTimeField(_('date joined'), default=timezone.now)
+
+
+  list:
+    Използвайте наготово: from django.contrib.auth.models import User
+
+= slide 'Пример' do
+  example:
+    unique = True # не може да се повтаря
+    blank = True # не е задължително Django да приеме стойност за него
+    null = True # базата не изисква стойност за него
+    default = "Панда" # стойност по подразбиране
+
+= slide 'Полета' do
+  example:
+    models.CharField(max_length=32)
+    models.TextField()
+    models.IntegerField()
+    models.BooleanField()
+    models.DateTimeField()
+    models.FileField()
+    models.ImageField()
+    models.EmailField()
+    ...
+
+  list:
+    https://docs.djangoproject.com/en/1.9/ref/models/fields/
+
+= slide 'Релационен модел' do
+  list:
+    Полетата могат да държат само скаларни типове
+    За сложни типове трябва да създадем нов клас + таблица
+    Всеки обект има уникален номер (id)
+    За да реферират друг обект, трябва да ползвате него
+
+
+= slide 'Views' do
+  list:
+    "Бизнес логиката" е там
+    Вход и изход между модела и потребителя
+
+= slide 'Views (пример)' do
+  example:
+    from django.shortcuts import render
+
+    def calculator(request):
+        if request.method == 'POST':
+            x = int(request.POST['x'])
+            y = int(request.POST['y'])
+            result = x + y
+
+        return render(request, 'calculator.html', locals())
+
+= slide 'CBV vs functions' do
+  list:
+    Class Based Views
+    functions view
+    предимства и недостатъци
+    недостатъци и предимства
+
+= slide 'Templates' do
+  ul
+    li Представяме данните в тях
+    li Приемат речник от view-то
+    li Форматират го в текст (най-често HTML)
+    li Изрази:
+
+  example:
+    {{ title }}
+    {{ user.first_name }}
+
+  ul
+    li Само елементарна логика
+
+  example:
+    {% if a > 5 %} а е голямо! {% endif %}
+    {% for user in users %} {{ user.first_name }} {% endfor %}
+
+= slide 'URLs' do
+  example:
+    from django.conf.urls import url
+
+    from djeeters import views
+
+    urlpatterns = [
+        url(
+            r'^profile/nongeneric/(?P<username>.+)/$',
+            'djeeters.views.djeeter_profile',
+            name='profile-info'
+        ),
+        url(
+            r'^profile/(?P<username>.+)/$',
+            views.DjeeterDetailView.as_view(),
+            name='profile'
+        )
+    ]
+
+  list:
+    Имаме нужда от нещо, което по текущия URL знае кое view да извика
+    Очевидно: регулярни изрази!
+
+= slide 'API' do
+  list:
+    Application programming interface
+    предимства
+    недостатъци
+    за проектите... с любов
+
+= slide 'Serializers' do
+  list:
+    serializers.py
+    <a href="http://www.django-rest-framework.org/">django rest framework (документация)</a>
+    за документация <a href="http://django-rest-swagger.readthedocs.io/en/latest/">django-rest-swagger</a>
+    пишете docstrings (в YAML формат) на вашите view функции, rest-swagger се оправя
+    получавате готови формички за "разцъкване"
+
+= slide 'Apps' do
+  list:
+    Един Django проект е конструиран от app-ове
+    Всеки app има свои модели, view-та и темплейти
+    Създаваме app с `$ python manage.py startapp appname`
+
+= slide 'Структура на един Django проект' do
+  example:
+    -> tree
+    .
+      ├── djitter
+      │   ├── __init__.py
+      │   ├── settings.py
+      │   ├── urls.py
+      │   └── wsgi.py
+      ├── djeeters
+      │   ├── admin.py
+      │   ├── __init__.py
+      │   ├── migrations
+      │   │   └── __init__.py
+      │   ├── models.py
+      │   ├── tests.py
+      │   └── views.py
+      ├── api
+      ├── common
+      └── manage.py
+
+= slide 'Миграции' do
+  list:
+    SQL базите данни разчитат на строго дефинирана стурктура
+    Промените по нея не може да се случват динамично
+    Разбрахме се, че имаме ORM, който се оправя вместо нас със заявките
+    Имаме и модул, който генерира миграции (добавяне/изтриване на поле/таблица)
+
+= slide 'Миграции' do
+  example:
+    python manage.py makemigrations djeeters # Създава миграция за този app
+    python manage.py migrate # Изпълнява всички миграции
+
+= slide 'Не откривайте топлата вода' do
+  list:
+    django.contrib.admin - админ панел на готово
+    django.contrib.auth - потребители, права, логин, логаут, ...
+    django.contrib.comments - коментари с модерация
+    django.contrib.messages - нотификации
+    ...
+
+  list:
+    разгледайте внимателно <a href="https://github.com/hhursev/django-example/tree/master/requirements">нашите решения</a>
+    подбирайте внимателно помощни инструменти
+    колкото и изтъркано да звучи...
+
+= slide 'Тестване на webapp' do
+  list:
+    за проекта тествайте само backend нещата
+    За връщане на точни status code, стойностти, пращане на сигнали и т.н.
