@@ -1,0 +1,28 @@
+0:
+  title: 00. Нулева лекция
+  date: 2022-10-06
+  url: lectures/00-intro.pdf
+1:
+  title: 01. Въведение в Python
+  date: 2022-10-11
+  url: lectures/01-intro-to-python.pdf
+2:
+  title: 2. Колекции
+  date: 2022-10-13
+  url: lectures/02-collections.pdf
+3:
+  title: 3. Декоратори
+  date: 2022-10-18
+  url: lectures/03-decorators.pdf
+4:
+  title: 4. ООП
+  date: 2022-10-20
+  url: lectures/04-oop.pdf
+5:
+  title: 05. Домашни дискусии
+  date: 2022-10-25
+  url: lectures/05-home-work-discussions.pdf
+6:
+  title: 06. ООП 2
+  date: 2022-10-27
+  url: lectures/06-oop-2.pdf
