@@ -32,5 +32,13 @@
   url: lectures/07.exceptions-and-with.pdf
 8: 
   title: 08. Итератори и Генератори
-  date: 2022-11-03
+  date: 2022-11-08
   url: lectures/08.Iterators-and-generators.pdf
+9: 
+  title: 09. DnD Workshop (Очаквайте скоро)
+  date: 2022-11-10
+  url: lectures/09.TBD
+10: 
+  title: 10. Модули
+  date: 2022-11-17
+  url: lectures/10.Modules.pdf
