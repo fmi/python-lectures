@@ -29,11 +29,11 @@
 7:
   title: 07. Изключения и with
   date: 2022-11-03
-  url: lectures/07.exceptions-and-with.pdf
+  url: lectures/07-exceptions-and-with.pdf
 8: 
   title: 08. Итератори и Генератори
   date: 2022-11-08
-  url: lectures/08.Iterators-and-generators.pdf
+  url: lectures/08-iterators-and-generators.pdf
 9: 
   title: 09. DnD Workshop (Очаквайте скоро)
   date: 2022-11-10
@@ -41,4 +41,8 @@
 10: 
   title: 10. Модули
   date: 2022-11-17
-  url: lectures/10.Modules.pdf
+  url: lectures/10-modules.pdf
+11: 
+  title: 10. RegEx и venv
+  date: 2022-11-17
+  url: lectures/11-regex-and-environments.pdf
