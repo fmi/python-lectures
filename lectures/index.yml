@@ -43,6 +43,10 @@
   date: 2022-11-17
   url: lectures/10-modules.pdf
 11: 
-  title: 10. RegEx и venv
-  date: 2022-11-17
+  title: 11. RegEx и venv
+  date: 2022-11-22
   url: lectures/11-regex-and-environments.pdf
+12: 
+  title: 12. Метаобектен протокол
+  date: 2022-11-24
+  url: lectures/12-meta-object-protocol.pdf
