@@ -65,8 +65,12 @@
 16:
   title: 16. C + Python
   date: 2022-12-13
-  url: lecture/16-c-python.pdf
+  url: lectures/16-c-python.pdf
 17:
-  title: 17. Concurrency
+  title: 17. Конкурентност
   date: 2022-12-15
-  url: lecture/17-concur17r-concurrencyency.pdf
+  url: lectures/17-concurrency.pdf
+18:
+  title: 18. Роботика
+  date: 2022-12-20
+  url: lectures/18-robotics.pdf
